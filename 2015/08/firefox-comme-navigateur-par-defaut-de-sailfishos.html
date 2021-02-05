@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Firefox comme navigateur par défaut de SailfishOS | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Jolla et son SailfishOS sont vraiment de beaux outils mais il faut avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité des navigateurs intégrés et surtout du navigateur par défaut. Malheureusement, l'interface ne propose actuellement aucune option pour modifier ce comportement. Ainsi, lorsqu'on clique sur un lien …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Firefox comme navigateur par défaut de SailfishOS
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2015-08-24T09:17:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Mon 24 August 2015
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/tech.html">Tech</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
+avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
+des navigateurs intégrés et surtout du navigateur par défaut.</p>
+<p>Malheureusement, l'interface ne propose actuellement aucune option pour
+modifier ce comportement. Ainsi, lorsqu'on clique sur un lien dans une
+autre application c'est forcement ce navigateur tout moisi qui s'ouvre
+et qui met 3 heures à charger la page. Heureusement, avec quelques
+bidouille, il est possible de paramétrer Firefox comme navigateur par
+défaut, c'est d'ailleurs ce que je viens de faire :)</p>
+<p>Si vous avez déjà Firefox d'installé, vous pouvez directement vous
+rendre au paragraphe 'Paramétrage d'ADB'.</p>
+<div class="section" id="installation-d-aptoide">
+<h2>Installation d'Aptoide</h2>
+<p>La première étape est d'installer le market Aptoide si ce n'est pas déjà
+fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
+'Place de marché' tout en bas et installer le market Aptoide Appstore</p>
+<p>[gallery size=&quot;medium&quot; columns=&quot;2&quot; link=&quot;file&quot; ids=&quot;571,572&quot;]</p>
+</div>
+<div class="section" id="installation-de-firefox">
+<h2>Installation de Firefox</h2>
+<p>L'installation de Firefox se fait via Aptoide, il faut donc ouvrir
+l'application nouvellement installée et dans la zone de recherche, taper
+Firefox. Il faut ensuite trouver l'application <strong>Firefox Browser for
+Android</strong> et l'installer.</p>
+<p>[gallery link=&quot;file&quot; columns=&quot;2&quot; size=&quot;medium&quot; ids=&quot;575,576,577,578&quot;]</p>
+</div>
+<div class="section" id="parametrage-d-adb">
+<h2>Paramétrage d'ADB</h2>
+<p>C'est partie pour le bricolage. Il faut d'abord <a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/">se connecter en
+SSH</a>
+à l'appareil afin d'y modifier le comportement d'Alien. Pour cela, il
+faut éditer le fichier /opt/alien/system/build.prop et ajouter à la fin
+:</p>
+<pre class="literal-block">
+persist.service.adb.enable=1
+service.adb.tcp.port=5555
+</pre>
+<p>Une fois cette modification faite, on relance Alien Dalvik</p>
+<pre class="literal-block">
+[root&#64;Jolla ~]# systemctl restart aliendalvik.service
+</pre>
+<p>Maintenant, un process adb doit apparaitre</p>
+<pre class="literal-block">
+[root&#64;Jolla ~]# ps aux | grep adb
+ shell&nbsp;&nbsp;&nbsp;&nbsp; 5162&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; 6532&nbsp;&nbsp;&nbsp; 92 ?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ssl&nbsp; 23:04&nbsp;&nbsp; 0:00 /system/root/sbin/adbd
+ root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5592&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; 3984&nbsp;&nbsp; 288 pts/0&nbsp;&nbsp;&nbsp; Sl&nbsp;&nbsp; 23:06&nbsp;&nbsp; 0:00 adb fork-server server
+ root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7330&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; 2256&nbsp;&nbsp; 544 pts/0&nbsp;&nbsp;&nbsp; S+&nbsp;&nbsp; 23:57&nbsp;&nbsp; 0:00 grep adb
+</pre>
+<pre class="literal-block">
+[root&#64;Jolla ~]# lsof -p 5162 | grep android_adb
+ adbd&nbsp;&nbsp;&nbsp; 5162 shell&nbsp;&nbsp; 10u&nbsp;&nbsp; CHR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10,25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0t0&nbsp; 1437 /opt/alien/dev/android_adb
+</pre>
+<p>Une fois que tout ça est ok, on lance en root :</p>
+<pre class="literal-block">
+[root&#64;localhost bin]# /opt/alien/system/bin/adb kill-server
+[root&#64;localhost bin]# /opt/alien/system/bin/adb devices
+* daemon not running. starting it now on port 5038 *
+* daemon started successfully *
+List of devices attached
+emulator-5554   device
+
+[root&#64;localhost bin]#
+</pre>
+</div>
+<div class="section" id="parametrage-de-sailfishos">
+<h2>Paramétrage de SailfishOS</h2>
+<p>La système est maintenant prêt à accueillir nos modifications. Toujours
+dans la connexion SSH, se rendre dans /usr/share/applications, faire une
+copie de sauvegarde du fichier open-url.desktop et le modifier pour
+qu'il ne prenne plus en charge les types MIME http et https</p>
+<pre class="literal-block">
+cd /usr/share/applications
+cp -a open-url.desktop open-url.desktop.ori
+vi open-url.desktop
+</pre>
+<p>Une fois dans le fichier, on supprime la ligne</p>
+<pre class="code literal-block">
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+</pre>
+<p>Le fichier doit maintenant ressembler à cela</p>
+<pre class="literal-block">
+[root&#64;Jolla applications]# cat open-url.desktop
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+</pre>
+<p>Créer ensuite le fichier firefox-as-default.desktop et y mettre ce
+contenu</p>
+<pre class="literal-block">
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+[root&#64;Jolla applications]# cat firefox-as-default.desktop
+[Desktop Entry]
+Exec=/opt/alien/system/bin/adb -e shell am start -a android.intent.action.VIEW -n org.mozilla.firefox/.App -d ' %U'
+Name=Firefox HTTP handler (opener)
+Type=Application
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+X-Nemo-Application-Type=no-invoker
+X-Nemo-Single-Instance=no
+X-apkd-apkfile=/data/app/org.mozilla.firefox.apk
+NoDisplay=true
+</pre>
+<p>Afin de prendre ces modifications en compte, on met à jour le cache des
+types MIME</p>
+<pre class="literal-block">
+[root&#64;Jolla applications]# update-desktop-database
+</pre>
+<p>Le fichier mimeinfo.cache devrait maintenant contenir 2 lignes de ce
+type</p>
+<pre class="literal-block">
+x-maemo-urischeme/http=firefox-as-default.desktop;
+x-maemo-urischeme/https=firefox-as-default.desktop;
+</pre>
+<p>Dorénavant, lorsqu'un lien sera cliqué dans une application (message,
+twitter...) celui s'ouvrir avec Firefox.</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

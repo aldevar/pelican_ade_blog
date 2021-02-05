@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Rapport de stage sur la mise en place de Squid et Egroupware | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2010/01/rapport-de-stage-sur-la-mise-en-place-de-squid-et-egroupware.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="J’ai longuement hésité à mettre ce rapport de stage en ligne pour plusieurs raisons. Tout d’abord, ce rapport n’est pas vraiment représentatif du travail fournit. La majorité des solutions expliquées m’ont demandées beaucoup de temps de recherche et d’arrachage de cheveux (notamment pour la migration …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Rapport de stage sur la mise en place de Squid et Egroupware
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2010-01-06T15:05:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 06 January 2010
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/tech.html">Tech</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>J’ai longuement hésité à mettre ce rapport de stage en ligne pour
+plusieurs raisons. Tout d’abord, ce rapport n’est pas vraiment
+représentatif du travail fournit. La majorité des solutions expliquées
+m’ont demandées beaucoup de temps de recherche et d’arrachage de cheveux
+(notamment pour la migration des comptes sous Lotus Notes). Ensuite, la
+qualité rédactionnel est loin d’être au rendez-vous. On m’a beaucoup
+reproché que ce rapport était trop technique et c’est plutôt vrai.
+Enfin, ce document ne décrit pas vraiment l’installation de Squid et
+d’Egroupware. Ces parties sont survolées et je m’attarde plus sur la
+résolution des problèmes rencontrés (résoudre un conflit de schéma LDAP
+quand on a jamais vu OpenLDAP de sa vie n’est pas chose aisée).</p>
+<p>Un mois après la fin de la formation, je me décide tout de même à le
+mettre en ligne. Je pense que ce rapport décrit plutôt bien ce que peut
+être le métier de technicien réseau dans une administration ou une PME.
+Le problème lors de la mise en place d’un nouveau service n’est pas
+l’installation et la configuration de ce service mais la migration des
+anciens services utilisés vers les nouveaux. Surtout lorsque l’ancien
+service est un système propriétaire vieillissant (Je veux parler ici de
+Lotus Notes 5).</p>
+<p><a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.squid-cache.org/">Squid</a>
+est un proxy http très utilisé, dont j’ai pu découvrir une partie des
+possibilités.
+<a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.egroupware.org/">Egroupware</a>
+est un groupware fournissant un agenda, un client mail, un carnet
+d’adresses, un système de réservations des ressources et plusieurs
+autres choses, le tout dans une interface web. Je vous invite à tester
+la <a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.stylite.de/egroupware_demo_login">demo sur le site du
+projet.</a></p>
+<p>Ce rapport fait 38 pages et voici son sommaire:</p>
+<ol class="arabic simple">
+<li><strong>Remerciements</strong></li>
+<li><strong>Objectif du stage</strong></li>
+<li><strong>L’entreprise</strong><ol class="arabic">
+<li>Historique</li>
+<li>La structure actuelle</li>
+<li>Le service informatique</li>
+</ol>
+</li>
+<li><strong>Spécifications</strong><ol class="arabic">
+<li>Environnement de travail</li>
+<li>L’existant</li>
+<li>Besoins et contraintes<ol class="arabic">
+<li><em>Squid</em></li>
+<li><em>Egroupware</em></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>Mise en œuvre</strong><ol class="arabic">
+<li>Proxy<ol class="arabic">
+<li><em>Planning prévisionnel</em></li>
+<li><em>Mise en œuvre</em><ol class="arabic">
+<li>Squid</li>
+<li>Sarg</li>
+<li>Squidguard</li>
+</ol>
+</li>
+<li><em>Problèmes rencontrés</em></li>
+<li><em>Annexes</em></li>
+</ol>
+</li>
+<li>eGroupware<ol class="arabic">
+<li><em>Schéma fonctionnel</em></li>
+<li><em>Planning previsionnel</em></li>
+<li><em>Mise en œuvre</em><ol class="arabic">
+<li>Configuration de openldap</li>
+</ol>
+</li>
+<li><em>Problèmes rencontrés</em><ol class="arabic">
+<li>Conflit de schéma openldap</li>
+<li>Configuration de felamimail</li>
+</ol>
+</li>
+<li><em>Préparation de la migration des utilisateurs</em><ol class="arabic">
+<li>Création du carnet d’adresses principal</li>
+<li>Importation des agendas Lotus Notes</li>
+<li>Importation des carnet d’adresse Lotus Notes</li>
+<li>Exportation des mails depuis LotusNotes dans eGroupware</li>
+<li>Importation mail depuis roundcube</li>
+</ol>
+</li>
+<li><em>Annexes</em></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>Procédure de migration serveur</strong><ol class="arabic">
+<li>Sur Revy</li>
+<li>Sur Revnew</li>
+</ol>
+</li>
+</ol>
+<p><a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2015/08/RapportDeStage-Squid-Egroupware.pdf">RapportDeStage-Squid-Egroupware</a></p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

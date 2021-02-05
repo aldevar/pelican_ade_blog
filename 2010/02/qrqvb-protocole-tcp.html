@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  QRQVB : Protocole TCP | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2010/02/qrqvb-protocole-tcp.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission Control Protocol, Protocole de Contrôle de Transmission).  Comme son petit frère UDP, TCP se situe en couche 4 du modèle OSI. Caractéristique de TCP TCP est bien plus compliqué qu’UDP examiné au chapitre précédent. Il apporte en contrepartie des …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  QRQVB : Protocole TCP
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2010-02-02T07:00:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Tue 02 February 2010
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/qrqvb.html">QRQVB</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission
+Control Protocol, Protocole de Contrôle de Transmission). &nbsp;Comme son
+petit frère UDP, TCP se situe en couche 4 du <a class="reference external" href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=232">modèle
+OSI</a>.</p>
+<div class="section" id="caracteristique-de-tcp">
+<h2>Caractéristique de TCP</h2>
+<p>TCP est bien plus compliqué qu’UDP examiné au <a class="reference external" href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=493">chapitre
+précédent</a>.
+Il apporte en contrepartie des services beaucoup plus élaborés.</p>
+<ul class="simple">
+<li>TCP contient un mécanisme pour assurer <strong>le bon acheminement des
+données</strong>. Cette possibilité est absolument indispensable dès lors
+que les applications doivent transmettre de gros volumes de données
+de façon fiable. Cette fonction est assurée par un mécanisme
+d’acquittement (ou accusé de réception). Les paquets de données sont
+acquittés de bout en bout et non de point à point. C’est à dire que
+ce sont les machines sources et machines de destinations qui
+s’occupent de cela et non les routeurs qui se situent entre les 2.</li>
+<li>Le protocole TCP permet l’établissement d’un <strong>circuit virtuel</strong>
+entre les 2 machines qui échangent de l’information (Voir a ce propos
+le <a class="reference external" href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=528#comment-757">commentaire de
+Guizmo.7</a>).
+On dit aussi que TCP &nbsp;fonctionne en <strong>mode connecté</strong> (par opposition
+à UDP qui est en mode non connecté). En pratique, l’une des 2 machine
+doit effectuer un appel que l’autre doit accepter. S’en suit une
+discutions afin d’établir certains paramètres de communication. Une
+fois les préliminaires terminés, les protocoles informent les
+applications respectives que la connexion est établie et que le
+transfert peut débuter. Durant le transfert, le dialogue entre les
+protocoles continue, pour vérifier le bon acheminement des données.</li>
+<li>TCP a la capacité de <strong>mémoriser les données</strong>. Les paquets pouvant
+prendre chacun un chemin différent pour arriver à destination, il
+arrive que ceux ci n’arrivent pas dans le bon ordre. Grâce à cette
+capacité de mémorisation, TCP garde les paquets un certains temps et
+les reconstitue lorsqu’ils sont tous arrivés afin de présenter les
+données à l’application.</li>
+<li>TCP simule une connexion en <strong>«&nbsp;full duplex&nbsp;»</strong>. Pour chacune des 2
+machines en connexion, l’opération qui consiste à lire des données
+peut s’effectuer indépendamment de celle qui consiste à en écrire.</li>
+</ul>
+</div>
+<div class="section" id="entete-tcp">
+<h2>Entête TCP</h2>
+<p><a class="reference external" href="/images/enteteTCP1.png"><img alt="enteteTCP1" src="/images/enteteTCP1.png" /></a></p>
+<p>L’entête TCP est codé sur 20 octets hors options.</p>
+<ul class="simple">
+<li>Port Source (16 bits): Port utilisé par l’application sur la machine
+source.</li>
+<li>Port Destination (16 bits): Port de destination.</li>
+<li>Numéro d’ordre (32 bits): Correspond au numéro du paquet. Cette
+valeur permet de situer à quel endroit du flux de données le paquet,
+qui est arrivé, doit se situer par rapport aux autres paquets.</li>
+<li>Numéro d’accusé de réception (32 bits):&nbsp;Acquittement pour les paquets
+reçus. Cette valeur signale le prochain numéro de paquet attendu. Par
+exemple, si il vaut 1500, cela signifie que tous les datagrammes
+&lt;1500 ont été reçus</li>
+<li>Offset (4 bits): Le champ Offset est codé sur 4 bits et définit le
+nombre de mots de 32 bits dans l’entête TCP. Ce champ indique donc où
+les données commencent.</li>
+<li>Réservé (6 bits): Champ inutilisé actuellement. Il était à l’origine
+prévu pour l’avenir. On peut dire aujourd’hui que ce champ restera
+vide.</li>
+<li>Drapeaux (flags) (6×1 bit): Les drapeaux représentent des
+informations supplémentaires :
+URG: si ce drapeau est à 1 le paquet doit être traité de façon
+urgente.
+ACK: si ce drapeau est à 1 le paquet est un accusé de réception.
+PSH (PUSH): si ce drapeau est à 1, le paquet fonctionne suivant la
+méthode PUSH.
+RST: si ce drapeau est à 1, la connexion est réinitialisée.
+SYN: Le Flag TCP SYN indique une demande d’établissement de
+connexion.
+FIN: si ce drapeau est à 1 la connexion s’interrompt.</li>
+<li>Fenêtre (16 bits): Champ permettant de connaître le nombre d’octets
+que le récepteur souhaite recevoir sans envoyer d’accusé de
+réception.</li>
+<li>Somme de contrôle (Checksum ou CRC): La somme de contrôle est
+réalisée en faisant la somme des champs de données de l’en-tête, afin
+de pouvoir vérifier l’intégrité de l’en-tête</li>
+<li>Pointeur d’urgence (16 bits): Indique le numéro d’ordre à partir
+duquel l’information devient urgente.</li>
+</ul>
+</div>
+<div class="section" id="etablissement-dune-connexion">
+<h2>Établissement d’une connexion</h2>
+<p><a class="reference external" href="/images/ConnectionTCP.png"><img alt="ConnectionTCP" src="/images/ConnectionTCP.png" /></a></p>
+<p>Une ouverture de connexion TCP s’effectue en 3 temps.</p>
+<p>L’émetteur du premier paquet doit avoir connaissance du couple
+<strong>`IP &lt;https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=293&gt;`__
+: Port</strong> de l’application de la machine réceptrice (par exemple, on
+contact un serveur HTTP sur le port 80 qui lui est dédié). L’émetteur de
+ce premier paquet est à l’origine de l’établissement du circuit virtuel.
+C’est une attitude qualifiée de «&nbsp;<strong>cliente</strong>«&nbsp;.</p>
+<p>Le récepteur du premier paquet accepte l’établissement de la connexion,
+ce qui suppose qu’il était prêt à le faire avant que le client en prenne
+l’initiative. C’est une attitude de «&nbsp;<strong>serveur</strong>«&nbsp;.</p>
+<p>Le client envoie un segment comportant le drapeau SYN à 1. Le serveur
+répond avec sa propre séquence (SYN = 1) mais il doit aussi acquitter le
+paquet précédent, ce qu’il fait avec ACK. Le client répond alors avec un
+acquittement de la séquence du serveur (ACK = 1).</p>
+<p>Une fois achevée cette phase appelée «&nbsp;Three-way handshake&nbsp;», les 2
+applications sont en mesure d’échanger des données.</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

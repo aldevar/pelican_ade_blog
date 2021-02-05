@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  HP Proliant Support Pack sur RHEL 5 | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2013/07/hp-proliant-support-pack-sur-rhel-5.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Dans le cadre de mon travail, je suis en train d'installer et de configurer un serveur HP System Insight Manager (SIM). Une sorte de Nagios amélioré pour serveur HP, avec anticipation des pannes matériel. Ce serveur SIM nous a permis par exemple de détecter qu'une pile de cache RAID était …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  HP Proliant Support Pack sur RHEL 5
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2013-07-23T18:07:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Tue 23 July 2013
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="/tag/hpsim.html">#HPSIM</a>,               <a href="/tag/hpsum.html">#hpsum</a>,               <a href="/tag/insight-manager.html">#insight manager</a>,               <a href="/tag/ksym.html">#ksym</a>,               <a href="/tag/proliant-support-pack.html">#proliant support pack</a>,               <a href="/tag/psp.html">#psp</a>,               <a href="/tag/redhat.html">#redhat</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Dans le cadre de mon travail, je suis en train d'installer et de
+configurer un serveur HP System Insight Manager (SIM). Une sorte de
+Nagios amélioré pour serveur HP, avec anticipation des pannes matériel.</p>
+<p>Ce serveur SIM nous a permis par exemple de détecter qu'une pile de
+cache RAID était en train de lâcher et nous avons donc pu remplacer
+cette pile avant que le problème intervienne (pas de cache RAID = temps
+d'accès en écriture tout moisi et ça le fait moyen sur un serveur de
+sauvegarde).</p>
+<p>Pour que le serveur HPSIM accède aux serveurs qu'il surveille, il faut
+installer un agent. Cet agent, c'est HP Proliant Support Pack. Une suite
+d'utilitaires et de pilotes pour serveur HP Proliant.</p>
+<p>J'ai donc téléchargé l'iso <a class="reference external" href="http://h18004.www1.hp.com/products/servers/service_packs/en/index.html">sur le site
+d'HP.&nbsp;</a>Celle
+ci contient les utilitaires pour tous les OS supportés (Windows, RedHat,
+HP-UX). Une fois l'iso transférée sur le serveur, je la monte :</p>
+<pre class="literal-block">
+mkdir /media/iso
+mount -o loop /tmp/fichier.iso /media/iso
+</pre>
+<p>Ensuite, c'est l'utilitaire HPSUM qui va s'occuper d'installer les
+différents modules et utilitaires.</p>
+<pre class="literal-block">
+cd /media/iso/hp/swpackages/
+./hpsum
+</pre>
+<p>Cette commande utilise un serveur X.
+|  Pour info, la doc complète : <a class="reference external" href="http://bizsupport1.austin.hp.com/bc/docs/support/SupportManual/c03114114/c03114114.pdf">Guide de l'Utilisateur, HP Smart Update
+Manager</a></p>
+<p>En suivant les étapes une à une, les packages sont tous compilés et
+installés.</p>
+<div class="section" id="aie">
+<h2>Aïe</h2>
+<p>Malheureusement, parfois, tout ne tourne pas rond et dans mon cas,
+certains paquets n'ont pas pu être compilés. Les logs montrent un obscur
+message de problème de dépendance avec ksym.</p>
+<p>Pour résoudre ce problème et terminer l'installation des paquets, voici
+la procédure ;</p>
+<p>Installation des sources :</p>
+<pre class="literal-block">
+cd /media/iso/hp/swpackages/
+rpm -ivh &lt;paquet&gt;.src.rpm
+rpmbuild -bb /usr/src/redhat/SPECS/&lt;paquet&gt;.spec
+rpm -ivh --nodeps /usr/src/redhat/RPMS/&lt;arch&gt;/&lt;paquet&gt;.rpm
+</pre>
+<p>On vérifie que le module a bien été installé :</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>modinfo &lt;nomdumondule&gt;</dd>
+</dl>
+<p>On charge le module :</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>modprobe &lt;nomdumodule&gt;</dd>
+</dl>
+<p>Ce qui donne, avec le paquet qla4xxx qui me concernait :</p>
+<pre class="literal-block">
+rpm -ivh hp-qla4xxx-&lt;version&gt;.src.rpm
+rpmbuild -bb /usr/src/redhat/SPECS/hp-qla4xxx.spec
+rpm -ivh --nodeps /usr/src/redhat/RPMS/x86_64/kmod-hp-qla4xxx-&lt;version&gt;-x86_64.rpm
+modprobe qla4xxx
+</pre>
+</div>
+<div class="section" id="explication">
+<h2>Explication</h2>
+<p>Les RPM utilisent les dépendances de KMP (Kernel Module Packaging) pour
+s'assurer que les binaires RPM puissent être installés. Red Hat
+maintient une liste blanche de&nbsp;<em>kernel symbols</em> (ksym donc) que les
+RPM utilisent. Certains de ses symboles peuvent être dans le kernel mais
+pas dans la liste blanche. Le résultat est que certains RPM, qui y font
+référence, ne peuvent pas être installés.</p>
+<p>L'utilisateur doit donc utiliser l'option &quot;--nodeps&quot; lors de
+l'installation des binaires.</p>
+<p>La paquet qla4xxx utilisent les symboles suivant sur RHEL 5 qui ne sont
+pas dans la liste blanche ;</p>
+<p>ksym(kobject_uevent_env) ksym(iscsi2_session_chkready)
+ksym(pci_get_domain_bus_and_slot)</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Accéder en webdav à son fichier Keepass | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2014/09/acceder-en-webdav-a-son-fichier-keepass.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Keepass est un gestionnaire de mot de passe que j'utilise personnellement et professionnellement. Il permet notamment de partager un coffre fort entre plusieurs personne en offrant un support pour ftp et http/webdav. Certains plugins ajoutent le support sftp et ftps. Sur CentOS, apache est livré avec le module webdav …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Accéder en webdav à son fichier Keepass
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2014-09-05T22:54:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Fri 05 September 2014
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="/tag/apache.html">#apache</a>,               <a href="/tag/centos.html">#centos</a>,               <a href="/tag/keepass.html">#keepass</a>,               <a href="/tag/ssl.html">#ssl</a>,               <a href="/tag/webdav.html">#webdav</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Keepass est un gestionnaire de mot de passe que j'utilise
+personnellement et professionnellement. Il permet notamment de partager
+un coffre fort entre plusieurs personne en offrant un support pour ftp
+et http/webdav. Certains plugins ajoutent le support sftp et ftps.</p>
+<p>Sur CentOS, apache est livré avec le module webdav. Ce n'est pas
+forcement le cas de toutes les distributions.</p>
+<p>La configuration utilisée est la suivante :</p>
+<ul class="simple">
+<li>Un sous domaine créé pour contenir le fichier kdbx</li>
+<li>une protection par mot de passe pour l'accès au fichier en lui même
+(anciennement .htaccess)</li>
+<li>L'autorisation d'accéder au sous domaine en webdav</li>
+<li>Et enfin, un mot de passe <strong>ultra solide</strong> pour le fichier kdbx qui
+peut contenir des données sensibles.</li>
+</ul>
+<p>Dans mon cas, j'ai utilisé un sous domaine du type keepass.domain.tld et
+le fichier est stocké en local sur le serveur sous /var/www/keepass/</p>
+<pre class="literal-block">
+root# mkdir /var/www/keepass
+root# chown apache. /var/www/keepass
+root# chmod 770 /var/www/keepass
+root# vim /etc/httpd/conf.d/keepass.conf
+</pre>
+<p>Pour ne pas que le mot de passe passe en clair sur le net, nous allons
+forcer l'utilisation de https</p>
+<pre class="literal-block">
+&lt;VirtualHost *:80&gt;
+ ServerName keepass.domain.tld
+ ServerAdmin admin&#64;domain.tld
+ Redirect permanent / https://keepass.domain.tld/
+ ErrorLog /var/log/httpd/keepass.err
+ CustomLog /var/log/httpd/keepass.log combined
+ DocumentRoot /var/www/keepass
+&lt;/VirtualHost&gt;
+&lt;VirtualHost *:443&gt;
+ SSLEngine on
+ SSLCertificateFile /etc/pki/tls/certs/ca.crt
+ SSLCertificateKeyFile /etc/pki/tls/private/ca.key
+ ServerName keepass.domain.tld
+ ServerAdmin admin&#64;domain.tld
+ ErrorLog /var/log/httpd/keepass.err
+ CustomLog /var/log/httpd/keepass.log combined
+ DocumentRoot /var/www/keepass
+&lt;Directory &quot;/var/www/keepass&quot;&gt;
+ DAV On
+ SSLRequireSSL
+ Options None
+ AuthType Basic
+ AuthName WebDAV
+ AuthUserFile /etc/httpd/conf/.htpasswd
+ &lt;LimitExcept GET OPTIONS&gt;
+ Order allow,deny
+ Allow from X.X.X.X #IP que vous autorisez, 'all' pour tout le monde
+ Require valid-user
+ &lt;/LimitExcept&gt;
+&lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+<p>Voici les étapes pour la création du fichier .htpasswd</p>
+<pre class="literal-block">
+root# htpasswd -c /etc/httpd/conf/.htpasswd NomUtilisateur
+root# /etc/init.d/httpd restart
+</pre>
+<p>Il ne reste plus qu'à placer le fichier kdbx dans /var/www/keepass et
+donner à apache les droits en écriture sur ce fichier.</p>
+<p>Enfin, dans Keepass en ouvrant une url, le logiciel demande de fournir
+l'URL et si besoin un couple login/mdp.</p>
+<p>L'URL sera de type <a class="reference external" href="https://keepass.domain.tld/fichier.kdbx">https://keepass.domain.tld/fichier.kdbx</a> et le couple
+login/mdp est celui créé lors de l’exécution de la commande htpasswd</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

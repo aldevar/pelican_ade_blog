@@ -1,0 +1,2632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Tech</title><link href="/" rel="alternate"></link><link href="/feeds/tech.atom.xml" rel="self"></link><id>/</id><updated>2021-02-03T21:40:00+01:00</updated><subtitle>Un Blog IT</subtitle><entry><title>Cisco Hyperflex - Supprimer la configuration réseau de réplication</title><link href="/2021/02/reset-hyperflex-replication-network.html" rel="alternate"></link><published>2021-02-03T21:40:00+01:00</published><updated>2021-02-03T21:40:00+01:00</updated><author><name>alain</name></author><id>tag:None,2021-02-03:/2021/02/reset-hyperflex-replication-network.html</id><summary type="html">&lt;p&gt;Cette semaine, j'ai pris le temps de jouer avec une instance de demo Cisco Hyperflex sur dcloud.cisco.com. Cette demo permet de jouer un peu avec deux instances Hyperflex et notamment de mettre en place un PRA entre ces deux instances.
+Pour mettre en oeuvre ce PRA, il faut …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cette semaine, j'ai pris le temps de jouer avec une instance de demo Cisco Hyperflex sur dcloud.cisco.com. Cette demo permet de jouer un peu avec deux instances Hyperflex et notamment de mettre en place un PRA entre ces deux instances.
+Pour mettre en oeuvre ce PRA, il faut au préalable configurer un réseau de réplication (Replication Network) qui doit permettre aux clusters Hyperflex de communiquer entre eux et transférer les données. Malheureusement, par inattention, j'ai fait une erreur lors de la configuration de ce réseau. J'ai paramétré une mauvaise adresse de réseau et une mauvaise gateway et la réplication refusait de fonctionner.&lt;/p&gt;
+&lt;p&gt;Cette erreur de configuration m'a posé plus de problèmes que ce que je pensais car il n'est pas possible de reconfigurer ce réseau une fois qu'il est enregistré... Cela est indiqué noir sur blanc dans la &lt;a class="reference external" href="https://www.cisco.com/c/en/us/td/docs/hyperconverged_systems/HyperFlex_HX_DataPlatformSoftware/AdminGuide/2_5/b_HyperFlexSystems_AdministrationGuide_2_5/b_HyperFlexSystems_AdministrationGuide_2_5_chapter_01111.html#task_agm_yqs_m1b"&gt;documenation Cisco Hyperflex&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Ce problème ne peut pas se régler par l'interface graphique. Il faut passer par la ligne de commande, directement sur le cluster. Ces commandes doivent être exécutées sur une des controller VM du cluster.
+Le première commande permet de supprimer un appairage déjà existant entre 2 cluster. La suivante supprime effectivement la confguration du réseau de réplication.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;stcli dp peer forget --all
+stcli drnetwork cleanup
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Une fois ces commandes executées, on peut de nouveau configurer le réseau de réplication.&lt;/p&gt;
+&lt;img alt="" src="/images/drnetwork.png" /&gt;
+</content><category term="Tech"></category><category term="hyperflex"></category><category term="cisco"></category></entry><entry><title>HyperText Acte 1</title><link href="/2017/11/hypertexte-acte-1.html" rel="alternate"></link><published>2017-11-03T22:45:00+01:00</published><updated>2017-11-03T22:45:00+01:00</updated><author><name>Aldevar</name></author><id>tag:None,2017-11-03:/2017/11/hypertexte-acte-1.html</id><summary type="html">&lt;p class="first last"&gt;Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Bienvenue dans Hypertexte Acte 1. Vous trouverez ici des articles en général plutôt techniques et majoritairement en anglais sur différents sujets dont l'administration système, le réseau, la virtualisation ou encore le savoir être en entreprise (soft skill).&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;[EN] Un article de Quinn Norton sur l'état de l'art en developpement. Il compare le developpement des applications actuelles à des constructions de ponts. La comparaison souffre de quelques biais mais l'article vaut vraiment le coup d'être lu : &lt;a class="reference external" href="https://www.emptywheel.net/2017/09/14/software-is-a-long-con/"&gt;SOFTWARE IS A LONG CON&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[EN] Suite à la sortie des CPU dédiés serveurs &lt;tt class="docutils literal"&gt;Intel Xeon Scalable&lt;/tt&gt;, FRANK DENNEMAN passe en revu les nouveautés apportées par ces CPU en terme de virtualisation de l'execution. Un article incontournable si vous administrez des clusters de virtualisation : &lt;a class="reference external" href="http://frankdenneman.nl/2017/09/26/vsphere-focused-guide-intel-xeon-scalable-family/"&gt;A vSphere Focused Guide to the Intel Xeon Scalable Family&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[FR] Un podcast, en français, consacré au DevOps. Deux épisodes publiés à ce jour: &lt;a class="reference external" href="https://soundcloud.com/devobs"&gt;DevObs&lt;/a&gt;. Mon seul regret est qu'il n'y a pas de flux RSS pour ajouter simplement ce podcast dans une appli dédiée.&lt;/li&gt;
+&lt;li&gt;[EN] Linux : Auditer la suppression des fichiers avec Auditd. Permet de 'trouver le coupable' si on ne sait pas comment des fichiers disparaissent du filesystem : &lt;a class="reference external" href="http://run.tournament.org.il/audit-delete-commands-in-linux/"&gt;Audit delete commands in Linux&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Lors de la migration de ce blog en statique via Pelican, je me suis lancé à la recherche d'une solution d'analyse de traffic. Je souhaitais une solution non intrusive (sans code à charger par le navigateur), un peu du style awstat. Je suis tombé sur le &lt;a class="reference external" href="http://goaccess.io"&gt;projet Goaccess&lt;/a&gt;, que je ne connaissais pas et qui rempli admirablement bien son rôle en faisant de l'analyse des logs apache en temps réel.&lt;/li&gt;
+&lt;li&gt;[FR] La semaine prochaine, du 7/11 au 9/11 aura lieu l'évenement européen de Nutanix: le .NEXT Europe à Nice. Je participerai à une discussion le 8/11 à 13h afin de faire un retour d'experience sur la mise en oeuvre de cette solution dans mon entreprise. Nutanix a récemment sortie la version 5 d'AOS qui propose un grand nombre de nouvelles fonctionnalités. C'est pourquoi sur VirtualementVotre, on n'hésite plus à poser la question : &lt;a class="reference external" href="http://www.virtualementvotre.ch/blog/2017/10/30/pourquoi-nutanix-ahv-est-une-reelle-option/"&gt;Pourquoi Nutanix AHV est une réelle option ?&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[FR] Un looooong article expliquant &lt;a class="reference external" href="https://medium.com/&amp;#64;djo/obsession-service-client-captain-train-cb0b91467fd9"&gt;l’obsession du service client chez Captain Train&lt;/a&gt;. Vraiment passionant et instructif.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;C'est ici que ça se termine. N'hésitez pas à revenir dans quelques temps pour le prochain numéro d'hypertexte. En attendant, n'hésitez pas à me &lt;a class="reference external" href="https://twitter.com/landvarx"&gt;contacter sur twitter&lt;/a&gt; si vous avez un lien qui aurait sa place dans un futur article.&lt;/p&gt;
+</content><category term="Tech"></category><category term="lien"></category></entry><entry><title>Zimbra : Envoi de mails via un relais SMTP authentifié</title><link href="/2016/06/relais-smtp-authentifie-zimbra.html" rel="alternate"></link><published>2016-06-24T08:30:00+02:00</published><updated>2016-06-24T08:30:00+02:00</updated><author><name>alain</name></author><id>tag:None,2016-06-24:/2016/06/relais-smtp-authentifie-zimbra.html</id><summary type="html">&lt;p&gt;Héberger soi même ses données c'est bien, le faire correctement c'est
+mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
+est qu'il est difficile de s'assurer que les mails soient bien reçus par
+nos correspondants.&lt;/p&gt;
+&lt;p&gt;Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un
+bloc …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Héberger soi même ses données c'est bien, le faire correctement c'est
+mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
+est qu'il est difficile de s'assurer que les mails soient bien reçus par
+nos correspondants.&lt;/p&gt;
+&lt;p&gt;Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un
+bloc d'IP bannie par plusieurs serveur SMTP. Il est toujours possible de
+se faire débloquer des principales blacklists mais la plupart des
+services mails possèdent leur propre blacklist (coucou barracuda). Même
+un SPF et un DKIM bien configuré ne suffisent pas à outrepasser ces
+blocages.&lt;/p&gt;
+&lt;p&gt;Plusieurs solutions s'offraient à moi pour contourner ce problème.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Changer d'adresse IP: ça peut fonctionner mais impossible de savoir
+tant qu'on a pas testé la nouvelle IP. Forte &amp;nbsp;probabilité que cette
+IP fasse également partie d'un bloc blacklisté&lt;/li&gt;
+&lt;li&gt;Passer sur un hébergeur Zimbra : Intéressant, mais souvent très cher.
+De l'ordre de 5€/mois et par compte minimum.&lt;/li&gt;
+&lt;li&gt;Passer par un relais SMTP : J'ai opté pour cette solution même si
+elle n'est pas idéal car cela ajoute intermédiaire et une dépendance
+pour le service.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pour mettre cette solution en oeuvre, j'ai choisi le service smtp2go. Il
+y en a beaucoup d'autres et la plupart proposent des services gratuits
+pour un envoi limité de mails. Avec smtp2go, le service est gratuit
+jusqu'à 1000 mails par mois ce qui devrait être suffisant.&lt;/p&gt;
+&lt;p&gt;Une fois l'inscription effectuée, il faut encore configurer Zimbra pour
+qu'il utilise ce relais. L'interface web d'administration propose bien
+d'ajouter des relais SMTP mais impossible de s'y authentifier. La
+configuration d'un relais STMP authentifié doit être faite en ligne de
+commande.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;monzimbra]# su - zimbra
+## On ajoute le relais SMTP
+[root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com&amp;nbsp;zimbraMtaRelayHost relaissmtp.relaisdomaine.com:port
+## On créé un fichier text de mapping login/mdp pour le relais
+[root&amp;#64;monzimbra]# echo relaissmtp.relaisdomaine.com USERNAME:PASSWORD &amp;gt; /opt/zimbra/conf/relay_password
+## Création de la table postfix
+[root&amp;#64;monzimbra]# postmap /opt/zimbra/conf/relay_password
+## Pour tester. Cette commande doit retourner le couple login/mdp
+[root&amp;#64;monzimbra]# postmap -q relaissmtp.relaisdomaine.com /opt/zimbra/conf/relay_password
+## Configuration de postfix pour qu'il utilise la map de login/mdp
+[root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpSaslPasswordMaps lmdb:/opt/zimbra/conf/relay_password
+## Configuration de postfix pour qu'il utilise l'authentification SSL
+[root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpSaslAuthEnable yes
+## Configuration de postfix pour qu'il n'utilise pas le canonical name du relais (problème de login/mdp sinon)
+[root&amp;#64;monzimbra]# zmproc ms monzimbra.mondomaine.com zimbraMtaSmtpCnameOverridesServername no
+## Configuration de TLS
+[root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpTlsSecurityLevel may
+&lt;/pre&gt;
+&lt;p&gt;C'est terminé, tous les domaines attachés au serveur passeront
+dorénavant vers ce relais SMTP.&lt;/p&gt;
+</content><category term="Tech"></category><category term="email"></category><category term="relais"></category><category term="smtp"></category><category term="spam"></category><category term="zimbra"></category></entry><entry><title>Pas à pas - monter un cluster Galera Mariadb</title><link href="/2016/06/monter-cluster-galera-mariadb.html" rel="alternate"></link><published>2016-06-20T22:40:00+02:00</published><updated>2016-06-20T22:40:00+02:00</updated><author><name>alain</name></author><id>tag:None,2016-06-20:/2016/06/monter-cluster-galera-mariadb.html</id><summary type="html">&lt;p&gt;Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
+pour remplacer notre cluster Mysql, je pensais trouver facilement de la
+documentation en ligne. On trouve en effet beaucoup d'articles de blogs
+expliquant comment créer son cluster Galera malheureusement cette techno
+évolue vite et les articles sont …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
+pour remplacer notre cluster Mysql, je pensais trouver facilement de la
+documentation en ligne. On trouve en effet beaucoup d'articles de blogs
+expliquant comment créer son cluster Galera malheureusement cette techno
+évolue vite et les articles sont rarement à jour.&lt;/p&gt;
+&lt;p&gt;La documentation qu'on peut trouver sur le site de mariadb est également
+assez succinct et c'est en compilant des articles depuis plusieurs
+sources que j'ai pu monter ce cluster.&lt;/p&gt;
+&lt;p&gt;Galera est une technologie de clusterisation de base de données bien
+plus efficace que ce qu'on peut faire actuellement avec mysql. Un
+cluster classique mysql fonctionne en mode actif/passif et si le nœud
+actif tombe, il est nécessaire de faire une opération manuelle pour
+passer un des nœud passif en actif. De plus, si un nœud reste éteint
+durant une période prolongée, il ne peut plus rattraper son retard sur
+le nœud primaire et sort du cluster. Galera règle ces problèmes avec un
+cluster de nœuds actifs/actifs. Chaque nœud est capable de recevoir des
+écritures et Galera s'occupe de synchroniser tout ça.&lt;/p&gt;
+&lt;p&gt;Pour réaliser le cluster, j'ai utilisé 4 serveurs Centos 7 : 3 nœuds
+mariadb (il faut un chiffre impair pour respecter le quorum) et un
+serveur haproxy en frontal en mode répartition de charge (leastconn) qui
+fait office de passerelle&amp;nbsp;d'accès. Les machines s'appellent
+respectivement mariadb01, mariadb02, mariadb03 et mariadb-proxy.&lt;/p&gt;
+&lt;p&gt;Cet article s'attache à la mise en oeuvre du cluster en lui même. Un
+second article détaillera &lt;a class="reference external" href="http://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy/"&gt;le déploiement
+d'haproxy&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="configuration-du-noeud-mariadb01"&gt;
+&lt;h2&gt;Configuration du nœud mariadb01&lt;/h2&gt;
+&lt;p&gt;On commence par récupérer le repo mariadb pour CentOS
+ici&amp;nbsp;&lt;a class="reference external" href="https://downloads.mariadb.org/mariadb/repositories/"&gt;https://downloads.mariadb.org/mariadb/repositories/&lt;/a&gt; ce qui devrait
+vous donner quelque chose comme ça:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+# Put this file in /etc/yum.repos.d/
+# MariaDB 10.1 CentOS repository list - created 2016-06-20 19:31 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+&lt;/pre&gt;
+&lt;p&gt;On peut ensuite installer les paquets nécessaires&lt;/p&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;tt class="docutils literal"&gt;yum &lt;span class="pre"&gt;-y&lt;/span&gt; install &lt;span class="pre"&gt;MariaDB-server&lt;/span&gt; &lt;span class="pre"&gt;MariaDB-client&lt;/span&gt; galera rsync xinetd&lt;/tt&gt;&lt;/div&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;On édite ensuite le fichier de configuration de galera&lt;/div&gt;
+&lt;div class="line"&gt;&lt;tt class="docutils literal"&gt;vim /etc/my.cnf.d/server.conf&lt;/tt&gt;&lt;/div&gt;
+&lt;div class="line"&gt;Et dans la zone du fichier dédiée à galera:&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+[galera]
+# Mandatory settings
+wsrep_on=ON
+wsrep_provider='/lib64/galera/libgalera_smm.so'
+wsrep_cluster_address='gcomm://'
+wsrep_cluster_name='galera'
+wsrep_node_name='mariadb01'
+wsrep_sst_method=rsync
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+&lt;/pre&gt;
+&lt;p&gt;On ne donne aucune adresse pour le moment au cluster. On laisse la
+valeur par défaut gcomm://. On reviendra sur cette partie plus tard.&lt;/p&gt;
+&lt;p&gt;Avant de démarrer le premier nœud du cluster, on lance la sécurisation
+de l'instance mariadb avec la commande&amp;nbsp;mysql_secure_installation.&lt;/p&gt;
+&lt;p&gt;Une fois cette étape effectuée, on peut démarrer le cluster. Cette
+commande ne doit être lancée qu'une seule fois et seulement sur le
+premier noeud configuré.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+galera_new_cluster
+&lt;/pre&gt;
+&lt;p&gt;On se connecte ensuite sur l'instance mysql pour vérifier que le cluster
+est bien opérationnel:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;mariadb01 ~]# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+Your MariaDB connection id is 18705
+Server version: 10.1.14-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2016, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&amp;gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', 'wsrep_cluster_size', 'wsrep_cluster_status', 'wsrep_connected');
++----------------------+---------+
+| Variable_name        | Value   |
++----------------------+---------+
+| wsrep_cluster_size   |    1    |
+| wsrep_cluster_status | Primary |
+| wsrep_connected      |    ON   |
+| wsrep_ready          |    ON   |
++----------------------+---------+
+4 rows in set (0.01 sec)
+&lt;/pre&gt;
+&lt;p&gt;Et voilà notre cluster Galera composée de 1 nœud pour le moment :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-mariadb02-et-mariadb03"&gt;
+&lt;h2&gt;Configuration de mariadb02 et mariadb03&lt;/h2&gt;
+&lt;p&gt;On reprend les mêmes étapes que pour mariadb01 en adaptant le fichier de
+configuration. On n'oublie pas de lancer mysql_secure_installation.&lt;/p&gt;
+&lt;p&gt;Le fichier de conf de mariadb02 :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[galera]
+# Mandatory settings
+wsrep_on=ON
+wsrep_provider='/lib64/galera/libgalera_smm.so'
+wsrep_cluster_address='gcomm://mariadb01,mariadb02'
+wsrep_cluster_name='galera'
+wsrep_node_name='mariadb02'
+wsrep_sst_method=rsync
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+&lt;/pre&gt;
+&lt;p&gt;On peut lancer le service mariadb de façon classique et vérifier que le
+cluster est opérationnel :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;mariadb02 ~]# systemctl start mariadb
+[root&amp;#64;mariadb02 ~]# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+Your MariaDB connection id is 18905
+Server version: 10.1.14-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2016, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&amp;gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', 'wsrep_cluster_size', 'wsrep_cluster_status', 'wsrep_connected');
++----------------------+---------+
+| Variable_name        | Value   |
++----------------------+---------+
+| wsrep_cluster_size   |    2    |
+| wsrep_cluster_status | Primary |
+| wsrep_connected      |    ON   |
+| wsrep_ready          |    ON   |
++----------------------+---------+
+4 rows in set (0.01 sec)
+&lt;/pre&gt;
+&lt;p&gt;On a bien 2 nœuds dans notre cluster, passons à mariadb03&lt;/p&gt;
+&lt;p&gt;Le fichier de conf de mariadb03 :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[galera]
+# Mandatory settings
+wsrep_on=ON
+wsrep_provider='/lib64/galera/libgalera_smm.so'
+wsrep_cluster_address='gcomm://mariadb01,mariadb02,mariadb03'
+wsrep_cluster_name='galera'
+wsrep_node_name='mariadb03'
+wsrep_sst_method=rsync
+binlog_format=row
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+bind-address=0.0.0.0
+&lt;/pre&gt;
+&lt;p&gt;Idem, on lance le service et on vérifie que tout est ok:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;mariadb02 ~]# systemctl start mariadb
+[root&amp;#64;mariadb02 ~]# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+Your MariaDB connection id is 18905
+Server version: 10.1.14-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2016, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&amp;gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', 'wsrep_cluster_size', 'wsrep_cluster_status', 'wsrep_connected');
++----------------------+---------+
+| Variable_name        | Value   |
++----------------------+---------+
+| wsrep_cluster_size   |    3    |
+| wsrep_cluster_status | Primary |
+| wsrep_connected      |    ON   |
+| wsrep_ready          |    ON   |
++----------------------+---------+
+4 rows in set (0.01 sec)
+&lt;/pre&gt;
+&lt;p&gt;Trois nœuds dans le cluster, c'est bon!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-finale"&gt;
+&lt;h2&gt;Configuration finale&lt;/h2&gt;
+&lt;p&gt;On corrige maintenant les adresses de cluster sur les serveurs mariadb01
+et mariadb02 en y mettant la même valeur que dans le fichier de conf de
+mariadb03&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+wsrep_cluster_address='gcomm://mariadb01,mariadb02,mariadb03'
+&lt;/pre&gt;
+&lt;p&gt;Puis on redémarrer les services&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;mariadb02 ~]# systemctl restart mariadb
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;mariadb01 ~]# systemctl restart mariadb
+&lt;/pre&gt;
+&lt;p&gt;C'est terminé.&lt;/p&gt;
+&lt;p&gt;A ce stade, vous devez pouvoir vous connecter sur n'importe quel noeud,
+créer une base, elle sera dupliquée dans la foulée sur les autres nœuds.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="bdd"></category><category term="cluster"></category><category term="galera"></category><category term="Linux"></category><category term="mariadb"></category></entry><entry><title>Pydio - migration, upgrade, package [EN]</title><link href="/2016/05/pydio-migration-upgrade-package-en.html" rel="alternate"></link><published>2016-05-27T23:02:00+02:00</published><updated>2016-05-27T23:02:00+02:00</updated><author><name>alain</name></author><id>tag:None,2016-05-27:/2016/05/pydio-migration-upgrade-package-en.html</id><summary type="html">&lt;p&gt;Cet article est également disponible &lt;a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/"&gt;en
+français&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This unclear title reveals an operation i've just done to make 3 moves
+in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
+tar.gz archive.&lt;/p&gt;
+&lt;p&gt;The primary goal was to upgrade Pydio to 6.4. Unfortunately …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cet article est également disponible &lt;a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/"&gt;en
+français&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This unclear title reveals an operation i've just done to make 3 moves
+in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
+tar.gz archive.&lt;/p&gt;
+&lt;p&gt;The primary goal was to upgrade Pydio to 6.4. Unfortunately, there was
+dependcies problems with php. Pydio 6.4 needs php 5.4 and CentOS only
+brings 5.3 (you can install php 5.4 via other repos but I didn't want
+this). The first was to create a new Centos7 VM, then install Pydio on
+it using yum and the Pydio repo and finally import the old config in the
+brand new Pydio.&lt;/p&gt;
+&lt;p&gt;Installing Pydio through the package manager allows you to update it
+easily and it also ease the automation for an autmatic deployement.
+Also, the plugin management is facilitated.&lt;/p&gt;
+&lt;p&gt;These are the steps I'll describe here.&lt;/p&gt;
+&lt;p&gt;Install mariadb and httpd&lt;/p&gt;
+&lt;pre class="code sh literal-block"&gt;
+yum install -y mariadb mariadb-server
+systemctl start mariadb.service
+systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; mariadb.service
+mysql_secure_installation
+yum install httpd
+systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; httpd.service
+systemctl start httpd.service
+&lt;/pre&gt;
+&lt;p&gt;Installing Pydio dependancies :&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum -y install php php-gd php-ldap php-pear php-xml php-xmlrpc php-mbstring curl php-mcrypt* php-mysql
+&lt;/pre&gt;
+&lt;p&gt;Installing Pydio repositories&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+wget https://download.pydio.com/pub/linux/centos/7/pydio-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;If you own a licence (free up to 10 users), you can also have the
+enterprise repo.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+wget https://API_KEY:API_SECRET&amp;#64;download.pydio.com/auth/linux/centos/7/x86_64/pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;With API_KEY and API_SECRET &amp;nbsp;in your dashboard on pydio.com, licence
+tab&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+rpm -ivh pydio-release-1-1.el7.centos.noarch.rpm
+rpm -ivh pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;Edit the repo file to add your API_KEY and API_SECRET&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+vim /etc/yum.repos.d/pydio-enterprise.repo
+&lt;/pre&gt;
+&lt;p&gt;InstallPydio&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum update
+yum install pydio-enterprise
+&lt;/pre&gt;
+&lt;p&gt;I use to modify the default vhost file /etc/httpd/conf.d/pydio.conf&lt;/p&gt;
+&lt;pre class="code apache literal-block"&gt;
+&lt;span class="nt"&gt;&amp;lt;VirtualHost&lt;/span&gt; &lt;span class="s"&gt;nom.du.vhost:80&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;Alias&lt;/span&gt; / &lt;span class="sx"&gt;/usr/share/pydio/&lt;/span&gt;
+&lt;span class="nb"&gt;Alias&lt;/span&gt; &lt;span class="sx"&gt;/pydio_public&lt;/span&gt; &lt;span class="sx"&gt;/var/lib/pydio/public/&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;Directory&lt;/span&gt; &lt;span class="s"&gt;/usr/share/pydio/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;Options&lt;/span&gt; FollowSymLinks
+&lt;span class="nb"&gt;AllowOverride&lt;/span&gt; Limit FileInfo
+&lt;span class="nb"&gt;Require&lt;/span&gt; &lt;span class="k"&gt;all&lt;/span&gt; granted
+&lt;span class="nb"&gt;php_value&lt;/span&gt; error_reporting &lt;span class="m"&gt;2&lt;/span&gt;
+&lt;span class="nb"&gt;php_value&lt;/span&gt; upload_max_filesize &lt;span class="m"&gt;100&lt;/span&gt;M
+&lt;span class="nb"&gt;php_value&lt;/span&gt; post_max_size &lt;span class="m"&gt;100&lt;/span&gt;M
+&lt;span class="nb"&gt;php_value&lt;/span&gt; output_buffering &lt;span class="k"&gt;Off&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;/Directory&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;Directory&lt;/span&gt; &lt;span class="s"&gt;/var/lib/pydio/public/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;AllowOverride&lt;/span&gt; Limit FileInfo
+&lt;span class="nb"&gt;Require&lt;/span&gt; &lt;span class="k"&gt;all&lt;/span&gt; granted
+&lt;span class="nb"&gt;php_value&lt;/span&gt; error_reporting &lt;span class="m"&gt;2&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/Directory&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/VirtualHost&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Customize the charset in /etc/pydio/bootstrap_conf.php&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+define(&amp;quot;AJXP_LOCALE&amp;quot;, &amp;quot;fr_FR.UTF-8&amp;quot;);
+&lt;/pre&gt;
+&lt;p&gt;Create the database:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+mysql -u root -p
+create database pydio;
+create user pydio&amp;#64;localhost identified by 'mypassword';
+grant all privileges on pydio.* to pydio&amp;#64;localhost identified by 'mypassword';
+use mysql
+update mysql.users set Super_Priv='Y' where user like pydio;
+&lt;/pre&gt;
+&lt;p&gt;The last command gives the Super Privileges to the pydio user for it to
+be able to create triggers.&lt;/p&gt;
+&lt;p&gt;Install the Pydio plugins;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum install pydio-plugin*
+&lt;/pre&gt;
+&lt;p&gt;The last step is to import your old pydio database in your brand new one&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+mysql -u pydio -p pydio &amp;lt; mondumppydio.sql
+&lt;/pre&gt;
+&lt;p&gt;Finally, you can go to the pydio page and go through the First Run
+Wizard. Once done, you should be able to connect with your account and
+find all your files.&lt;/p&gt;
+</content><category term="Tech"></category><category term="centos"></category><category term="Linux"></category><category term="pydio"></category></entry><entry><title>Pydio : migration, upgrade, package [FR]</title><link href="/2016/05/pydio-migration-upgrade-package-fr.html" rel="alternate"></link><published>2016-05-27T23:02:00+02:00</published><updated>2016-05-27T23:02:00+02:00</updated><author><name>alain</name></author><id>tag:None,2016-05-27:/2016/05/pydio-migration-upgrade-package-fr.html</id><summary type="html">&lt;p&gt;The article is also available &lt;a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en/"&gt;in
+english&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Sous ce titre peu clair se cache une opération de que je viens de mener
+afin d'opérer 3 opérations sur une instance pydio. Pour mettre les
+choses dans leur contexte, Pydio était installé via l'archive tar.gz,
+sur un serveur CentOS 6 et …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The article is also available &lt;a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en/"&gt;in
+english&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Sous ce titre peu clair se cache une opération de que je viens de mener
+afin d'opérer 3 opérations sur une instance pydio. Pour mettre les
+choses dans leur contexte, Pydio était installé via l'archive tar.gz,
+sur un serveur CentOS 6 et la version utilisée était la 6.0.7.&lt;/p&gt;
+&lt;p&gt;L'objectif initial est de mettre à jour Pydio en version 6.4.
+Malheureusement, la version de php nécessaire n'est pas présente dans
+Centos 6 (sauf via des dépôts externe que je ne souhaitais pas
+utiliser). La première étape est donc de monter une nouvelle VM Centos7
+puis d'installer Pydio avec yum via le dépôt Pydio et d'importer
+l'ancienne configuration dans cette nouvelle instance.&lt;/p&gt;
+&lt;p&gt;Installer Pydio via le gestionnaire de paquet permet de plus facilement
+le mettre à jour et facilite également l'automation &amp;nbsp;pour un déploiement
+automatique de Pydio ainsi que la gestion des plugins.&lt;/p&gt;
+&lt;p&gt;Ce sont ces étapes que je vais détailler ici.&lt;/p&gt;
+&lt;p&gt;Installation de mariadb et httpd&lt;/p&gt;
+&lt;pre class="code sh literal-block"&gt;
+yum install -y mariadb mariadb-server
+systemctl start mariadb.service
+systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; mariadb.service
+mysql_secure_installation
+yum install httpd
+systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; httpd.service
+systemctl start httpd.service
+&lt;/pre&gt;
+&lt;p&gt;Installation des dépendances pour Pydio :&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum -y install php php-gd php-ldap php-pear php-xml php-xmlrpc php-mbstring curl php-mcrypt* php-mysql
+&lt;/pre&gt;
+&lt;p&gt;Installation des dépots Pydio&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+wget https://download.pydio.com/pub/linux/centos/7/pydio-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;Si vous avez une licence pydio (gratuit jusqu'à 10 utilisateurs), vous
+devez aussi récupérer le dépot enterprise&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+wget https://API_KEY:API_SECRET&amp;#64;download.pydio.com/auth/linux/centos/7/x86_64/pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;Avec API_KEY et API_SECRET &amp;nbsp;dans votre dashboard sur pydio.com, onglet
+licence&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+rpm -ivh pydio-release-1-1.el7.centos.noarch.rpm
+rpm -ivh pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+&lt;/pre&gt;
+&lt;p&gt;Edition du dépot pour ajouter API_KEY et API_SECRET&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+vim /etc/yum.repos.d/pydio-enterprise.repo
+&lt;/pre&gt;
+&lt;p&gt;Installation de pydio&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum update
+yum install pydio-enterprise
+&lt;/pre&gt;
+&lt;p&gt;Modification du vhost par defaut :&lt;/p&gt;
+&lt;pre class="code apache literal-block"&gt;
+&lt;span class="nt"&gt;&amp;lt;VirtualHost&lt;/span&gt; &lt;span class="s"&gt;nom.du.vhost:80&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;Alias&lt;/span&gt; / &lt;span class="sx"&gt;/usr/share/pydio/&lt;/span&gt;
+&lt;span class="nb"&gt;Alias&lt;/span&gt; &lt;span class="sx"&gt;/pydio_public&lt;/span&gt; &lt;span class="sx"&gt;/var/lib/pydio/public/&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;Directory&lt;/span&gt; &lt;span class="s"&gt;/usr/share/pydio/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;Options&lt;/span&gt; FollowSymLinks
+&lt;span class="nb"&gt;AllowOverride&lt;/span&gt; Limit FileInfo
+&lt;span class="nb"&gt;Require&lt;/span&gt; &lt;span class="k"&gt;all&lt;/span&gt; granted
+&lt;span class="nb"&gt;php_value&lt;/span&gt; error_reporting &lt;span class="m"&gt;2&lt;/span&gt;
+&lt;span class="nb"&gt;php_value&lt;/span&gt; upload_max_filesize &lt;span class="m"&gt;100&lt;/span&gt;M
+&lt;span class="nb"&gt;php_value&lt;/span&gt; post_max_size &lt;span class="m"&gt;100&lt;/span&gt;M
+&lt;span class="nb"&gt;php_value&lt;/span&gt; output_buffering &lt;span class="k"&gt;Off&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;/Directory&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;Directory&lt;/span&gt; &lt;span class="s"&gt;/var/lib/pydio/public/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nb"&gt;AllowOverride&lt;/span&gt; Limit FileInfo
+&lt;span class="nb"&gt;Require&lt;/span&gt; &lt;span class="k"&gt;all&lt;/span&gt; granted
+&lt;span class="nb"&gt;php_value&lt;/span&gt; error_reporting &lt;span class="m"&gt;2&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/Directory&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/VirtualHost&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Modification du charset dans /etc/pydio/bootstrap_conf.php&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+define(&amp;quot;AJXP_LOCALE&amp;quot;, &amp;quot;fr_FR.UTF-8&amp;quot;);
+&lt;/pre&gt;
+&lt;p&gt;Création de la base de données:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+mysql -u root -p
+create database pydio;
+create user pydio&amp;#64;localhost identified by 'mypassword';
+grant all privileges on pydio.* to pydio&amp;#64;localhost identified by 'mypassword';
+update mysql.users set Super_Priv='Y' where user like pydio;
+&lt;/pre&gt;
+&lt;p&gt;La dernière commande sert à donner les super privilège à l'utilisateur
+pydio afin qu'il puisse créer des triggers.&lt;/p&gt;
+&lt;p&gt;Vient ensuite l'installation des plugins pydio:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+yum install pydio-plugin*
+&lt;/pre&gt;
+&lt;p&gt;On termine par l'import de la base de données&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+mysql -u pydio -p pydio &amp;lt; mondumppydio.sql
+&lt;/pre&gt;
+&lt;p&gt;Enfin, on lance l'interface de pydio et on passe via le wizard pour la
+première configuration.&amp;nbsp;Une fois terminé, on doit pouvoir se connecter
+avec son compte habituel et retrouver tous ses fichiers.&lt;/p&gt;
+</content><category term="Tech"></category><category term="centos"></category><category term="Linux"></category><category term="pydio"></category></entry><entry><title>Migration OpenLDAP 2.2 vers OpenLDAP 2.4</title><link href="/2015/10/migration-openldap-2-2-vers-openldap-2-4.html" rel="alternate"></link><published>2015-10-30T23:24:00+01:00</published><updated>2015-10-30T23:24:00+01:00</updated><author><name>alain</name></author><id>tag:None,2015-10-30:/2015/10/migration-openldap-2-2-vers-openldap-2-4.html</id><summary type="html">&lt;p&gt;Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y
+prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner
+des applications assez sensible, parfois même critique.&lt;/p&gt;
+&lt;p&gt;C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans
+licence (donc sans yum) et dont la version …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y
+prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner
+des applications assez sensible, parfois même critique.&lt;/p&gt;
+&lt;p&gt;C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans
+licence (donc sans yum) et dont la version 2.2 d'OpenLDAP installée a
+été compilée dans /usr/local. Typiquement le genre de serveur dont
+personne ne veut s'occuper parce qu'il est difficile à maintenir et il
+est également difficile de s'en débarrasser car il faut pouvoir sortir
+les applications qui y tournent.&lt;/p&gt;
+&lt;p&gt;Avec un collègue nous nous sommes donc attelé à cette tâche, non sans
+peine. Il n'était à priori pas difficile de sortir un annuaire OpenLDAP
+2.2 vers un nouvel annuaire OpenLDAP 2.2 mais l’intérêt de cette
+manipulation était assez limité. Nous avons donc décidé de migrer vers
+la version 2.4 d'OpenLDAP proposée dans les dépôts de CentOS 7. Nous
+souhaitions également profiter de cette migration pour passer d'une
+configuration fichier (slapd.conf) à une configuration en base (olc, en
+gros OpenLDAP stock sa configuration dans une base LDAP). Voici la
+méthode employée pour réussir cette opération :&lt;/p&gt;
+&lt;p&gt;La première étape est de récupérer les informations dont nous avons
+besoin sur l'ancien serveur. Nous avons besoin de son fichier de
+configuration (slapd.conf, que nous allons renommer vieuxslapd.conf) et
+du contenu de la base. Pour cela nous allons utiliser l'outil
+&lt;tt class="docutils literal"&gt;slapcat&lt;/tt&gt; qui va générer un fichier &lt;tt class="docutils literal"&gt;ldif&lt;/tt&gt;. Ces 2 fichiers seront à
+transférer sur le nouveau serveur. Si vous utilisez des schémas
+spécifique, il faudra également les récupérer.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+[aldevar&amp;#64;vieuxserveur]# slapcat -f /chemin/vers/vieuwslapd.conf -l /tmp/vieuxslap.ldif
+&lt;/pre&gt;
+&lt;p&gt;Sur notre nouvelle machine CentOS 7, à jour, on installe
+openldap-servers et openldap-clients&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# yum -y install openldap-servers openldap-clients
+&lt;/pre&gt;
+&lt;p&gt;Configuration des logs d'OpenLDAP&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# echo &amp;quot;local4.*&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; /var/log/slapd.log&amp;quot; &amp;gt; /etc/rsyslog.d/slapd.conf
+[aldevar&amp;#64;serveur]# systemctl restart rsyslog.service
+&lt;/pre&gt;
+&lt;p&gt;Dans notre cas, il était nécessaire de nettoyer l'ancien fichier de
+configuration.
+|  Pour vérifier si que le fichier de conf est valide, on utilise
+&lt;tt class="docutils literal"&gt;slaptest&lt;/tt&gt;&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# slaptest -f vieuxslapd.conf
+&lt;/pre&gt;
+&lt;p&gt;Celui ci nous retourne des erreurs que nous corrigeons.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# sed -i -e &amp;quot;s/attr=/attrs=/g&amp;quot; vieuxslapd.conf
+[aldevar&amp;#64;serveur]# sed -i -e &amp;quot;/pidfile/d&amp;quot; /root/vieuxslapd.conf
+[aldevar&amp;#64;serveur]# sed -i -e &amp;quot;/argsfile/d&amp;quot; /root/vieuxslapd.conf
+[aldevar&amp;#64;serveur]# sed -i -e &amp;quot;s;directory /var/ldap/annuaireldap;directory /var/lib/ldap;&amp;quot; /root/vieuxslapd.conf
+&lt;/pre&gt;
+&lt;p&gt;Nous utilisons le schéma de samba, pour le récupérer nous installons
+samba&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# yum -y install samba
+&lt;/pre&gt;
+&lt;p&gt;On copie les fichiers schéma récupérés sur l'ancien serveur dans le bon
+répertoire :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# cp *.schema /etc/openldap/schema/
+[aldevar&amp;#64;serveur]# chown ldap. /etc/openldap/schema/*
+&lt;/pre&gt;
+&lt;p&gt;Maintenant, nous allons corriger une incompatibilité sur laquelle nous
+avons bloqué un bon moment. OpenLDAP ajoute pour chaque entrée un
+attribut &lt;tt class="docutils literal"&gt;entryUUID&lt;/tt&gt; qu'il provisionne automatiquement. Entre la
+version 2.2 et notre version 2.4, la format de la valeur
+d'&lt;tt class="docutils literal"&gt;entryUUID&lt;/tt&gt; a changé. Il est passé d'une suite de caractères
+aléatoire à 4 série de caractères hexadécimaux séparés par des &lt;tt class="docutils literal"&gt;-&lt;/tt&gt;.
+Tant que nous n'avions pas trouver de solution à cette incompatibilité,
+aucune entrée de ne pouvait être ajoutée dans notre nouvelle base. C'est
+d’ailleurs la raison pour laquelle nous ne pouvions pas mettre en place
+de synchronisation entre les 2 instances.&lt;/p&gt;
+&lt;p&gt;La solution, radicale et rapide est de supprimer les entrées
+&lt;tt class="docutils literal"&gt;entryUUID&lt;/tt&gt;&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# sed -i -e &amp;quot;/entryUUID/d&amp;quot; vieuxslap.ldif
+&lt;/pre&gt;
+&lt;p&gt;Une fois ces étapes effectuée, nous devrions être prêt pour tester
+l'import des données. Pour cela, nous utilisons l'outil &lt;tt class="docutils literal"&gt;slapadd&lt;/tt&gt; qui
+à l'avantage de pouvoir travailler sans daemon ldap actif. En lui
+fournissant le fichier de configuration il est capable d'écrire
+directement dans les fichiers de la base. Dans un premier temps, nous le
+lançons avec l'option &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-u&lt;/span&gt;&lt;/tt&gt; afin de le lancer en mode &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;dry-run&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# slapadd -f vieuxslapd.conf&amp;nbsp; -c -u -o schema-check=yes -l vieuxslap.ldif
+&lt;/pre&gt;
+&lt;p&gt;Si cette commande ne sort pas d'erreurs, on peut la faire en réelle.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# slapadd -f vieuxslapd.conf&amp;nbsp; -c -o schema-check=yes -l vieuxslap.ldif
+&lt;/pre&gt;
+&lt;p&gt;A partir de là, on dispose d'une base ldap fonctionnelle et si on lance
+la daemon slapd en lui fournissant le fichier de configuration, tout
+devrait fonctionner.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# slapd -u ldap -f vieuxslapd.conf
+&lt;/pre&gt;
+&lt;p&gt;Mais, comme je l'ai dit plus haut, la bonne pratique est plutôt de
+stocker la configuration en base olc. Cette base se trouve dans
+&lt;tt class="docutils literal"&gt;/etc/openldap/slapd.d&lt;/tt&gt; et contient déjà de quoi faire fonctionner un
+slapd basique mais vide. L'utilitaire &lt;tt class="docutils literal"&gt;slaptest&lt;/tt&gt; que nous avons
+utilisé pour vérifier le fichier de configuration est également utilisé
+pour faire cette migration. En lui fournissant d'un coté le fichier de
+configuration et de l'autre le dossier de destination, il va transformer
+le contenu du fichier en instructions ldif.&lt;/p&gt;
+&lt;p&gt;Avant tout, on supprime le contenu actuel du répertoire.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# rm -Rf /etc/openldap/slapd.d/*
+&lt;/pre&gt;
+&lt;p&gt;On lance la migration de la configuration&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# slaptest -f vieuxslapd.conf -F /etc/openldap/slapd.d/
+&lt;/pre&gt;
+&lt;p&gt;0n corrige les droits pour que le daemon puisse travailler&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# chown -R ldap. /etc/openldap/slapd.d/
+&lt;/pre&gt;
+&lt;p&gt;Enfin, on importe le fichier &lt;tt class="docutils literal"&gt;DB_CONFIG&lt;/tt&gt; afin d'avoir des performances
+normales sur la base&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+[aldevar&amp;#64;serveur]# chown ldap. /var/lib/ldap/DB_CONFIG
+&lt;/pre&gt;
+&lt;p&gt;Pour finir, on peut démarrer le daemon&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[aldevar&amp;#64;serveur]# systemctl start slapd
+[aldevar&amp;#64;serveur]# systemctl enable slapd
+&lt;/pre&gt;
+</content><category term="Tech"></category><category term="centos"></category><category term="migration"></category><category term="openldap"></category><category term="slap"></category></entry><entry><title>Firefox comme navigateur par défaut de SailfishOS</title><link href="/2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html" rel="alternate"></link><published>2015-08-24T09:17:00+02:00</published><updated>2015-08-24T09:17:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-08-24:/2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html</id><summary type="html">&lt;p&gt;Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
+avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
+des navigateurs intégrés et surtout du navigateur par défaut.&lt;/p&gt;
+&lt;p&gt;Malheureusement, l'interface ne propose actuellement aucune option pour
+modifier ce comportement. Ainsi, lorsqu'on clique sur un lien …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
+avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
+des navigateurs intégrés et surtout du navigateur par défaut.&lt;/p&gt;
+&lt;p&gt;Malheureusement, l'interface ne propose actuellement aucune option pour
+modifier ce comportement. Ainsi, lorsqu'on clique sur un lien dans une
+autre application c'est forcement ce navigateur tout moisi qui s'ouvre
+et qui met 3 heures à charger la page. Heureusement, avec quelques
+bidouille, il est possible de paramétrer Firefox comme navigateur par
+défaut, c'est d'ailleurs ce que je viens de faire :)&lt;/p&gt;
+&lt;p&gt;Si vous avez déjà Firefox d'installé, vous pouvez directement vous
+rendre au paragraphe 'Paramétrage d'ADB'.&lt;/p&gt;
+&lt;div class="section" id="installation-d-aptoide"&gt;
+&lt;h2&gt;Installation d'Aptoide&lt;/h2&gt;
+&lt;p&gt;La première étape est d'installer le market Aptoide si ce n'est pas déjà
+fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
+'Place de marché' tout en bas et installer le market Aptoide Appstore&lt;/p&gt;
+&lt;p&gt;[gallery size=&amp;quot;medium&amp;quot; columns=&amp;quot;2&amp;quot; link=&amp;quot;file&amp;quot; ids=&amp;quot;571,572&amp;quot;]&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installation-de-firefox"&gt;
+&lt;h2&gt;Installation de Firefox&lt;/h2&gt;
+&lt;p&gt;L'installation de Firefox se fait via Aptoide, il faut donc ouvrir
+l'application nouvellement installée et dans la zone de recherche, taper
+Firefox. Il faut ensuite trouver l'application &lt;strong&gt;Firefox Browser for
+Android&lt;/strong&gt; et l'installer.&lt;/p&gt;
+&lt;p&gt;[gallery link=&amp;quot;file&amp;quot; columns=&amp;quot;2&amp;quot; size=&amp;quot;medium&amp;quot; ids=&amp;quot;575,576,577,578&amp;quot;]&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="parametrage-d-adb"&gt;
+&lt;h2&gt;Paramétrage d'ADB&lt;/h2&gt;
+&lt;p&gt;C'est partie pour le bricolage. Il faut d'abord &lt;a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/"&gt;se connecter en
+SSH&lt;/a&gt;
+à l'appareil afin d'y modifier le comportement d'Alien. Pour cela, il
+faut éditer le fichier /opt/alien/system/build.prop et ajouter à la fin
+:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+persist.service.adb.enable=1
+service.adb.tcp.port=5555
+&lt;/pre&gt;
+&lt;p&gt;Une fois cette modification faite, on relance Alien Dalvik&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# systemctl restart aliendalvik.service
+&lt;/pre&gt;
+&lt;p&gt;Maintenant, un process adb doit apparaitre&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# ps aux | grep adb
+ shell&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5162&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 6532&amp;nbsp;&amp;nbsp;&amp;nbsp; 92 ?&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Ssl&amp;nbsp; 23:04&amp;nbsp;&amp;nbsp; 0:00 /system/root/sbin/adbd
+ root&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5592&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 3984&amp;nbsp;&amp;nbsp; 288 pts/0&amp;nbsp;&amp;nbsp;&amp;nbsp; Sl&amp;nbsp;&amp;nbsp; 23:06&amp;nbsp;&amp;nbsp; 0:00 adb fork-server server
+ root&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 7330&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 2256&amp;nbsp;&amp;nbsp; 544 pts/0&amp;nbsp;&amp;nbsp;&amp;nbsp; S+&amp;nbsp;&amp;nbsp; 23:57&amp;nbsp;&amp;nbsp; 0:00 grep adb
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# lsof -p 5162 | grep android_adb
+ adbd&amp;nbsp;&amp;nbsp;&amp;nbsp; 5162 shell&amp;nbsp;&amp;nbsp; 10u&amp;nbsp;&amp;nbsp; CHR&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 10,25&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 0t0&amp;nbsp; 1437 /opt/alien/dev/android_adb
+&lt;/pre&gt;
+&lt;p&gt;Une fois que tout ça est ok, on lance en root :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;localhost bin]# /opt/alien/system/bin/adb kill-server
+[root&amp;#64;localhost bin]# /opt/alien/system/bin/adb devices
+* daemon not running. starting it now on port 5038 *
+* daemon started successfully *
+List of devices attached
+emulator-5554   device
+
+[root&amp;#64;localhost bin]#
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="parametrage-de-sailfishos"&gt;
+&lt;h2&gt;Paramétrage de SailfishOS&lt;/h2&gt;
+&lt;p&gt;La système est maintenant prêt à accueillir nos modifications. Toujours
+dans la connexion SSH, se rendre dans /usr/share/applications, faire une
+copie de sauvegarde du fichier open-url.desktop et le modifier pour
+qu'il ne prenne plus en charge les types MIME http et https&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd /usr/share/applications
+cp -a open-url.desktop open-url.desktop.ori
+vi open-url.desktop
+&lt;/pre&gt;
+&lt;p&gt;Une fois dans le fichier, on supprime la ligne&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+&lt;/pre&gt;
+&lt;p&gt;Le fichier doit maintenant ressembler à cela&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla applications]# cat open-url.desktop
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+&lt;/pre&gt;
+&lt;p&gt;Créer ensuite le fichier firefox-as-default.desktop et y mettre ce
+contenu&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+[root&amp;#64;Jolla applications]# cat firefox-as-default.desktop
+[Desktop Entry]
+Exec=/opt/alien/system/bin/adb -e shell am start -a android.intent.action.VIEW -n org.mozilla.firefox/.App -d ' %U'
+Name=Firefox HTTP handler (opener)
+Type=Application
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+X-Nemo-Application-Type=no-invoker
+X-Nemo-Single-Instance=no
+X-apkd-apkfile=/data/app/org.mozilla.firefox.apk
+NoDisplay=true
+&lt;/pre&gt;
+&lt;p&gt;Afin de prendre ces modifications en compte, on met à jour le cache des
+types MIME&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla applications]# update-desktop-database
+&lt;/pre&gt;
+&lt;p&gt;Le fichier mimeinfo.cache devrait maintenant contenir 2 lignes de ce
+type&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+x-maemo-urischeme/http=firefox-as-default.desktop;
+x-maemo-urischeme/https=firefox-as-default.desktop;
+&lt;/pre&gt;
+&lt;p&gt;Dorénavant, lorsqu'un lien sera cliqué dans une application (message,
+twitter...) celui s'ouvrir avec Firefox.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category></entry><entry><title>Vmware Client Integration Plugin HS dans Firefox</title><link href="/2015/08/vmware-client-integration-plugin-hs-dans-firefox.html" rel="alternate"></link><published>2015-08-23T14:00:00+02:00</published><updated>2015-08-23T14:00:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-08-23:/2015/08/vmware-client-integration-plugin-hs-dans-firefox.html</id><summary type="html">&lt;p&gt;Depuis quelques semaines, le plugin d'intégration client VMware ne
+fonctionne plus dans Firefox. La case &amp;quot;Utiliser les identifiants
+Windows&amp;quot; est grisée et d'après l'interface de vCenter, le plugin n'est
+pas installé sur votre machine.&lt;/p&gt;
+&lt;p&gt;Ce problème est apparu avec Firefox 39 et concerne toutes les nouvelles
+versions de Firefox depuis …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis quelques semaines, le plugin d'intégration client VMware ne
+fonctionne plus dans Firefox. La case &amp;quot;Utiliser les identifiants
+Windows&amp;quot; est grisée et d'après l'interface de vCenter, le plugin n'est
+pas installé sur votre machine.&lt;/p&gt;
+&lt;p&gt;Ce problème est apparu avec Firefox 39 et concerne toutes les nouvelles
+versions de Firefox depuis. Cela a plusieurs conséquences.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Impossible d'ouvrir les consoles des VM (la console HTML5, VMRC
+fonctionne quant à lui)&lt;/li&gt;
+&lt;li&gt;Impossible de déposer un fichier depuis son PC vers un Datastore via
+le navigateur HTML5&lt;/li&gt;
+&lt;li&gt;Impossible de déployer un template OVF depuis son PC via l'option de
+déploiement de fichier OVF local.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Pour corriger ce problème, il faut désactiver les options
+security.ssl3.dhe de Firefox.&lt;/p&gt;
+&lt;p&gt;Pour cela, se rendre dans &lt;a class="reference external" href="about:config"&gt;about:config&lt;/a&gt;, rechercher security.ssl3.dhe.
+Vous devriez vous retrouver avec 2 entrées :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;security.ssl3.dhe_rsa_aes_128_sha&lt;/li&gt;
+&lt;li&gt;security.ssl3.dhe_rsa_aes_256_sha&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Faire un clique droit sur chacune de ses entrées et cliquer sur
+&lt;strong&gt;Inverser&lt;/strong&gt; (Toggle).&lt;/p&gt;
+&lt;p&gt;Il ne reste plus qu'à rafraîchir la page vcenter.&lt;/p&gt;
+&lt;p&gt;Source &lt;a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2125623"&gt;Vmware KB
+2125623&lt;/a&gt;&lt;/p&gt;
+</content><category term="Tech"></category></entry><entry><title>Comprendre la prédiction de noms des interfaces réseau de systemd</title><link href="/2015/08/comprendre-la-prediction-de-noms-des-interfaces-reseau-de-systemd.html" rel="alternate"></link><published>2015-08-22T23:58:00+02:00</published><updated>2015-08-22T23:58:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-08-22:/2015/08/comprendre-la-prediction-de-noms-des-interfaces-reseau-de-systemd.html</id><summary type="html">&lt;p&gt;&lt;em&gt;Cet article est une traduction d'`un article
+original &amp;lt;https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/&amp;gt;`__
+de Major Hayden, publié `sur son blog &amp;lt;https://major.io/&amp;gt;`__ le 21 Aout
+2015. Article traduit avec son aimable autorisation.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;J'ai un peu parlé des nom des interfaces réseau de systemd dans …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;Cet article est une traduction d'`un article
+original &amp;lt;https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/&amp;gt;`__
+de Major Hayden, publié `sur son blog &amp;lt;https://major.io/&amp;gt;`__ le 21 Aout
+2015. Article traduit avec son aimable autorisation.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;J'ai un peu parlé des nom des interfaces réseau de systemd dans un de
+mes premiers post sur &lt;a class="reference external" href="https://major.io/2015/08/21/using-systemd-networkd-with-bonding-on-rackspaces-onmetal-servers/"&gt;systemd-networkd et le
+bonding&lt;/a&gt;.
+J'avais alors eu quelques questions sur la manière dont systemd
+détermine le nom final des interfaces réseau. La prédictibilité de ces
+noms m'a &lt;a class="reference external" href="https://major.io/2014/08/06/unexpected-predictable-network-naming-systemd/"&gt;pris de court l'été
+dernier&lt;/a&gt;
+quand je n'ai pas pu comprendre comment ces noms étaient construits.
+|  Observons donc ce processus&lt;/p&gt;
+&lt;div class="section" id="que-contient-le-nom"&gt;
+&lt;h2&gt;Que contient le nom?&lt;/h2&gt;
+&lt;p&gt;Dans l'article sur le bonding avec systemd-networkd, j'avais utilisé une
+carte réseau Intel dual port montée sur un port hotplug&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# udevadm info -e | grep -A 9 ^P.*eth0
+P: /devices/pci0000:00/0000:00:03.2/0000:08:00.0/net/eth0
+E: DEVPATH=/devices/pci0000:00/0000:00:03.2/0000:08:00.0/net/eth0
+E: ID_BUS=pci
+E: ID_MODEL_FROM_DATABASE=82599ES 10-Gigabit SFI/SFP+ Network Connection (Ethernet OCP Server Adapter X520-2)
+E: ID_MODEL_ID=0x10fb
+E: ID_NET_DRIVER=ixgbe
+E: ID_NET_LINK_FILE=/usr/lib/systemd/network/99-default.link
+E: ID_NET_NAME_MAC=enxa0369f2cec90
+E: ID_NET_NAME_PATH=enp8s0f0
+E: ID_NET_NAME_SLOT=ens9f0
+&lt;/pre&gt;
+&lt;p&gt;Dans ce dump de la base de donnée udev, on voit que l'interface réseau
+possède plusieurs noms&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;ID_NET_NAME_MAC=enxa0369f2cec90&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_PATH=enp8s0f0&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_SLOT=ens9f0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;D'où viennent ces noms? Nous pouvons nous plonger dans la code source de
+systemd pour comprendre l'origine de ces noms et lequel est sélectionné
+au final.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="descendre-dans-le-terrier-de-udev"&gt;
+&lt;h2&gt;Descendre dans le terrier de udev&lt;/h2&gt;
+&lt;p&gt;Voici un extrait du fichier
+&lt;a class="reference external" href="https://github.com/systemd/systemd/blob/master/src/udev/udev-builtin-net_id.c"&gt;src/udev/udev-builtin-net_id.c&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="code c literal-block"&gt;
+&lt;span class="cm"&gt;/*
+ * Predictable network interface device names based on:
+ *  - firmware/bios-provided index numbers for on-board devices
+ *  - firmware-provided pci-express hotplug slot index number
+ *  - physical/geographical location of the hardware
+ *  - the interface's MAC address
+ *
+ * http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames
+ *
+ * Two character prefixes based on the type of interface:
+ *   en -- ethernet
+ *   sl -- serial line IP (slip)
+ *   wl -- wlan
+ *   ww -- wwan
+ *
+ * Type of names:
+ *   b&amp;lt;number&amp;gt;                             -- BCMA bus core number
+ *   ccw&amp;lt;name&amp;gt;                             -- CCW bus group name
+ *   o&amp;lt;index&amp;gt;[d&amp;lt;dev_port&amp;gt;]                 -- on-board device index number
+ *   s&amp;lt;slot&amp;gt;[f&amp;lt;function&amp;gt;][d&amp;lt;dev_port&amp;gt;]     -- hotplug slot index number
+ *   x&amp;lt;MAC&amp;gt;                                -- MAC address
+ *   [P&amp;lt;domain&amp;gt;]p&amp;lt;bus&amp;gt;s&amp;lt;slot&amp;gt;[f&amp;lt;function&amp;gt;][d&amp;lt;dev_port&amp;gt;]
+ *                                         -- PCI geographical location
+ *   [P&amp;lt;domain&amp;gt;]p&amp;lt;bus&amp;gt;s&amp;lt;slot&amp;gt;[f&amp;lt;function&amp;gt;][u&amp;lt;port&amp;gt;][..][c&amp;lt;config&amp;gt;][i&amp;lt;interface&amp;gt;]
+ *                                         -- USB port number chain&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Voici donc la manière dont sont nommées nos interfaces. Les cartes
+Ethernet commenceront toujours par &lt;em&gt;en&lt;/em&gt;, elles peuvent ensuite être
+suivie d'un &lt;em&gt;p&lt;/em&gt; (pour port PCI), un &lt;em&gt;s&lt;/em&gt; (pour port PCI-E), un &lt;em&gt;o&lt;/em&gt; (pour
+carte interne (onboard)). En descendant un peu dans le fichier, on
+trouve des exemples à partir de la ligne 56.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="de-vrais-exemples"&gt;
+&lt;h2&gt;De vrais exemples&lt;/h2&gt;
+&lt;p&gt;Nous avons vu plus haut le nommage des interfaces PCI-E sur un serveur
+OnMetal de chez Rackspace. Elles étaient nommées &lt;em&gt;ens9f0&lt;/em&gt; et &lt;em&gt;ens9f1&lt;/em&gt;.
+Cela signifie qu'elles sont sur un port PCI-E qui se trouve être le port
+numéro 9. Les indexes sont à 0 et 1 (pour les 2 ports Ethernet sur
+l'Intel 82599ES).&lt;/p&gt;
+&lt;div class="section" id="firewall-linux-avec-une-carte-pci-dual-port"&gt;
+&lt;h3&gt;Firewall Linux avec une carte PCI dual-port.&lt;/h3&gt;
+&lt;p&gt;Voici un exemple avec mon firewall Linux personnel. C'est un Dell
+Optiplex 3020 avec une carte Intel I350-T2(dual-port):&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# udevadm info -e | grep -A 10 ^P.*enp1s0f1
+ P: /devices/pci0000:00/0000:00:01.0/0000:01:00.1/net/enp1s0f1
+ E: DEVPATH=/devices/pci0000:00/0000:00:01.0/0000:01:00.1/net/enp1s0f1
+ E: ID_BUS=pci
+ E: ID_MODEL_FROM_DATABASE=I350 Gigabit Network Connection (Ethernet Server Adapter I350-T2)
+ E: ID_MODEL_ID=0x1521
+ E: ID_NET_DRIVER=igb
+ E: ID_NET_LINK_FILE=/usr/lib/systemd/network/99-default.link
+ E: ID_NET_NAME=enp1s0f1
+ E: ID_NET_NAME_MAC=enxa0369f6e5227
+ E: ID_NET_NAME_PATH=enp1s0f1
+ E: ID_OUI_FROM_DATABASE=Intel Corporate
+&lt;/pre&gt;
+&lt;p&gt;L'affichage de lspci:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# lspci -s 01:00
+ 01:00.0 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+ 01:00.1 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+&lt;/pre&gt;
+&lt;p&gt;Cette carte est branchée sur le premier bus PCI (enp1), slot 0 (s0).
+Comme c'est une carte dual-port, elle possède 2 indexes (f0 et f1). Cela
+fait donc apparaître 2 noms prédictibles : &lt;em&gt;enp1s0f1&lt;/em&gt; et &lt;em&gt;enp1s0f0&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="serveur-1u-avec-4-ports-ethernet"&gt;
+&lt;h3&gt;Serveur 1U avec 4 ports Ethernet.&lt;/h3&gt;
+&lt;p&gt;Prenons un autre exemple. Voici un serveur SuperMicro X9SCA 1U avec 4
+cartes Ethernet PCI internes.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# udevadm info -e | grep -A 10 ^P.*enp2s0
+ P: /devices/pci0000:00/0000:00:1c.4/0000:02:00.0/net/enp2s0
+ E: DEVPATH=/devices/pci0000:00/0000:00:1c.4/0000:02:00.0/net/enp2s0
+ E: ID_BUS=pci
+ E: ID_MODEL_FROM_DATABASE=82574L Gigabit Network Connection
+ E: ID_MODEL_ID=0x10d3
+ E: ID_NET_DRIVER=e1000e
+ E: ID_NET_LINK_FILE=/usr/lib/systemd/network/99-default.link
+ E: ID_NET_NAME=enp2s0
+ E: ID_NET_NAME_MAC=enx00259025963a
+ E: ID_NET_NAME_PATH=enp2s0
+ E: ID_OUI_FROM_DATABASE=Super Micro Computer, Inc.
+&lt;/pre&gt;
+&lt;p&gt;Voici les 4 cartes dans lspci&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# for i in `seq 2 5`; do lspci -s 0${i}:; done
+ 02:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+ 03:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+ 04:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+ 05:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+&lt;/pre&gt;
+&lt;p&gt;C'est assez intéressant car elles ne sont pas toutes sur le même bus
+PCI. Elles se situent sur les bus 2 à 5 du slot 0. Il n'y a donc pas de
+numéro d'index dans ce cas. Elles sont donc nommées de &lt;em&gt;enp2s0&lt;/em&gt; à
+&lt;em&gt;enp5s0&lt;/em&gt;. Ce ne sont pas de vraies cartes internes, elles sont donc
+nommées en fonction de leur localisation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="serveur-de-stockage-avec-carte-ethernet-interne"&gt;
+&lt;h3&gt;Serveur de stockage avec carte ethernet interne&lt;/h3&gt;
+&lt;p&gt;Voici un exemple de serveur avec une vrai carte ethernet interne
+(onboard):&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ udevadm info -e | grep -A 11 ^P.*eno1
+ P: /devices/pci0000:00/0000:00:19.0/net/eno1
+ E: DEVPATH=/devices/pci0000:00/0000:00:19.0/net/eno1
+ E: ID_BUS=pci
+ E: ID_MODEL_FROM_DATABASE=Ethernet Connection I217-V
+ E: ID_MODEL_ID=0x153b
+ E: ID_NET_DRIVER=e1000e
+ E: ID_NET_LABEL_ONBOARD=en Onboard LAN
+ E: ID_NET_LINK_FILE=/usr/lib/systemd/network/99-default.link
+ E: ID_NET_NAME_MAC=enxe03f49b159c0
+ E: ID_NET_NAME_ONBOARD=eno1
+ E: ID_NET_NAME_PATH=enp0s25
+ E: ID_OUI_FROM_DATABASE=ASUSTek COMPUTER INC.
+&lt;/pre&gt;
+&lt;p&gt;L'affichage de lspci&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ lspci -s 00:19.0
+ 00:19.0 Ethernet controller: Intel Corporation Ethernet Connection I217-V (rev 05)
+&lt;/pre&gt;
+&lt;p&gt;Cette carte a un nouveau type de nom dans udev :
+ID_NET_NAME_ONBOARD. Le code de udev pour systemd a une prise en
+charge spécifique des cartes internes car elles se situent en général
+sur le bus principal. Le nommage peut devenir assez laid car le 19
+devrait être converti en hexadécimal dans le nom.
+|  Si systemd ne prenait pas en charge cette carte différemment, elle
+aurait du être nommée &lt;em&gt;enp0s13&lt;/em&gt; (car 19 devient 13 en hexa). Cela peut
+mener à des confusions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="choix-du-nom-finale"&gt;
+&lt;h2&gt;Choix du nom finale&lt;/h2&gt;
+&lt;p&gt;Comme nous l'avons vu plus haut, udev contient une grande liste de nom
+dans sa base. Cependant, il ne peut y avoir qu'un seul nom dans l'OS.
+|  Retournons dans le code. Cette fois, jetons un oeil a
+&lt;a class="reference external" href="https://github.com/systemd/systemd/blob/master/src/udev/net/link-config.c#L403"&gt;src/udev/net/link-config.c&lt;/a&gt;
+à partir de la ligne 403:&lt;/p&gt;
+&lt;pre class="code c literal-block"&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;enable_name_policy&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;NamePolicy&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+             &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;_NAMEPOLICY_INVALID&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_KERNEL&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;respect_predictable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_DATABASE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_FROM_DATABASE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_ONBOARD&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_ONBOARD&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_SLOT&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_SLOT&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_PATH&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_PATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_MAC&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_MAC&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                        &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Si on regarde le case dans son ensemble, on voit que la première
+correspondance est conservée et donne le nom à l'interface. En partant
+du haut vers le bas, udev prend le premier de cette liste:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;ID_NET_NAME_FROM_DATABASE&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_ONBOARD&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_SLOT&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_PATH&lt;/li&gt;
+&lt;li&gt;ID_NET_NAME_MAC&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Si on retourne sur le serveur OnMetal en haut de l'article, on peut
+suivre cette logique. La base udev contient:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+E: ID_NET_NAME_MAC=enxa0369f2cec90
+E: ID_NET_NAME_PATH=enp8s0f0
+E: ID_NET_NAME_SLOT=ens9f0
+&lt;/pre&gt;
+&lt;p&gt;Le daemon udev commencerait par ID_NET_NAME_FROM_DATABASE, mais
+cela n'existe pas pour cette carte. Il passe ensuite à
+ID_NET_NAME_ONBOARD, qui n'est pas présent. Vient ensuite
+ID_NET_NAME_SLOT, voilà la correspondance! L'entrée
+ID_NET_NAME_SLOT contient &lt;em&gt;ens9f0&lt;/em&gt;, qui est donc le nom final de
+l'interface réseau.
+|  Cette boucle gère aussi quelques cas spéciaux. La première est de
+vérifier si udev n'est pas configuré pour ne pas utiliser les noms
+prédictible. Nous l'avions vu dans le post sur le&lt;a class="reference external" href="https://major.io/2015/08/21/using-systemd-networkd-with-bonding-on-rackspaces-onmetal-servers/"&gt;bonding avec
+systemd-networkd&lt;/a&gt;
+quand la configuration du bootloader contenait net.ifnames=0. Si cette
+commande noyau est présente, les noms prédictibles ne sont pas utilisés.
+|  Un autre cas spécial est ID_NET_NAME_FROM_DATABASE. Ces ports
+viennent de la &lt;a class="reference external" href="https://github.com/systemd/systemd/blob/master/hwdb/20-net-ifname.hwdb"&gt;base de donnée matériel interne de
+udev&lt;/a&gt;.
+Ce fichier ne contient pour le moment qu'une seule entrée et c'est pour
+une carte réseau particulière iDRAC de DELL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="confondu-par-l-hexa"&gt;
+&lt;h2&gt;Confondu par l'hexa&lt;/h2&gt;
+&lt;p&gt;Si les numéros des ports PCI ne semblent pas se suivre, lisez mon
+&lt;a class="reference external" href="https://major.io/2014/08/06/unexpected-predictable-network-naming-systemd/"&gt;post de l'été
+dernier&lt;/a&gt;.
+J'avais eu affaire à un serveur Dell particulier avec une carte Intel
+dual-port sur le bus PCI 42. Le nom de l'interface était &lt;em&gt;enp66s0f0&lt;/em&gt; et
+j'en étais resté perplexe.
+|  Le nom &lt;em&gt;enp66s0f0&lt;/em&gt; semble signifier que nous avons une carte sur le
+bus PCI 66, slot 0, avec de multiple fonction d'index. Cependant,
+systemd fait une conversion des numéros de slot PCI en hexa. La décimal
+42 devient donc 66 en hexa.
+|  La plupart des serveurs n'auront pas cette complexité mais il est
+important de se souvenir de la conversion en hexa.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="feedback"&gt;
+&lt;h2&gt;Feedback&lt;/h2&gt;
+&lt;p&gt;Ces articles sur systemd sont ils intéressant? Je suis un grand fan de
+systemd et j'adore écrire à son sujet.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category></entry><entry><title>Ajouter Duckduckgo comme moteur de recherche dans SailfishOS</title><link href="/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html" rel="alternate"></link><published>2015-08-20T22:10:00+02:00</published><updated>2015-08-20T22:10:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-08-20:/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html</id><summary type="html">&lt;p&gt;Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+comme moteur de recherche et il n'y a pas d'interface pour ajouter de
+nouveaux moteurs de recherche.&lt;/p&gt;
+&lt;p&gt;Je vous propose ici une méthode pour ajouter un nouveau moteur de
+recherche dans cette liste. Ici ce sera
+&lt;a class="reference external" href="https://duckduckgo.com/"&gt;Duckduckgo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;La manipulation …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+comme moteur de recherche et il n'y a pas d'interface pour ajouter de
+nouveaux moteurs de recherche.&lt;/p&gt;
+&lt;p&gt;Je vous propose ici une méthode pour ajouter un nouveau moteur de
+recherche dans cette liste. Ici ce sera
+&lt;a class="reference external" href="https://duckduckgo.com/"&gt;Duckduckgo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;La manipulation consiste à ajouter un fichier de description du moteur
+de recherche dans le répertoire adéquat.&lt;/p&gt;
+&lt;p&gt;La première étape est d'activer le mode développeur et de se connecter
+en SSH à son Jolla. Si vous ne savez pas comment vous y prendre, vous
+pouvez &lt;a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/"&gt;suivre ce
+tuto&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Une fois connecté en SSH, se connecter en root :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[nemo&amp;#64;Jolla ~]$ devel-su
+&lt;/pre&gt;
+&lt;p&gt;Se rendre dans /usr/lib/mozembedlite/chrome/embedlite/content/&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla nemo]# cd /usr/lib/mozembedlite/chrome/embedlite/content/
+&lt;/pre&gt;
+&lt;p&gt;Créer un fichier duckduckgo.xml&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla nemo]# vi duckduckgo.xml
+&lt;/pre&gt;
+&lt;p&gt;Coller le contenu de ce fichier :
+&lt;a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml"&gt;duckduckgo.xml&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ou plus simplement&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla content]# curl &amp;nbsp;http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml -o duckduckgo.xml
+&lt;/pre&gt;
+&lt;p&gt;Il ne reste plus qu'à fermer se rendre sur le téléphone, fermer
+l'application 'Réglages', la relancer, se rendre dans 'Application' &amp;gt;
+'Navigateur' et choisir le moteur de recherche Duckduckgo.&lt;/p&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content><category term="Tech"></category></entry><entry><title>Vmware tools, Centos 7 et customisation</title><link href="/2015/08/vmware-tools-centos-7-et-customisation.html" rel="alternate"></link><published>2015-08-14T22:39:00+02:00</published><updated>2015-08-14T22:39:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-08-14:/2015/08/vmware-tools-centos-7-et-customisation.html</id><summary type="html">&lt;p&gt;Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
+une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas
+utiliser le script perl fournit mais de passer plutôt par les
+open-vm-tools qu'on peut directement trouvé dans le gestionnaire de
+paquet.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install open-vm-tools
+&lt;/pre&gt;
+&lt;p&gt;C'est simple, rapide …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
+une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas
+utiliser le script perl fournit mais de passer plutôt par les
+open-vm-tools qu'on peut directement trouvé dans le gestionnaire de
+paquet.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install open-vm-tools
+&lt;/pre&gt;
+&lt;p&gt;C'est simple, rapide, ça facilite les mise à jour des tools et c'est
+conseillé par VMware directement, il y a même &lt;a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2073803"&gt;un
+KB&lt;/a&gt;
+pour ça et &lt;a class="reference external" href="https://github.com/vmware/open-vm-tools"&gt;un projet
+GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Pour rappel, l'insallation des vm-tools permet d'accéder à ces
+fonctionnalité vSphere :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Synchronisation de l'horloge de l'OS invité avec celle de la
+plateforme de virtualisation&lt;/li&gt;
+&lt;li&gt;Permet à l'hyperviseur de procéder à des appels système afin par
+exemple de demander à l'OS de s'arréter.&lt;/li&gt;
+&lt;li&gt;Support de vSphere High Availability (HA) grace à un système de
+heartbeat.&lt;/li&gt;
+&lt;li&gt;Permet à l'hyperviseur de récolter des informations sur la
+consommation des ressources CPU, RAM, réseau.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Dans cette liste, il manque tout de même un outil important. Si vous
+clonez ou si vous créez un template à partir d'une VM ayant les
+open-vm-tools, vous serez dans l'incapacité de customiser la nouvelle VM
+à sa création. Exit donc le changement du mot de passe root et surtout
+la configuration réseau. Cette fonctionnalité est apportée par un plugin
+pour open-vm-tools nommé DeployPkg.&lt;/p&gt;
+&lt;p&gt;La page &lt;a class="reference external" href="http://partnerweb.vmware.com/GOSIG/RHEL_7.html"&gt;Red Hat Enterprise Linux 7 Guest Operating System Installation
+Guide&lt;/a&gt; mentionne bien
+ce plugin mais il y manque certaines informations. La procédure complète
+est mieux décrite dans la &lt;a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2075048"&gt;Knowledge Base de
+VMware.&lt;/a&gt;Celle
+ci consiste a récupérer les clés public du dépots VMware, importer les
+clés, créer le fichier de repo pour yum et procéder enfin à
+l'installation.&lt;/p&gt;
+&lt;p&gt;Dans un premier temps, on récupère les clés ici
+&lt;a class="reference external" href="http://packages.vmware.com/tools/keys"&gt;http://packages.vmware.com/tools/keys&lt;/a&gt; et on les place dans le répertoire
+/tmp du serveur&lt;/p&gt;
+&lt;p&gt;On importe les clés avec rpm&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+rpm --import /tmp/key1
+rpm --import /tmp/key2
+&lt;/pre&gt;
+&lt;p&gt;Création du fichier &lt;em&gt;/etc/yum.repos.d/vmware-tools.repo&lt;/em&gt; avec ce contenu
+:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[vmware-tools]
+name = VMware Tools
+baseurl = http://packages.vmware.com/packages/rhel7/x86_64/
+enabled = 1
+gpgcheck = 1
+&lt;/pre&gt;
+&lt;p&gt;Installation du paquet&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install open-vm-tools-deploypkg
+&lt;/pre&gt;
+&lt;p&gt;Installation de perl, nécessaire pour les scripts de customisation&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install perl
+&lt;/pre&gt;
+&lt;p&gt;On termine par le rechargement du service pour prendre en compte
+l'installation du plugin&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+systemctl restart vmtoolsd
+&lt;/pre&gt;
+&lt;p&gt;Vous pouvez maintenant transformer votre VM en template en toute
+sérénité.&lt;/p&gt;
+</content><category term="Tech"></category></entry><entry><title>Se connecter en SSH à son Jolla</title><link href="/2015/03/se-connecter-en-ssh-a-son-jolla.html" rel="alternate"></link><published>2015-03-03T23:19:00+01:00</published><updated>2015-03-03T23:19:00+01:00</updated><author><name>alain</name></author><id>tag:None,2015-03-03:/2015/03/se-connecter-en-ssh-a-son-jolla.html</id><summary type="html">&lt;p&gt;Même s'il est possible d'utiliser directement une console sur l'appareil
+grâce à FingerPrint quand on est en mode developpeur, il est quand même
+plus simple d'utiliser son PC pour entrer quelques commandes où même
+pour écrire des scripts. Voici donc comment activer la connexion SSH sur
+son Jolla.&lt;/p&gt;
+&lt;p&gt;1- Activer …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Même s'il est possible d'utiliser directement une console sur l'appareil
+grâce à FingerPrint quand on est en mode developpeur, il est quand même
+plus simple d'utiliser son PC pour entrer quelques commandes où même
+pour écrire des scripts. Voici donc comment activer la connexion SSH sur
+son Jolla.&lt;/p&gt;
+&lt;p&gt;1- Activer le mode developpeur&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2- Activer la connexion distante et définir un mot de passe&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;3- Se connecter depuis son PC avec l'utilisateur nemo. Pour passer en
+root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content><category term="Tech"></category></entry><entry><title>Prise en main du smartphone de Jolla</title><link href="/2015/02/prise-en-main-du-smartphone-de-jolla.html" rel="alternate"></link><published>2015-02-21T00:29:00+01:00</published><updated>2015-02-21T00:29:00+01:00</updated><author><name>alain</name></author><id>tag:None,2015-02-21:/2015/02/prise-en-main-du-smartphone-de-jolla.html</id><summary type="html">&lt;p&gt;Il est enfin arrivé, après plus de 2 semaines d'attente pour cause de
+rupture de stock. Malheureusement le colis est incomplet puisqu'il
+manque 2 des 3 'Other Half' (les coques arrières). J'ai envoyé un mail à
+Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
+&lt;p&gt;Une fois cette légère déception …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il est enfin arrivé, après plus de 2 semaines d'attente pour cause de
+rupture de stock. Malheureusement le colis est incomplet puisqu'il
+manque 2 des 3 'Other Half' (les coques arrières). J'ai envoyé un mail à
+Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
+&lt;p&gt;Une fois cette légère déception passée, j'ai observé l'emballage d'un
+peu plus prêt. La boite est sympa, sobre. Le logo Jolla est écrit en
+argenté et entouré de lignes de code&lt;/p&gt;
+&lt;p&gt;[gallery columns=&amp;quot;2&amp;quot; ids=&amp;quot;417,418,422,424&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Le contenu est très basique : le smartphone, la batterie, un câble
+USB/micro USB et un bloc alim secteur sur lequel on peut branche le
+câble USB. Pas de pair d'écouteur, on a juste le strict minimum. Notons
+tout de même la présence de 2 stickers au nom de la firme.&lt;/p&gt;
+&lt;p&gt;Au premier démarrage, un tuto vous explique comment utiliser cet OS basé
+sur la gestuelle. En effet, que ce soit pour fermer une appli, valider
+ou annuler une action, retourner sur l'écran principal ou lire un SMS,
+toutes ces actions se feront par un mouvement de haut en bas, ou de
+gauche à droite ou inversement, sans oublier que si le geste commence en
+dehors de la surface de l'écran, cela n'aura pas le même effet que s'il
+prend son départ sur la surface d'affichage. C'est donc une nouvelle
+façon d’appréhender son smartphone et je doit avouer que j'étais assez
+enthousiaste en testant ces nouvelles fonctions. Cette façon de faire,
+très différente d'Androïd, iOS ou Windows Phone est vraiment
+rafraichissante, surtout après 5 années chez Androïd.&lt;/p&gt;
+&lt;p&gt;Lorsqu'un menu est disponible, une lumière vous indique que vous pouvez
+tirer l'écran pour faire apparaitre ce menu. La sélection d'une entrée
+du menu se fait en tirant plus ou moins.&lt;/p&gt;
+&lt;p&gt;[gallery ids=&amp;quot;431,427,426&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Lorsqu'on ferme une application en swipant de droite à gauche (pour la
+fermer réellement, c'est de haut en bas), celle ci se 'range' sur la
+page principale et reste tourner en tache de fond. SailfishOS est
+multitâche. Les applications qui ne sont pas fermées continues de se
+mettre à jour et ne sont pas gelées comme cela peut être le cas sur les
+autres plateforme. Vous pouvez avoir jusqu'à 9 applications en parallèle&lt;/p&gt;
+&lt;p&gt;[gallery ids=&amp;quot;428,429,430&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Au premier démarrage, SailfishOS vous propose de connecter vos comptes
+Google, Facebook et Twitter. Il regroupera ensuite toutes les
+notifications au même endroit, que vous pourrez retrouver en swipant du
+bas vers le haut. On peut ensuite facilement ajouter un compte email, un
+compte xmpp (intégré sans appli à installer) et sont même présent les
+connecteurs CalDAV et CardDAV que j'ai pu brancher sur mon instance
+zimbra.&lt;/p&gt;
+&lt;p&gt;Mais que manque-t-il à ce smartphone en fait? Premièrement, le store
+n'est pas très fourni. Il est cependant possible d'installer des
+applications Android en installant quelques market. Je n'ai pas encore
+testé cette fonctionnalité.&lt;/p&gt;
+&lt;p&gt;L'écran n'offre pas une très bonne définition, ainsi que la camera 8Mp.
+Les photos sont de piètre qualité par rapport à ce dont on est habitué.
+L'appareil photo à même tendance à prendre les photos après vous avoir
+annoncé que la photo à été prise, ce qui peut avoir tendance à faire des
+photos floues.&lt;/p&gt;
+&lt;p&gt;Ce n'est pas un foudre de guerre, si vous voulez jouer, passez votre
+chemin. Par contre, l'OS est très fluide dans son utilisation.&lt;/p&gt;
+&lt;p&gt;Je suis sûr qu'il a plein d'autres défauts que je trouverai lors de son
+utilisation quotidienne. Ceci dit, l'OS me semble simple à appréhender.
+Le système lumineux indiquant les actions possibles est très bien pensé
+et fait bien son boulot de guide.&lt;/p&gt;
+</content><category term="Tech"></category><category term="jolla"></category><category term="sailfishos"></category></entry><entry><title>Jolla - Le Smartphone Linux</title><link href="/2015/02/jolla-le-smartphone-linux.html" rel="alternate"></link><published>2015-02-07T18:01:00+01:00</published><updated>2015-02-07T18:01:00+01:00</updated><author><name>alain</name></author><id>tag:None,2015-02-07:/2015/02/jolla-le-smartphone-linux.html</id><summary type="html">&lt;div class="section" id="flash-back"&gt;
+&lt;h2&gt;Flash Back&lt;/h2&gt;
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a class="reference external" href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+de
+Google&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
+stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
+&lt;a class="reference external" href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
+pour des …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;div class="section" id="flash-back"&gt;
+&lt;h2&gt;Flash Back&lt;/h2&gt;
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a class="reference external" href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+de
+Google&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
+stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
+&lt;a class="reference external" href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
+pour des raisons historique, même si de moins en moins de personnes de
+mon entourage l'utilise. Ce compte Google est également celui que
+j'utilise sur mon smartphone Android.&lt;/p&gt;
+&lt;p&gt;En gros, Android est le dernier lien solide qui m'attache à Google. Ce
+lien va bientôt sauter. Je viens en effet de commander le smartphone de
+Jolla sous Sailfish OS. En gros, du full Linux, sans la sous couche Java
+incluse dans Android.&lt;/p&gt;
+&lt;p&gt;L'entreprise Jolla qui fabrique les smartphones du même nom a été créée
+par des anciens cadres et ingénieurs de chez Nokia et Sailfish OS
+reprend les bases de MeeGo, l'OS du Nokia N9, basé sur Qt. Une couche de
+compatibilité est ajoutée pour pouvoir faire fonctionner plus ou moins
+bien les applis Android.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="comment-est-ce-que-je-me-suis-decide-a-faire-cet-achat"&gt;
+&lt;h2&gt;Comment est ce que je me suis décidé à faire cet achat?&lt;/h2&gt;
+&lt;p&gt;Cela faisait un moment que je souhaitais changer mon Nexus 4. Il
+fonctionne encore très bien, Madame en héritera. J'attendais avec
+impatience la sortie du Nexus 6 mais la politique tarifaire sur ce
+modèle m'a fait renoncer à cet achat. Il est hors de question que je
+mette plus de 300/350€ dans un smartphone.&lt;/p&gt;
+&lt;p&gt;Et puis il y a 10 jours un amis m'a montré son Jolla, m'a expliqué le
+fonctionnement, la gestion du multi tâches, comment on passe d'une appli
+à l'autre etc.. Et enfin le prix : 250€. Alléchant... Le lendemain, je
+me baladais sur le site de Jolla et étais à 2 doigts de faire chauffer
+la CB quand je me suis dit que ce n'était peut être pas le moment de
+faire ce genre de dépense. Le jeudi suivant, je tombe sur une nouvelle
+offre : &lt;a class="reference external" href="http://jollafr.org/code-promo-le-jolla-pour-200e-fosdem2015/"&gt;Code promo, le Jolla pour 200€ !
+#FOSDEM2015&lt;/a&gt;.
+Et voilà comment je me suis retrouvé à commander la bête sur le &lt;a class="reference external" href="http://shop.jolla.com/eu_en/"&gt;shop de
+Jolla.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="et-maintenant"&gt;
+&lt;h2&gt;Et Maintenant&lt;/h2&gt;
+&lt;p&gt;Alors évidemment, ne rêvons pas trop, tout ne sera pas rose. Je suppose
+qu'il va y avoir des bugs, que je vais perdre en confort mais comme le
+dit si bien l'ami qui m'a montré son Jolla la première fois, c'est aussi
+un achat engagé.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;J'attends maintenant impatiemment de recevoir mon colis.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="google"></category><category term="jolla"></category><category term="Linux"></category></entry><entry><title>Trop de requêtes ARP - Régler le timeout de la table ARP</title><link href="/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html" rel="alternate"></link><published>2015-01-21T20:18:00+01:00</published><updated>2015-01-21T20:18:00+01:00</updated><author><name>alain</name></author><id>tag:None,2015-01-21:/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html</id><summary type="html">&lt;p&gt;Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
+chez SoYouStart.&lt;/p&gt;
+&lt;p&gt;Le serveur étant assez puissant, nous avons décidé d'y installer un
+hyperviseur Proxmox qui hébergera des VM CentOS&lt;/p&gt;
+&lt;p&gt;Avant de mettre en place les applications dont j'ai besoin sur ce
+serveur, je l'ai installé et laissé tourner quelques …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
+chez SoYouStart.&lt;/p&gt;
+&lt;p&gt;Le serveur étant assez puissant, nous avons décidé d'y installer un
+hyperviseur Proxmox qui hébergera des VM CentOS&lt;/p&gt;
+&lt;p&gt;Avant de mettre en place les applications dont j'ai besoin sur ce
+serveur, je l'ai installé et laissé tourner quelques temps pour
+m'assurer de sa stabilité. Et le premier dimanche suivant l'installe,
+voici le mail que je reçois, venant d'un bot de chez OVH et concernant
+une des VM :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Bonjour,
+
+Nous avons constaté que votre serveur diffuse inutilement un nombre important de requêtes sur le
+réseau via son IP failover XX.XX.XX.XX, ceci est dû à une mauvaise configuration de celle-ci.
+Nous vous avons demandé dans un mail précédant de bien vouloir reconfigurer votre IP failover,
+constatant que le problème persiste, nous nous permettons de réitérer cette demande.
+Si le problème n'est pas résolu dans un délais de 24 heures, nous nous verrons dans l'obligation de
+bloquer votre IP.
+
+Dans ce cas, il vous sera possible de la débloquer dans votre manager une fois la reconfiguration
+faite.
+
+Ceci est le dernier avertissement avant le blocage de votre IP !
+-------  EXTRAIT DES REQUETES  -------
+
+Thu Jan 8 06:47:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:47:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:50:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+
+-------   FIN DE L'EXTRAIT   -------
+&lt;/pre&gt;
+&lt;p&gt;Une requête toutes les 30 secondes, c'est en effet beaucoup.&lt;/p&gt;
+&lt;p&gt;J'ai longtemps cherché d'où pouvait venir le problème. J'ai commencer
+par changer de modèle de carte réseau dans Proxmox (E1000, VirtIO,
+Vmxnet3) sans succès. J'ai reconfiguré et rereconfiguré le réseau en
+ajoutant ou retirant des options dans le fichier ifcfg-eth0, rien à
+faire, toujours autant de requêtes ARP.&lt;/p&gt;
+&lt;p&gt;En faisant tout ça, je me rendais bien compte d'une aberration dans&amp;nbsp;les
+opérations que je mettais en œuvre : je travaillais sur du niveau 3 (IP)
+alors que j'avais un problème qui se situait entre la couche 2 et la
+couche 3 (ARP).&lt;/p&gt;
+&lt;p&gt;Après moult recherches, j'ai fini par trouver où étaient les fichiers
+qui pourraient m'aider.&lt;/p&gt;
+&lt;p&gt;Voici les fichiers concernés, avec leurs valeurs par défaut.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+/proc/sys/net/ipv4/neigh/default/anycast_delay:100
+/proc/sys/net/ipv4/neigh/default/app_solicit:0
+/proc/sys/net/ipv4/neigh/default/base_reachable_time:30
+/proc/sys/net/ipv4/neigh/default/base_reachable_time_ms:1200
+/proc/sys/net/ipv4/neigh/default/delay_first_probe_time:5
+/proc/sys/net/ipv4/neigh/default/gc_interval:30
+/proc/sys/net/ipv4/neigh/default/gc_stale_time:60
+/proc/sys/net/ipv4/neigh/default/gc_thresh1:128
+/proc/sys/net/ipv4/neigh/default/gc_thresh2:512
+/proc/sys/net/ipv4/neigh/default/gc_thresh3:1024
+/proc/sys/net/ipv4/neigh/default/locktime:100
+/proc/sys/net/ipv4/neigh/default/mcast_solicit:3
+/proc/sys/net/ipv4/neigh/default/proxy_delay:80
+/proc/sys/net/ipv4/neigh/default/proxy_qlen:64
+/proc/sys/net/ipv4/neigh/default/retrans_time:100
+/proc/sys/net/ipv4/neigh/default/ucast_solicit:3
+/proc/sys/net/ipv4/neigh/default/unres_qlen:3
+&lt;/pre&gt;
+&lt;p&gt;Ici, les fichiers qui nous intéressent sont base_reachable_time (ou
+base_reachable_time_ms) et gc_stale_time.&lt;/p&gt;
+&lt;p&gt;Le fichier gc_stale_time définit la&amp;nbsp;fréquence à laquelle l'état
+'stale' (obsolète) des entrées de la table ARP sera vérifié. Le défaut
+est à 60 secondes. Le fichier base_reachable_time quant à lui définit
+la durée durant laquelle une entrée de la table ARP est considérée
+valide. La durée de validité de cette entrée sera un chiffre choisi au
+hasard entre (base_reachable_time/2) et (3*base_reachable_time/2).
+La valeur par défaut est de 30 secondes.&lt;/p&gt;
+&lt;p&gt;Un simple echo du chiffre souhaité dans le fichier suffit. CentOS permet
+d'avoir ces valeurs en dure et persistante après un redémarrage (les
+autres distributions aussi sans doute, mais je ne sais par quel moyen).&lt;/p&gt;
+&lt;p&gt;Pour CentOS donc, dans le fichier /etc/sysctl.conf, ajouter ces lignes :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+##### Pour limiter le nombre de requête ARP ##########
+##### Equivalent a 30 minutes ###########
+net.ipv4.neigh.default.base_reachable_time_ms = 1200000
+net.ipv4.neigh.default.gc_stale_time = 3600
+&lt;/pre&gt;
+&lt;p&gt;Ces valeurs vont donner une durée de validité des entrées de la table
+ARP entre 15 et 45 minutes.&lt;/p&gt;
+</content><category term="Tech"></category><category term="arp"></category><category term="kernel"></category><category term="Linux"></category><category term="osi"></category><category term="requête"></category><category term="table"></category></entry><entry><title>Accéder en webdav à son fichier Keepass</title><link href="/2014/09/acceder-en-webdav-a-son-fichier-keepass.html" rel="alternate"></link><published>2014-09-05T22:54:00+02:00</published><updated>2014-09-05T22:54:00+02:00</updated><author><name>alain</name></author><id>tag:None,2014-09-05:/2014/09/acceder-en-webdav-a-son-fichier-keepass.html</id><summary type="html">&lt;p&gt;Keepass est un gestionnaire de mot de passe que j'utilise
+personnellement et professionnellement. Il permet notamment de partager
+un coffre fort entre plusieurs personne en offrant un support pour ftp
+et http/webdav. Certains plugins ajoutent le support sftp et ftps.&lt;/p&gt;
+&lt;p&gt;Sur CentOS, apache est livré avec le module webdav …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Keepass est un gestionnaire de mot de passe que j'utilise
+personnellement et professionnellement. Il permet notamment de partager
+un coffre fort entre plusieurs personne en offrant un support pour ftp
+et http/webdav. Certains plugins ajoutent le support sftp et ftps.&lt;/p&gt;
+&lt;p&gt;Sur CentOS, apache est livré avec le module webdav. Ce n'est pas
+forcement le cas de toutes les distributions.&lt;/p&gt;
+&lt;p&gt;La configuration utilisée est la suivante :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Un sous domaine créé pour contenir le fichier kdbx&lt;/li&gt;
+&lt;li&gt;une protection par mot de passe pour l'accès au fichier en lui même
+(anciennement .htaccess)&lt;/li&gt;
+&lt;li&gt;L'autorisation d'accéder au sous domaine en webdav&lt;/li&gt;
+&lt;li&gt;Et enfin, un mot de passe &lt;strong&gt;ultra solide&lt;/strong&gt; pour le fichier kdbx qui
+peut contenir des données sensibles.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Dans mon cas, j'ai utilisé un sous domaine du type keepass.domain.tld et
+le fichier est stocké en local sur le serveur sous /var/www/keepass/&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+root# mkdir /var/www/keepass
+root# chown apache. /var/www/keepass
+root# chmod 770 /var/www/keepass
+root# vim /etc/httpd/conf.d/keepass.conf
+&lt;/pre&gt;
+&lt;p&gt;Pour ne pas que le mot de passe passe en clair sur le net, nous allons
+forcer l'utilisation de https&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+&amp;lt;VirtualHost *:80&amp;gt;
+ ServerName keepass.domain.tld
+ ServerAdmin admin&amp;#64;domain.tld
+ Redirect permanent / https://keepass.domain.tld/
+ ErrorLog /var/log/httpd/keepass.err
+ CustomLog /var/log/httpd/keepass.log combined
+ DocumentRoot /var/www/keepass
+&amp;lt;/VirtualHost&amp;gt;
+&amp;lt;VirtualHost *:443&amp;gt;
+ SSLEngine on
+ SSLCertificateFile /etc/pki/tls/certs/ca.crt
+ SSLCertificateKeyFile /etc/pki/tls/private/ca.key
+ ServerName keepass.domain.tld
+ ServerAdmin admin&amp;#64;domain.tld
+ ErrorLog /var/log/httpd/keepass.err
+ CustomLog /var/log/httpd/keepass.log combined
+ DocumentRoot /var/www/keepass
+&amp;lt;Directory &amp;quot;/var/www/keepass&amp;quot;&amp;gt;
+ DAV On
+ SSLRequireSSL
+ Options None
+ AuthType Basic
+ AuthName WebDAV
+ AuthUserFile /etc/httpd/conf/.htpasswd
+ &amp;lt;LimitExcept GET OPTIONS&amp;gt;
+ Order allow,deny
+ Allow from X.X.X.X #IP que vous autorisez, 'all' pour tout le monde
+ Require valid-user
+ &amp;lt;/LimitExcept&amp;gt;
+&amp;lt;/Directory&amp;gt;
+&amp;lt;/VirtualHost&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;Voici les étapes pour la création du fichier .htpasswd&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+root# htpasswd -c /etc/httpd/conf/.htpasswd NomUtilisateur
+root# /etc/init.d/httpd restart
+&lt;/pre&gt;
+&lt;p&gt;Il ne reste plus qu'à placer le fichier kdbx dans /var/www/keepass et
+donner à apache les droits en écriture sur ce fichier.&lt;/p&gt;
+&lt;p&gt;Enfin, dans Keepass en ouvrant une url, le logiciel demande de fournir
+l'URL et si besoin un couple login/mdp.&lt;/p&gt;
+&lt;p&gt;L'URL sera de type &lt;a class="reference external" href="https://keepass.domain.tld/fichier.kdbx"&gt;https://keepass.domain.tld/fichier.kdbx&lt;/a&gt; et le couple
+login/mdp est celui créé lors de l’exécution de la commande htpasswd&lt;/p&gt;
+</content><category term="Tech"></category><category term="apache"></category><category term="centos"></category><category term="keepass"></category><category term="ssl"></category><category term="webdav"></category></entry><entry><title>Bash : Script de sauvegarde</title><link href="/2014/07/bash-script-de-sauvegarde.html" rel="alternate"></link><published>2014-07-24T11:14:00+02:00</published><updated>2014-07-24T11:14:00+02:00</updated><author><name>alain</name></author><id>tag:None,2014-07-24:/2014/07/bash-script-de-sauvegarde.html</id><summary type="html">&lt;p&gt;On ne le dira jamais assez : &lt;strong&gt;FAITES DES SAUVEGARDES!!!!!&lt;/strong&gt;
+Ayant un petit serveur dédié sous CentOS, j'ai évidemment appliqué
+cet adage à moi même. Je vous présente donc un script duquel vous pouvez
+librement vous inspirer afin de l'adapter à votre environnement.
+Ce script place quelques répertoires et quelques exports …&lt;/p&gt;</summary><content type="html">&lt;p&gt;On ne le dira jamais assez : &lt;strong&gt;FAITES DES SAUVEGARDES!!!!!&lt;/strong&gt;
+Ayant un petit serveur dédié sous CentOS, j'ai évidemment appliqué
+cet adage à moi même. Je vous présente donc un script duquel vous pouvez
+librement vous inspirer afin de l'adapter à votre environnement.
+Ce script place quelques répertoires et quelques exports de base de
+données dans un fichier tar.gz puis envoie ce fichier sur 2 serveurs FTP
+(ceinture + bretelles) et enfin déplace l'archive dans un répertoire de
+&lt;a class="reference external" href="http://pyd.io"&gt;pydio&lt;/a&gt; afin de pouvoir facilement récupérer le
+fichier sur ma machine personnelle.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+#!/bin/bash
+#Fichier de Backup créé par Alain Devarieux
+# - créer un fichier tar.gz contenant plusieurs élements de l'arborescence
+# - Envoie ce fichier tar.gz sur un serveur FTP dédié au backup
+# - Dépose une copie du fichier tar.gz dans un repertoire local
+# - Ceinture ET Bretelles : Envoie le fichier tar.gz sur un 2nd serveur FTP
+logger -t backup &amp;quot;########## Debut de la sauvegarde ##########&amp;quot;
+# Nom du fichier de Backup
+backup_file=&amp;quot;/sauv/backup-$(hostname)-$(date +%Y-%m-%d).tar.gz&amp;quot;
+#Variable : Premier Serveur FTP de Backup
+bckftp01=&amp;quot;server01&amp;quot;
+bckftp01_user=&amp;quot;user01&amp;quot;
+bckftp01_mdp=&amp;quot;Enter password here&amp;quot;
+#Variable : Second Serveur de Backup
+bckftp02=&amp;quot;server02&amp;quot;
+bckftp02_user=&amp;quot;user02&amp;quot;
+bckftp02_mdp=&amp;quot;Enter password here&amp;quot;
+#Varibales : Dossier de destination du tar.gz en local
+destdir=&amp;quot;/var/www/html/pydio/data/files/&amp;quot;
+#Liste des dossiers à sauvegarder
+backup_list=&amp;quot;/etc /var/www/html /sauv/sql /sauv/packagelist.txt&amp;quot;
+#Le dossier a exclure
+backup_exclude=&amp;quot;/var/www/html/pydio/data&amp;quot;
+
+#Liste des paquets installés
+rpm -qa &amp;gt; /sauv/packagelist.txt
+
+#Dump des bases SQL
+#Base01
+if ! mysqldump -u userbase01 -pPassword base01 &amp;gt; /sauv/sql/base01.sql; then
+statusbase01=&amp;quot;Warning : Erreur lors de l'export de la base Base01&amp;quot;
+else
+statusbase01=&amp;quot;Succes de l'export de la base Base01&amp;quot;
+fi
+logger -t backup &amp;quot;$statusbase01&amp;quot;
+#Base02
+if ! mysqldump -u userbase02 -pPassword Base02 &amp;gt; /sauv/sql/base02.sql; then
+statusbase02=&amp;quot;Warning : Erreur lors de l'export de la base Base02&amp;quot;
+else
+statusbase02=&amp;quot;Succes de l'export de la base Base02&amp;quot;
+fi
+logger -t backup &amp;quot;$statusbase02&amp;quot;
+
+#Creation du tar
+#On commence par enregistrer la seconde de debut
+start=$(date '+%s')
+if ! tar czf $backup_file --exclude=$backup_exclude $backup_list; then
+statustar=&amp;quot;echec de la commande tar&amp;quot; || exit 1
+else
+statustar=&amp;quot;Succes creation fichier tar taille=$(stat -c%s $backup_file) duree=$((`date '+%s'` - $start))&amp;quot;
+fi
+#On log le resultat
+logger -t backup &amp;quot;$statustar&amp;quot;
+
+#Envoie vers le ftp01
+if ! lftp $bckftp01_user:$bckftp01_mdp&amp;#64;$bckftp01 -e &amp;quot;put $backup_file; exit&amp;quot;; then
+statusftp01=&amp;quot;Echec de l'envoie FTP vers $bckftp01&amp;quot;
+else
+statusftp01=&amp;quot;Succes de l'envoie FTP vers $bckftp01&amp;quot;
+fi
+#On log le resultat
+logger -t backup &amp;quot;$statusftp01&amp;quot;
+
+#Envoie vers le ftp02
+if ! lftp $bckftp02_user:$bckftp02_mdp&amp;#64;$bckftp02 -e &amp;quot;put $backup_file; exit&amp;quot;; then
+statusftp02=&amp;quot;Echec de l'envoie FTP vers $bckftp02&amp;quot;
+else
+statusftp02=&amp;quot;Succes de l'envoie FTP vers $bckftp02&amp;quot;
+fi
+#On log le resultat
+logger -t backup &amp;quot;$statusftp02&amp;quot;
+
+#Deplacer le fichier dans pydio
+if ! mv $backup_file $destdir; then
+statusmv=&amp;quot;Warning : Echec du déplacement de $backup_file dans Pydio&amp;quot;
+else
+statusmv=&amp;quot;Fichier $backup_file déplacé dans Pydio&amp;quot;
+fi
+logger -t backup &amp;quot;$statusmv&amp;quot;
+logger -t backup &amp;quot;########## Fin de la sauvegarde ##########&amp;quot;
+exit 0
+&lt;/pre&gt;
+&lt;p&gt;Le script est planifié pour être lancé tous les dimanche à 5h00.
+J'ai écris un 2nd script qui m'envoie un email avec les logs de la
+sauvegarde afin que je puisse surveillé que tout c'est bien passé&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+#!/bin/bash
+#Envoie d'un mail suite à l'execution du script de sauvegarde
+datejour=$(LC_ALL=&amp;quot;en_EN.UTF-8&amp;quot; date &amp;quot;+%b %d&amp;quot;)
+grep backup /var/log/messages |grep &amp;quot;$datejour&amp;quot; | mail -s &amp;quot;Backup du mois de $(date &amp;quot;+%B&amp;quot;)&amp;quot; adresse&amp;#64;email.com adresse2&amp;#64;email.com
+&lt;/pre&gt;
+&lt;p&gt;Petite explication sur le LC_ALL=&amp;quot;en_EN.UTF-8&amp;quot;
+Lorsque je tape&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+date &amp;quot;+%b&amp;quot;
+&lt;/pre&gt;
+&lt;p&gt;J'obtiens la version courte et francisée du mois. Par exemple, pour le
+mois de juillet, je vais avoir comme retour &lt;em&gt;juil&lt;/em&gt;. Hors syslog lui
+écris dans le fichier &lt;em&gt;/var/log/messages&lt;/em&gt; en anglais. Ce qui donne pour
+le mois de juillet : &lt;em&gt;jul&lt;/em&gt; pour &lt;em&gt;july.&lt;/em&gt; Pour pouvoir réussir mon grep
+dans mon fichier de log, j'ai besoin de que la commande &lt;em&gt;date&lt;/em&gt; me
+retourne les informations en anglais également. C'est ce qui explique le
+positionnement de cette variable en amont.&lt;/p&gt;
+&lt;p&gt;Ce second script est également placé dans un cron et est lancé a 5h15
+tous les dimanches.&lt;/p&gt;
+</content><category term="Tech"></category><category term="bash"></category><category term="centos"></category><category term="cron"></category><category term="ftp"></category><category term="gz"></category><category term="Linux"></category><category term="pydio"></category><category term="sauvegarde"></category><category term="script"></category><category term="tar"></category></entry><entry><title>Veille Open Source pour les pros</title><link href="/2013/12/veille-open-source-pour-les-pros.html" rel="alternate"></link><published>2013-12-18T18:48:00+01:00</published><updated>2013-12-18T18:48:00+01:00</updated><author><name>alain</name></author><id>tag:None,2013-12-18:/2013/12/veille-open-source-pour-les-pros.html</id><summary type="html">&lt;p&gt;Cela fait quelques temps que je suis ce site, édité par
+&lt;a class="reference external" href="http://www.smile.fr/"&gt;smile&lt;/a&gt;&amp;nbsp;(dont je vous conseil les livres
+blancs), et je n'en ai pas beaucoup parlé autour de moi. Ajouté
+récemment dans les flux RSS, il me permet de suivre l'actualité des
+solutions open source professionnelles facilement.&lt;/p&gt;
+&lt;p&gt;Ce site,
+c'est …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cela fait quelques temps que je suis ce site, édité par
+&lt;a class="reference external" href="http://www.smile.fr/"&gt;smile&lt;/a&gt;&amp;nbsp;(dont je vous conseil les livres
+blancs), et je n'en ai pas beaucoup parlé autour de moi. Ajouté
+récemment dans les flux RSS, il me permet de suivre l'actualité des
+solutions open source professionnelles facilement.&lt;/p&gt;
+&lt;p&gt;Ce site,
+c'est&amp;nbsp;&lt;a class="reference external" href="http://www.open-source-guide.com/"&gt;open-source-guide.com&lt;/a&gt;,
+disponible également en &lt;a class="reference external" href="http://www.open-source-guide.com/en"&gt;version
+anglaise&lt;/a&gt;. Il m'a permis de
+découvrir plusieurs solutions open source dont je ne connaissais pas
+l'existence. Un système de double notation permet de se rendre
+rapidement compte de la fiabilité des produits (note smile et note des
+utilisateurs).&lt;/p&gt;
+</content><category term="Tech"></category><category term="annuaire"></category><category term="libre"></category><category term="open source"></category><category term="smile"></category></entry><entry><title>Owncloud et fail2ban derrière un reverse proxy</title><link href="/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html" rel="alternate"></link><published>2013-12-05T18:32:00+01:00</published><updated>2013-12-05T18:32:00+01:00</updated><author><name>alain</name></author><id>tag:None,2013-12-05:/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html</id><summary type="html">&lt;p&gt;Dans le &lt;a class="reference external" href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+article&lt;/a&gt;,
+j'expliquais comment mettre en place fail2ban sur son serveur pour
+protéger son instance Owncloud lorsqu'elle est connectée sur un serveur
+Ldap.&lt;/p&gt;
+&lt;p&gt;En général, lorsqu'on utilise un serveur Ldap pour l'authentification,
+c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas
+si simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le &lt;a class="reference external" href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+article&lt;/a&gt;,
+j'expliquais comment mettre en place fail2ban sur son serveur pour
+protéger son instance Owncloud lorsqu'elle est connectée sur un serveur
+Ldap.&lt;/p&gt;
+&lt;p&gt;En général, lorsqu'on utilise un serveur Ldap pour l'authentification,
+c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas
+si simple. Par exemple, dans mon cas, le serveur owncloud ne se trouve
+pas directement en frontale sur le net mais est caché derrière un
+reverse proxy.&lt;/p&gt;
+&lt;p&gt;Du coup, le serveur owncloud ne voit qu'une seule IP : celle du reverse
+proxy. La mise en place de fail2ban sur ce serveur poserait alors un
+gros problème car cela reviendrait à faire bannir l'IP du reverse proxy
+et interdire tout accès à owncloud depuis l’extérieur. Dans cet article,
+nous allons donc voir comment corriger ce problème à l'aide de syslog.&lt;/p&gt;
+&lt;div class="section" id="sur-le-serveur-owncloud"&gt;
+&lt;h2&gt;Sur le serveur Owncloud&lt;/h2&gt;
+&lt;div class="section" id="modification-d-owncloud"&gt;
+&lt;h3&gt;Modification d'owncloud&lt;/h3&gt;
+&lt;div class="section" id="configuration-du-serveur-owncloud"&gt;
+&lt;h4&gt;Configuration du serveur owncloud&lt;/h4&gt;
+&lt;p&gt;Afin d’assurer une cohérence dans l’écriture des logs, il faut que la
+timezone soit correctement configurée sur le serveur.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;owncloud]# tzselect
+&lt;/pre&gt;
+&lt;p&gt;Création du fichier qui recevra les écritures des logs des échecs de
+connexions :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;owncloud]# touch /var/log/owncloud-fail.log
+[root&amp;#64;owncloud]# chmod 660 /var/log/owncloud-fail.log
+[root&amp;#64;owncloud]# chown root.apache /var/log/owncloud-fail.log
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="modification-du-backend-d-owncloud"&gt;
+&lt;h4&gt;Modification du backend d'owncloud&lt;/h4&gt;
+&lt;p&gt;Dans le fichier &lt;em&gt;/var/www/html/owncloud/lib/user/database.php&lt;/em&gt;, ligne
+202. Dans la fonction &lt;strong&gt;checkPassword&lt;/strong&gt;, entre le else et le return
+false, insérez le code suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$headers = apache_request_headers();
+$real_client_ip = $headers[&amp;quot;X-Forwarded-for&amp;quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&amp;quot;owncloud&amp;quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &amp;quot;Password check failed for: &amp;quot; . &amp;quot;$IPClient&amp;quot; . &amp;quot; &amp;quot; . &amp;quot;$real_client_ip&amp;quot;);
+closelog();
+&lt;/pre&gt;
+&lt;p&gt;Dans le fichier &lt;em&gt;/var/www/html/owncloud/apps/user_ldap/user_ldap.php&lt;/em&gt;,
+ligne 75. Dans la fonction &lt;strong&gt;checkPassword&lt;/strong&gt;, entre le
+if(count($ldap_users) &amp;lt; 1) { et le return false; insérez le code
+suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+if($uid!=&amp;quot;admin&amp;quot;) {
+$headers = apache_request_headers();
+$real_client_ip = $headers[&amp;quot;X-Forwarded-For&amp;quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&amp;quot;owncloud&amp;quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &amp;quot;Password check failed for: &amp;quot; . &amp;quot;$IPClient&amp;quot; . &amp;quot; &amp;quot; . &amp;quot;$real_client_ip&amp;quot;);
+closelog();
+&lt;/pre&gt;
+&lt;p&gt;Puis, en dessous du return false, fermez l’instruction if en ajoutant un&lt;/p&gt;
+&lt;p&gt;&lt;tt class="docutils literal"&gt;}&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;Toujours dans le même fichier, ligne 97, juste après
+&lt;strong&gt;if(!$this→areCredentialsValid($dn, $password)) {&lt;/strong&gt; Et au-dessus du
+&lt;strong&gt;return false;&lt;/strong&gt; correspondant ajouter le code suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$headers = apache_request_headers();
+$real_client_ip = $headers[&amp;quot;X-Forwarded-For&amp;quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&amp;quot;owncloud&amp;quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &amp;quot;Password check failed for: &amp;quot; . &amp;quot;$IPClient&amp;quot; . &amp;quot; &amp;quot; . &amp;quot;$real_client_ip&amp;quot;);
+closelog();
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="explication-du-code"&gt;
+&lt;h4&gt;Explication du code&lt;/h4&gt;
+&lt;pre class="literal-block"&gt;
+$headers = apache_request_headers()
+&lt;/pre&gt;
+&lt;p&gt;Récupère l’entête des requêtes http venant du reverse proxy sous forme
+de tableau&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$real_client_ip = $headers[ &amp;quot;X-forwarded-For &amp;quot;] ;
+&lt;/pre&gt;
+&lt;p&gt;Récupère l’adresse IP réelle du client dans le tableau $headers&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$IPClient = $_SERVER[‘REMOTE_ADDR’] ;
+&lt;/pre&gt;
+&lt;p&gt;Récupère l’adresse IP du client. Si le client vient de l’extérieur du
+SIB, cette IP sera celle du reverse proxy.&lt;/p&gt;
+&lt;p&gt;Openlog, Syslog et closelog sont les fonctions PHP pour écrire les
+échecs de connexions en passant par syslog.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-rsyslog"&gt;
+&lt;h3&gt;Configuration de rsyslog&lt;/h3&gt;
+&lt;div class="section" id="log-locaux"&gt;
+&lt;h4&gt;Log locaux&lt;/h4&gt;
+&lt;p&gt;Pour loguer les échecs de connexion venant d’owncloud, il faut dire à
+rsyslog ce qu’il doit faire avec ces entrées. On crée pour cela un
+fichier supplémentaire &lt;em&gt;/etc/rsyslog.d/owncloud.conf&lt;/em&gt; contenant une
+seule ligne :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+local0.*   /var/log/owncloud-fail.log
+&lt;/pre&gt;
+&lt;p&gt;Ainsi, tous les messages reçus sur l’interface LOCAL0 de rsyslog seront
+redirigé vers le fichier &lt;em&gt;/var/log/owncloud-fail.log&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="log-distant"&gt;
+&lt;h4&gt;Log distant&lt;/h4&gt;
+&lt;p&gt;Le serveur owncloud ne peut pas bannir lui-même les IP car il ne voit
+que l’IP du reverse proxy pour toutes les connexions venant de
+l’extérieur. Il faut donc remonter les logs des échecs de connexions
+vers le reverse proxy qui bannira lui-même les IP. On crée pour cela un
+nouveau fichier de configuration de rsyslog :
+&lt;em&gt;/etc/rsyslog.d/fail2ban.conf&lt;/em&gt;.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+local0.*        &amp;#64;nomdevotrereverse.proxy:514
+&lt;/pre&gt;
+&lt;p&gt;Ceci a pour effet d’envoyer tous les messages reçu sur l’interface
+LOCAL0 de rsyslog vers le service syslog du reverse proxy.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="prise-en-compte-des-modifications"&gt;
+&lt;h3&gt;Prise en compte des modifications&lt;/h3&gt;
+&lt;p&gt;On redémarre le service rsyslog&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+/etc/init.d/rsyslog restart
+&lt;/pre&gt;
+&lt;p&gt;Afin de voir si les modifications effectuées n’ont pas générée d’erreur
+:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+grep rsyslog /var/log/messages
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="sur-le-reverse-proxy"&gt;
+&lt;h2&gt;Sur le reverse proxy&lt;/h2&gt;
+&lt;div class="section" id="configuration-de-syslog"&gt;
+&lt;h3&gt;Configuration de syslog&lt;/h3&gt;
+&lt;p&gt;Par défaut, le service syslog n’écoute pas le réseau et ne peut donc pas
+recevoir de logs distants. Pour corriger cela, on édite le fichier
+&lt;em&gt;/etc/sysconfig/syslog&lt;/em&gt;. Modification de la ligne SYSLOGD_OPTIONS en
+ajoutant l’option –r&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+SYSLOGD_OPTIONS=&amp;quot;-r -m 0&amp;quot;
+&lt;/pre&gt;
+&lt;p&gt;Puis, on relance le service afin d’activer l’écoute réseau :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+/etc/init.d/syslog restart
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-fail2ban"&gt;
+&lt;h3&gt;Configuration de fail2ban&lt;/h3&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h4&gt;Installation&lt;/h4&gt;
+&lt;p&gt;L’installation se fait simplement par le gestionnaire de paquet :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install fail2ban
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-la-prison"&gt;
+&lt;h4&gt;Configuration de la prison&lt;/h4&gt;
+&lt;p&gt;On édite pour cela le fichier &lt;em&gt;/etc/fail2ban/jail.conf&lt;/em&gt; et on y ajoute
+les lignes suivantes :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[owncloud]
+enabled = true
+port = https
+filter = owncloud
+action = iptables[name=httpd,port=https,protocal=all]
+logpath = /var/log/messages
+maxretry = 5
+&lt;/pre&gt;
+&lt;p&gt;Toutes les autres prisons peuvent être positionnées sur enabled = false
+puisque nous n’en avons pas besoin ici.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="creation-du-filtre"&gt;
+&lt;h4&gt;Création du filtre&lt;/h4&gt;
+&lt;p&gt;Dans la configuration du jail, nous avons dit à fail2ban d’utiliser le
+filtre owncloud, nous allons maintenant créer le filtre :&lt;/p&gt;
+&lt;p&gt;Création du fichier &lt;em&gt;/etc/fail2ban/filter.d/owncloud.conf&lt;/em&gt;&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[Definition]
+failregex = Password check failed for: ip.du.reverse.proxy &amp;lt;HOST&amp;gt;
+ignoreregex =
+&lt;/pre&gt;
+&lt;p&gt;Puisque nous ne souhaitons que bannir les IP externes, nous ne
+récupérons que les lignes qui contiennent l’IP du reverse proxy ET l’IP
+réelle du client. Le ligne ignoreregex n’est pas nécessaire mais il faut
+tout de même qu’elle soit présente afin que fail2ban valide la
+configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="demarrage-du-service"&gt;
+&lt;h4&gt;Démarrage du service&lt;/h4&gt;
+&lt;p&gt;On lance le service fail2ban :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+/etc/init.d/fail2ban start
+&lt;/pre&gt;
+&lt;p&gt;Si le lancement tombe en échec, c’est qu’il y a un problème de
+configuration. Pour repérer ce problème, il faut lancer le daemon à la
+main :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+fail2ban-server
+&lt;/pre&gt;
+&lt;p&gt;Puis on lance un reload du client qui va tester pour nous la
+configuration&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+fail2ban-client reload
+&lt;/pre&gt;
+&lt;p&gt;S’il y a une erreur, cette commande nous le dira.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="test-de-la-configuration"&gt;
+&lt;h4&gt;Test de la configuration&lt;/h4&gt;
+&lt;p&gt;Afin de tester la valididité de la regex, fail2ban propose l’outil
+fail2ban-regex. Créer pour cela quelques échecs de connexion et tester
+avec la commande :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+fail2ban-regex /var/log/messages /etc/fail2ban/filter.d/owncloud.conf
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+Running tests
+=============
+Use regex file : /etc/fail2ban/filter.d/owncloud.conf
+Use log file   : /var/log/messages
+
+Results
+=======
+Failregex
+|- Regular expressions:
+|  [1] Password check failed for: ip.du.reverse.proxy &amp;lt;HOST&amp;gt;
+|
+`- Number of matches:
+   [1] 6 match(es)
+
+Ignoreregex
+|- Regular expressions:
+|
+`- Number of matches:
+
+Summary
+=======
+
+Addresses found:
+[1]
+    X.X.X.X (Thu Dec 05 10:02:11 2013)
+    X.X.X.X (Thu Dec 05 10:05:24 2013)
+    X.X.X.X (Thu Dec 05 10:05:34 2013)
+    X.X.X.X (Thu Dec 05 10:05:42 2013)
+    X.X.X.X (Thu Dec 05 10:05:47 2013)
+    X.X.X.X (Thu Dec 05 10:05:53 2013)
+
+Date template hits:
+18154 hit(s): MONTH Day Hour:Minute:Second
+
+Success, the total number of match is 6
+However, look at the above section 'Running tests' which could contain important info
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="fail2ban"></category><category term="owncloud"></category><category term="proxy"></category><category term="remote log"></category><category term="reverse"></category><category term="reverse proxy"></category><category term="rsyslog"></category><category term="syslog"></category></entry><entry><title>Mise en oeuvre de Fail2Ban pour Owncloud/Ldap</title><link href="/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html" rel="alternate"></link><published>2013-11-27T20:30:00+01:00</published><updated>2013-11-27T20:30:00+01:00</updated><author><name>alain</name></author><id>tag:None,2013-11-27:/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html</id><summary type="html">&lt;p&gt;Si vous stockez des données personnelles ou à caractères sensibles sur
+votre serveur owncloud, vous souhaitez sans doute que les malandrins
+s'aventurant à tester vos couples &lt;em&gt;Login / Mot de passe&lt;/em&gt; par brutforce
+soient éjectés de votre serveur après un certains nombre de tentatives
+infructueuses.&lt;/p&gt;
+&lt;p&gt;Fail2Ban fera le travail pour vous …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Si vous stockez des données personnelles ou à caractères sensibles sur
+votre serveur owncloud, vous souhaitez sans doute que les malandrins
+s'aventurant à tester vos couples &lt;em&gt;Login / Mot de passe&lt;/em&gt; par brutforce
+soient éjectés de votre serveur après un certains nombre de tentatives
+infructueuses.&lt;/p&gt;
+&lt;p&gt;Fail2Ban fera le travail pour vous, mais pour cela, il a besoin que les
+échecs de connexions soient logués, ce qu'Owncloud ne fait
+malheureusement pas. Il faut donc, avant de mettre en oeuvre Fail2Ban,
+procéder à quelques modifications dans le code d'Owncloud.&lt;/p&gt;
+&lt;p&gt;Vous trouverez beaucoup d'article vous expliquant comment faire cela
+avec une connexion classique via la base de donnée d'Owncloud, par
+exemple
+&lt;a class="reference external" href="http://www.dataparadis.net/osp/gnu-linux-server/cloud-server/owncloud-and-fail2ban-update/"&gt;ici&lt;/a&gt;.
+Dans cet article, nous verrons plutôt comment régler le problème
+lorsqu'on utilise une authentification via un serveur Ldap.&lt;/p&gt;
+&lt;div class="section" id="preparer-le-terrain"&gt;
+&lt;h2&gt;Préparer le terrain&lt;/h2&gt;
+&lt;p&gt;Afin d'assurer une cohérence dans l'écriture des logs, il faut que la
+timezone soit correctement configurée sur le serveur. Vous pouvez faire
+cela à l'aide de la commande :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;server1]# tzselect
+&lt;/pre&gt;
+&lt;p&gt;On va ensuite, créer le fichier qui servira à loguer les échecs de
+connexions&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;server1]# touch /var/log/owncloud-fail.log
+[root&amp;#64;server1]# chmod 660 /var/log/owncloud-fail.log
+[root&amp;#64;server1]# chown root.apache&amp;nbsp;/var/log/owncloud-fail.log
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="modification-du-backend-d-owncloud"&gt;
+&lt;h2&gt;Modification du backend d'Owncloud&lt;/h2&gt;
+&lt;p&gt;Dans le fichier lib/user/database.php, ligne 202. Dans la fonction
+checkPassword, entre le &lt;strong&gt;else&lt;/strong&gt; et le &lt;strong&gt;return false&lt;/strong&gt;, insérez le code
+suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$today = new DateTime();
+date_timezone_set($today, timezone_open('Europe/Paris'));
+$IPClient=$_SERVER['REMOTE_ADDR'];
+$logAuth=fopen('/var/log/owncloud-fail.log', 'a+');
+fputs($logAuth, date_format($today, 'Y/m/d H:i:s') . &amp;quot; Password check failed for: \t&amp;quot; . $IPClient . &amp;quot;\n&amp;quot;);
+fclose($logAuth);
+&lt;/pre&gt;
+&lt;p&gt;Dans le fichier apps/user_ldap/user_ldap.php, ligne 75. Dans la
+fonction checkPassword, entre le&amp;nbsp; &lt;strong&gt;if(count($ldap_users) &amp;lt; 1)
+{&lt;/strong&gt; et le&amp;nbsp; &lt;strong&gt;return false;&lt;/strong&gt; insérez le code suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+if($uid!=&amp;quot;admin&amp;quot;) {
+date_default_timezone_set('Europe/Paris');
+$today = date(&amp;quot;Y/m/d H:i:s&amp;quot;);
+$IPClient=$_SERVER['REMOTE_ADDR'];
+$logAuth=fopen('/var/log/owncloud-fail.log', 'a+');
+fputs($logAuth, $today . &amp;quot; Password check failed for: \t&amp;quot; . $IPClient . &amp;quot;\n&amp;quot;);
+fclose($logAuth);
+&lt;/pre&gt;
+&lt;p&gt;Puis, en dessous du return false, fermez l'instruction if en ajoutant un&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+}
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Explication du code :&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Il y a un utilisateur qui est inscrit en base de donnée et qui n'est pas
+dans le ldap, c'est l'admin d'owncloud. Afin ne ne pas loguer une
+connexion de l'utilisateur 'admin' en tant qu'erreur de connexion, il
+est nécessaire de vérifier que que c'est pas cet utilisateur qui se
+connecte. D'où le &lt;strong&gt;if($uid!=&amp;quot;admin&amp;quot;){}&lt;/strong&gt;. Veillez à modifier cette
+valeur suivant la votre.&lt;/p&gt;
+&lt;p&gt;La variable &lt;strong&gt;$ldap_users&lt;/strong&gt; est un tableau contenant la liste des
+utilisateurs qui correspondent à la valeur saisie dans le login. Si
+cette table est vide, alors il y aura un échec de connexion logué.&lt;/p&gt;
+&lt;p&gt;Le dernier ajout à faire se trouve un petit peu plus bas dans ce
+fichier, ligne 97, juste en dessous
+de&amp;nbsp;&lt;strong&gt;if(!$this-&amp;gt;areCredentialsValid($dn, $password)) {&lt;/strong&gt; et au dessus
+de &lt;strong&gt;return false;&lt;/strong&gt;ajoutez le code suivant :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+date_default_timezone_set('Europe/Paris');
+$today = date(&amp;quot;Y/m/d H:i:s&amp;quot;);
+$IPClient=$_SERVER['REMOTE_ADDR'];
+$logAuth=fopen('/var/log/owncloud-fail.log', 'a+');
+fputs($logAuth, $today . &amp;quot; Password check failed for: \t&amp;quot; . $IPClient . &amp;quot;\n&amp;quot;);
+fclose($logAuth);
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-fail2ban"&gt;
+&lt;h2&gt;Configuration de Fail2Ban&lt;/h2&gt;
+&lt;p&gt;Dans votre fichier /etc/fail2ban/jail.conf (ou équivalent suivant votre
+distribution) :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[Owncloud]
+enabled  = true
+port     = http,https
+filter   = owncloud
+logpath  = /var/log/owncloud-fail.log
+maxretry = 5
+&lt;/pre&gt;
+&lt;p&gt;Et enfin, le fichier de filtre /etc/fail2ban/filter.d/owncloud.conf&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+# /etc/fail2ban/filter.d/owncloud.conf
+#
+# Fail2Ban configuration file
+# Owncloud
+#
+
+[Definition]
+# Option: failregex
+failregex = &amp;lt;HOST&amp;gt;$
+&lt;/pre&gt;
+&lt;p&gt;Relancez fail2ban et le tour est joué.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="fail2ban"></category><category term="ldap"></category><category term="Linux"></category><category term="owncloud"></category></entry><entry><title>Remboursement de licence Windows 8 sur portable ASUS - Episode 2</title><link href="/2013/10/remboursement-de-licence-windows-8-sur-portable-asus-episode-2.html" rel="alternate"></link><published>2013-10-19T17:51:00+02:00</published><updated>2013-10-19T17:51:00+02:00</updated><author><name>alain</name></author><id>tag:None,2013-10-19:/2013/10/remboursement-de-licence-windows-8-sur-portable-asus-episode-2.html</id><summary type="html">&lt;div class="section" id="la-vertu-de-la-patience"&gt;
+&lt;h2&gt;La vertu de la patience&lt;/h2&gt;
+&lt;p&gt;Suite et fin de ce &lt;a class="reference external" href="http://blog.devarieux.net/2013/07/remboursement-de-licence-windows-8-sur-portable-asus/"&gt;premier
+article&lt;/a&gt;
+sur la procédure de remboursement de licence Windows de mon nouveau
+portable. Il m'a fallu patienter quelques temps avant de devoir les
+relancer pour savoir où en était la procédure.&lt;/p&gt;
+&lt;p&gt;J'avais en effet envoyé mon dossier complet par …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;div class="section" id="la-vertu-de-la-patience"&gt;
+&lt;h2&gt;La vertu de la patience&lt;/h2&gt;
+&lt;p&gt;Suite et fin de ce &lt;a class="reference external" href="http://blog.devarieux.net/2013/07/remboursement-de-licence-windows-8-sur-portable-asus/"&gt;premier
+article&lt;/a&gt;
+sur la procédure de remboursement de licence Windows de mon nouveau
+portable. Il m'a fallu patienter quelques temps avant de devoir les
+relancer pour savoir où en était la procédure.&lt;/p&gt;
+&lt;p&gt;J'avais en effet envoyé mon dossier complet par email le 26 Juillet. Le
+28 Août, n'ayant toujours aucune nouvelles, je leur ai envoyé ce mail de
+relance :&lt;/p&gt;
+&lt;blockquote&gt;
+Bonjour,
+Je me permets de revenir vers vous concernant cette demande de
+remboursement.
+Je vous ai envoyé les documents il y a un petit peu plus d'un mois
+et je n'ai pas reçu de nouvelle de votre part.
+Pouvez-vous me dire quel est le délai généralement constaté dans le
+traitement de ces dossiers?
+Cordialement,&lt;/blockquote&gt;
+&lt;p&gt;Et le jour même, je recevais cette réponse de leur part :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bonjour monsieur,&lt;/p&gt;
+&lt;p&gt;Je vous remercie.&lt;/p&gt;
+&lt;p&gt;Je vous joins maintenant en pièce jointe, le formulaire pré rempli
+que vous devrez vérifier, dater puis signer et me le retourner en
+retour de ce mail s’il vous plaît.&lt;/p&gt;
+&lt;p&gt;En vous souhaitant une bonne journée,&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Le jour même, je leur renvoyais le document, toujours par email,
+rempli et signé.
+Le 17 Septembre, mon dossier montait enfin en compta.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bonjour monsieur,&lt;/p&gt;
+&lt;p&gt;Je vous remercie.&lt;/p&gt;
+&lt;p&gt;Je remonte votre document au centre de comptabilité.&lt;/p&gt;
+&lt;p&gt;En vous souhaitant une bonne journée,&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Et le 10 Octobre, j'ai enfin reçu mon virement de 42€.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="bilan-de-l-operation"&gt;
+&lt;h2&gt;Bilan de l'opération&lt;/h2&gt;
+&lt;p&gt;D'après cette petite expérience, le remboursement de licence Windows
+chez Asus ce fait plutôt facilement. Pas besoin de renvoyer le PC. Il
+faut juste leur écrire assez rapidement (au max 3 semaines après
+l'achat) et être assez patient.&lt;/p&gt;
+&lt;p&gt;J'ai lancé la procédure le 16 Juillet et reçu le virement le 10 Octobre.
+Il a donc fallu environ 3 mois pour aller au bout de l'opération.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="asus-ACF-COA" src="/images/asus-ACF-COA-300x92.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Je me suis tout de même heurté à un petit problème lors du premier
+démarrage de la machine. Je souhaitais démarrer sur l'OS Windows afin
+pouvoir refuser le CLU. Il est impossible de refuser le CLU. Vous ne
+pouvez que l'accepter. La seul solution a été de rebooter le PC (hard
+reboot via le bouton Power).&lt;/p&gt;
+&lt;p&gt;Il ne faut surtout pas démarrer sur la partition Windows. Ceci risque
+d'activer la licence de l'OS, son remboursement devenant alors
+impossible.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="acf_coa"></category><category term="asus"></category><category term="remboursement"></category><category term="windows"></category></entry><entry><title>Remboursement de licence Windows 8 sur portable ASUS - Episode 1</title><link href="/2013/07/remboursement-de-licence-windows-8-sur-portable-asus.html" rel="alternate"></link><published>2013-07-25T19:14:00+02:00</published><updated>2013-07-25T19:14:00+02:00</updated><author><name>alain</name></author><id>tag:None,2013-07-25:/2013/07/remboursement-de-licence-windows-8-sur-portable-asus.html</id><summary type="html">&lt;p&gt;Il y a 10 jours, j'ai fait l'acquisition d'un nouvel ultra-book. Un Asus
+Zenbook UX32VD-R4020H pour être précis. Une belle bête, avec un core i5
+&amp;#64; 1.70Ghz, 4go de RAM, technologie Optimus (un chipset Intel HD intégré
+au processeur et une carte graphique Nvidia 620M quand la machine a
+besoin …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il y a 10 jours, j'ai fait l'acquisition d'un nouvel ultra-book. Un Asus
+Zenbook UX32VD-R4020H pour être précis. Une belle bête, avec un core i5
+&amp;#64; 1.70Ghz, 4go de RAM, technologie Optimus (un chipset Intel HD intégré
+au processeur et une carte graphique Nvidia 620M quand la machine a
+besoin d'un peu plus de puissance graphique), un SSD de 24Go pour
+installer l'OS et un disque dur de 500GO pour la data. Le tout avec un
+écran 13.3&amp;quot; 1080p.&lt;/p&gt;
+&lt;p&gt;Évidemment, la machine est livrée avec un Windows 8 préinstallée. J'ai
+donc entrepris de me faire rembourser l'OS OEM par Asus.&lt;/p&gt;
+&lt;p&gt;Pour cela, il y a une adresse email de contact qui est
+&lt;a class="reference external" href="mailto:acf_coa&amp;#64;asus.com"&gt;acf_coa&amp;#64;asus.com&lt;/a&gt;. Voici le mail que je leur ai envoyé le Mardi 16
+Juillet :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bonjour,&lt;/p&gt;
+&lt;p&gt;Je viens de faire l'acquisition d'un Ultrabook Asus Zenbook
+UX32VD-R4020H.
+Je suis très content de cet achat, cependant, je ne souhaite pas
+conserver le système d'exploitation Windows 8 qui ne me convient
+pas.&lt;/p&gt;
+&lt;p&gt;Je n'ai pas encore démarré la machine. Pourriez-vous me donner la
+procédure afin d'obtenir le remboursement de la licence Windows 8.&lt;/p&gt;
+&lt;p&gt;Vous trouverez la facture d'achat en PJ de cet email.&lt;/p&gt;
+&lt;p&gt;Cordialement,&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Le Jeudi 25 Juillet, je recevais une réponse d'Asus avec la procédure à
+suivre et les documents à fournir pour me faire rembourser.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bonjour cher client,&lt;/p&gt;
+&lt;p&gt;Vous avez sollicité nos services pour demander le remboursement de
+la licence OEM Windows 8 liée à votre produit.&lt;/p&gt;
+&lt;p&gt;Dans un premier temps je vais vous demander de me fournir tous les
+éléments ci-dessous afin de pouvoir constituer votre dossier et
+pré-remplir un formulaire qui vous sera ensuite renvoyé pour
+signature.&lt;/p&gt;
+&lt;p&gt;Merci donc de me fournir par retour de mail :&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Nom et prénom du propriétaire de la machine.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; N° de téléphone.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Adresse e-Mail.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Adresse postale complète.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; N° de série du produit ASUS (visible sur la carte de
+garantie et/ou sous votre machine, sur un autocollant).&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Copie de la facture d’achat.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Une copie de la page 1 de votre « carte de garantie ASUS
+» (fournie avec tous produit ASUS).&lt;/p&gt;
+&lt;p&gt;o&amp;nbsp;&amp;nbsp; Cette page contient une étiquette avec un code barre et le n° de
+série du produit.&lt;/p&gt;
+&lt;p&gt;o&amp;nbsp;&amp;nbsp; Cette page est également à remplir par le propriétaire du
+produit.&lt;/p&gt;
+&lt;p&gt;-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Facultatif : une photo de l’étiquette du produit&amp;nbsp; avec le
+numéro de série visible (située sous le produit ou sur le chargeur
+du produit) Ces éléments me permettront entre autres d’identifier la
+clé de licence Windows 8 liée à votre appareil.&lt;/p&gt;
+&lt;p&gt;Une fois ces éléments en ma possession je vous ferais donc parvenir
+votre « formulaire de demande de remboursement de la licence
+Microsoft » préalablement rempli qu’il vous faudra confirmer, dater
+et signer à la main puis me renvoyer par mail ou par courrier postal
+(adresse de nos locaux sur les documents joints). Ce premier
+document contient : conditions générales, détails de procédures,
+formulaire et engagements contractuels.&lt;/p&gt;
+&lt;p&gt;Nous tenons cependant à vous signaler que ce document a pour but de
+couvrir tous les cas de figure et que de fait, il est possible que
+certaines étapes de procédure ou certaines mentions ne soient pas
+pertinentes sur votre dossier (exple : le point 2.e des conditions
+générales ne concerne pas la plupart de nos dossiers puisque le n°
+de RMA est rempli par nos services)&lt;/p&gt;
+&lt;p&gt;Je joins a ce courrier le second formulaire, « procédure de paiement
+», qui doit impérativement être rempli informatiquement et
+signé/daté à la main. En effet ces documents administratifs sont
+traités en partie automatiquement et ne peuvent l’être si l’écriture
+est manuelle, en revanche pour des raisons légales la signature du
+client doit être manuelle.&lt;/p&gt;
+&lt;p&gt;Ce formulaire permettra de procéder au remboursement par virement
+une fois la procédure dûment remplie et validée par les 2 partis.&lt;/p&gt;
+&lt;p&gt;Afin de pouvoir vous assurer un traitement fluide et les meilleurs
+délais, nous vous invitons à répondre à nos e-mails au plus vite,
+merci également de prendre note que nos services n’effectuerons pas
+de relance systématique en cas d’absence de réponse et ne pourront
+être tenus responsables en cas d’échec de la procédure pour des
+raisons de délais ne pouvant nous être incombés.&lt;/p&gt;
+&lt;p&gt;Je reste toutefois à votre disposition pour toute autre information
+complémentaire.&lt;/p&gt;
+&lt;p&gt;En vous souhaitant une bonne journée.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;La procédure de remboursement semble donc relativement simple. En tout
+cas, c'est bien partie.&lt;/p&gt;
+&lt;p&gt;En plus de ça, le document à remplir, dans lequel il faut mettre son RIB
+(code IBAN et BIC) est fourni au format ODT. Un bon point encore pour
+Asus.&lt;/p&gt;
+&lt;p&gt;Je vous tiendrai au courant de l'avancement de la procédure via ce blog.&lt;/p&gt;
+</content><category term="Tech"></category><category term="asus"></category><category term="Linux"></category><category term="remboursement"></category><category term="windows"></category></entry><entry><title>HP Proliant Support Pack sur RHEL 5</title><link href="/2013/07/hp-proliant-support-pack-sur-rhel-5.html" rel="alternate"></link><published>2013-07-23T18:07:00+02:00</published><updated>2013-07-23T18:07:00+02:00</updated><author><name>alain</name></author><id>tag:None,2013-07-23:/2013/07/hp-proliant-support-pack-sur-rhel-5.html</id><summary type="html">&lt;p&gt;Dans le cadre de mon travail, je suis en train d'installer et de
+configurer un serveur HP System Insight Manager (SIM). Une sorte de
+Nagios amélioré pour serveur HP, avec anticipation des pannes matériel.&lt;/p&gt;
+&lt;p&gt;Ce serveur SIM nous a permis par exemple de détecter qu'une pile de
+cache RAID était …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le cadre de mon travail, je suis en train d'installer et de
+configurer un serveur HP System Insight Manager (SIM). Une sorte de
+Nagios amélioré pour serveur HP, avec anticipation des pannes matériel.&lt;/p&gt;
+&lt;p&gt;Ce serveur SIM nous a permis par exemple de détecter qu'une pile de
+cache RAID était en train de lâcher et nous avons donc pu remplacer
+cette pile avant que le problème intervienne (pas de cache RAID = temps
+d'accès en écriture tout moisi et ça le fait moyen sur un serveur de
+sauvegarde).&lt;/p&gt;
+&lt;p&gt;Pour que le serveur HPSIM accède aux serveurs qu'il surveille, il faut
+installer un agent. Cet agent, c'est HP Proliant Support Pack. Une suite
+d'utilitaires et de pilotes pour serveur HP Proliant.&lt;/p&gt;
+&lt;p&gt;J'ai donc téléchargé l'iso &lt;a class="reference external" href="http://h18004.www1.hp.com/products/servers/service_packs/en/index.html"&gt;sur le site
+d'HP.&amp;nbsp;&lt;/a&gt;Celle
+ci contient les utilitaires pour tous les OS supportés (Windows, RedHat,
+HP-UX). Une fois l'iso transférée sur le serveur, je la monte :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+mkdir /media/iso
+mount -o loop /tmp/fichier.iso /media/iso
+&lt;/pre&gt;
+&lt;p&gt;Ensuite, c'est l'utilitaire HPSUM qui va s'occuper d'installer les
+différents modules et utilitaires.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd /media/iso/hp/swpackages/
+./hpsum
+&lt;/pre&gt;
+&lt;p&gt;Cette commande utilise un serveur X.
+|  Pour info, la doc complète : &lt;a class="reference external" href="http://bizsupport1.austin.hp.com/bc/docs/support/SupportManual/c03114114/c03114114.pdf"&gt;Guide de l'Utilisateur, HP Smart Update
+Manager&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;En suivant les étapes une à une, les packages sont tous compilés et
+installés.&lt;/p&gt;
+&lt;div class="section" id="aie"&gt;
+&lt;h2&gt;Aïe&lt;/h2&gt;
+&lt;p&gt;Malheureusement, parfois, tout ne tourne pas rond et dans mon cas,
+certains paquets n'ont pas pu être compilés. Les logs montrent un obscur
+message de problème de dépendance avec ksym.&lt;/p&gt;
+&lt;p&gt;Pour résoudre ce problème et terminer l'installation des paquets, voici
+la procédure ;&lt;/p&gt;
+&lt;p&gt;Installation des sources :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd /media/iso/hp/swpackages/
+rpm -ivh &amp;lt;paquet&amp;gt;.src.rpm
+rpmbuild -bb /usr/src/redhat/SPECS/&amp;lt;paquet&amp;gt;.spec
+rpm -ivh --nodeps /usr/src/redhat/RPMS/&amp;lt;arch&amp;gt;/&amp;lt;paquet&amp;gt;.rpm
+&lt;/pre&gt;
+&lt;p&gt;On vérifie que le module a bien été installé :&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;::&lt;/dt&gt;
+&lt;dd&gt;modinfo &amp;lt;nomdumondule&amp;gt;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;On charge le module :&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;::&lt;/dt&gt;
+&lt;dd&gt;modprobe &amp;lt;nomdumodule&amp;gt;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Ce qui donne, avec le paquet qla4xxx qui me concernait :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+rpm -ivh hp-qla4xxx-&amp;lt;version&amp;gt;.src.rpm
+rpmbuild -bb /usr/src/redhat/SPECS/hp-qla4xxx.spec
+rpm -ivh --nodeps /usr/src/redhat/RPMS/x86_64/kmod-hp-qla4xxx-&amp;lt;version&amp;gt;-x86_64.rpm
+modprobe qla4xxx
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="explication"&gt;
+&lt;h2&gt;Explication&lt;/h2&gt;
+&lt;p&gt;Les RPM utilisent les dépendances de KMP (Kernel Module Packaging) pour
+s'assurer que les binaires RPM puissent être installés. Red Hat
+maintient une liste blanche de&amp;nbsp;&lt;em&gt;kernel symbols&lt;/em&gt; (ksym donc) que les
+RPM utilisent. Certains de ses symboles peuvent être dans le kernel mais
+pas dans la liste blanche. Le résultat est que certains RPM, qui y font
+référence, ne peuvent pas être installés.&lt;/p&gt;
+&lt;p&gt;L'utilisateur doit donc utiliser l'option &amp;quot;--nodeps&amp;quot; lors de
+l'installation des binaires.&lt;/p&gt;
+&lt;p&gt;La paquet qla4xxx utilisent les symboles suivant sur RHEL 5 qui ne sont
+pas dans la liste blanche ;&lt;/p&gt;
+&lt;p&gt;ksym(kobject_uevent_env) ksym(iscsi2_session_chkready)
+ksym(pci_get_domain_bus_and_slot)&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="HPSIM"></category><category term="hpsum"></category><category term="insight manager"></category><category term="ksym"></category><category term="proliant support pack"></category><category term="psp"></category><category term="redhat"></category></entry><entry><title>Good Bye Bouygues Telecom</title><link href="/2012/11/good-bye-bouygues-telecom.html" rel="alternate"></link><published>2012-11-02T16:00:00+01:00</published><updated>2012-11-02T16:00:00+01:00</updated><author><name>alain</name></author><id>tag:None,2012-11-02:/2012/11/good-bye-bouygues-telecom.html</id><summary type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
+ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
+il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
+&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
+&lt;p&gt;J'avais en …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
+ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
+il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
+&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
+&lt;p&gt;J'avais en plus groupé mon forfait téléphone et Internet chez eux, avec
+une offre BBox Fibre. Donc, lors de mon déménagement en Septembre 2012
+et puisque leur offre Fibre fonctionnait plutôt bien dans l'ensemble,
+j'ai procédé au déménagement de ma ligne Fibre à ma nouvelle adresse,
+non sans les avoir appelés 3 fois avant afin de m'assurer que mon
+nouveau logement était bien relié à la fibre. &amp;quot;Oui oui&amp;quot; m'a t'on dit à
+plusieurs reprises.&lt;/p&gt;
+&lt;p&gt;Ainsi, le 24 Septembre, un technicien devait se présenter pour nous
+raccorder. Le technicien n'est pas venu (classique). J'ai pris ma plus
+grosse voix pour appeler le service client et demander des explications
+: &amp;quot;Ha mais vous n'êtes pas relié à la fibre monsieur, le rendez-vous à
+été annulé le 16 Septembre&amp;quot;.&lt;/p&gt;
+&lt;p&gt;Ok, donc merci de m'avoir prévenu pour le rendez-vous annulé, ça fait
+plaisir...! À la place de l'offre fibre, j'ai donc droit à une offre
+imbattable de 4Mb/s à la place des 100Mb/s que j'avais avant. Et
+attention, je ne paierais même pas plus cher, ils me le font
+gracieusement au même prix... Ahem... Comment vous dire...? Je pense
+plutôt que je vais résilier mon offre Internet Fibre et aller chez
+Numéricable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="choisir-un-nouveau-forfait-telephone"&gt;
+&lt;h2&gt;Choisir un nouveau forfait téléphone&lt;/h2&gt;
+&lt;p&gt;Puisque je quittais l'offre Bbox, il me fallait choisir un forfait de
+téléphonie. Je pensais pouvoir simplement revenir vers l'offre que j'ai
+toujours eu, soit 2h d'appel + appels illimités le soir + sms illimité +
+3G avec 2Go de fair use. Pour environ 35€ par mois avec smartphone
+subventionné.&lt;/p&gt;
+&lt;p&gt;Malheureusement, ce type de forfait n'existe plus et j'avais le choix
+entre une offre 'Tout illimité + 3Go de fair use à 42Mbps' à 60€ ou une
+offre avec 'Tout illimité + 500Mo de fair use à 7.2Mbps'. Je consomme un
+peu plus de 1.5Go de data par mois sur mon Nexus S, donc il me fallait
+une offre avec au moins 3Go de data. Cela signifiait payer 60€ par mois,
+juste pour le téléphone alors que c'est ce que je payais avant pour
+Téléphone + Internet Fibre.&lt;/p&gt;
+&lt;p&gt;Il me restait un peu moins d'un an d'engagement. Je me suis donc dit que
+c'était le bon moment pour partir à moindre frais.&lt;/p&gt;
+&lt;p&gt;J'ai choisi l'offre Eden 1h. Pas de data, pas de SMS, rien. Juste 1h
+d'appel. De suite après avoir souscris à ce mini forfait, je me suis
+rendu sur le site de B&amp;amp;You pour faire l'acquisition d'une nouvelle carte
+SIM avec un forfait tout illimité à 20€. La somme que je dois à Bouygues
+pour pouvoir partir est donc de (14€ x 10 mois)/3 = 35€. Somme remboursé
+en 1 mois.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="et-maintenant"&gt;
+&lt;h2&gt;Et maintenant?&lt;/h2&gt;
+&lt;p&gt;Bon, oui, je vais maintenant devoir acheter moi même mes smartphones.&lt;/p&gt;
+&lt;p&gt;Ici aussi, faisons un rapide calcul.&lt;/p&gt;
+&lt;p&gt;Avec le forfait à 60€ de chez Bouygues et smartphone subventionné,
+j'aurais payé à l'année, smartphone non compris : &lt;strong&gt;60*12 = 720€&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Avec le forfait à 20€ de chez B&amp;amp;You et un smartphone à 349€ (par
+exemple, le LG Nexus 4 16G), cela me fera à l'année : &lt;strong&gt;20*12 + 349 =
+589€&lt;/strong&gt; (En considérant que je change de smartphone une fois par an, ce
+qui n'est pas le cas. (bon ok, je change tous les 18 mois...)).&lt;/p&gt;
+&lt;p&gt;J'économise donc environ &lt;strong&gt;130€&lt;/strong&gt;, sans compter que chez Bouygues et son
+forfait à 60€, il faut au minimum débourser 50 ou 80€ pour un smartphone
+dernier cri subventionné.&lt;/p&gt;
+&lt;p&gt;Quand je pense qu'on s'est fait pigeonner (pour le dire poliment)
+pendant toutes ses années...&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="B&amp;amp"></category><category term="You, Bouygues, fibre, forfait, Free, internet"></category></entry><entry><title>RHEL 5.5 et chipset broadcom BCM5709</title><link href="/2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html" rel="alternate"></link><published>2010-06-28T19:36:00+02:00</published><updated>2010-06-28T19:36:00+02:00</updated><author><name>alain</name></author><id>tag:None,2010-06-28:/2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html</id><summary type="html">&lt;p&gt;Nous avons récemment installé une nouvelle machine qui sert de serveur
+principal pour notre nouveau système de sauvegarde. Lors des tests des
+sauvegardes complètes du week end, le chipset réseau du serveur
+s'écroulait lamentablement sous la charge du nombre de paquets qui
+arrivaient. Même si le réseau semblait toujours fonctionnel …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Nous avons récemment installé une nouvelle machine qui sert de serveur
+principal pour notre nouveau système de sauvegarde. Lors des tests des
+sauvegardes complètes du week end, le chipset réseau du serveur
+s'écroulait lamentablement sous la charge du nombre de paquets qui
+arrivaient. Même si le réseau semblait toujours fonctionnel (service
+réseau lancé, ifconfig ne signal rien d'anormal), la machine était
+injoignable et ne répondait pas au ping. Dans certains cas, un
+redémarrage du service réseau ne suffit pas à retrouver une
+connectivité.&lt;/p&gt;
+&lt;p&gt;A l'heure où la sauvegarde s'arrêtait, voici ce qu'on pouvait trouver
+dans /var/log/messages :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+server1 kernel: NETDEV WATCHDOG: eth0: transmit timed out
+server1 kernel: bnx2: eth0 NIC Copper Link is Down
+&lt;/pre&gt;
+&lt;p&gt;La résolution du problème passe par une mise à jour du pilote. On trouve
+le pilote pour ce chipset à cette page :
+&lt;a class="reference external" href="http://www.broadcom.com/support/ethernet_nic/netxtremeii.php"&gt;http://www.broadcom.com/support/ethernet_nic/netxtremeii.php&lt;/a&gt; Après avoir
+extrait l'archive, on installe les sources :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+rpm -ivh netxtreme2-&amp;lt;version&amp;gt;.src.rpm
+&lt;/pre&gt;
+&lt;p&gt;Installation de kernel-devel pour pouvoir compiler les sources du
+pilotes :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+yum install kernel-devel
+&lt;/pre&gt;
+&lt;p&gt;Construction du paquet :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd /usr/src/redhat
+rpm -bb SPECS/netxtreme2.spec
+&lt;/pre&gt;
+&lt;p&gt;Installation du paquet fraichement installé :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+rpm -ivh RPMS/&amp;lt;arch&amp;gt;/netxtreme2-&amp;lt;version&amp;gt;.&amp;lt;arch&amp;gt;.rpm
+&lt;/pre&gt;
+&lt;p&gt;déchargement de l'ancien module :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+rmmode bnx2
+&lt;/pre&gt;
+&lt;p&gt;Chargement du nouveau module :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+modprobe bnx2
+&lt;/pre&gt;
+&lt;p&gt;Suite à cette petite manipulation, plus de soucis de chipset réseau qui
+ne répond plus. Problème résolu :D&lt;/p&gt;
+</content><category term="Tech"></category><category term="broadcom"></category><category term="Linux"></category><category term="pilote"></category><category term="Red hat"></category><category term="réseau"></category></entry><entry><title>Rapport de stage sur la mise en place de Squid et Egroupware</title><link href="/2010/01/rapport-de-stage-sur-la-mise-en-place-de-squid-et-egroupware.html" rel="alternate"></link><published>2010-01-06T15:05:00+01:00</published><updated>2010-01-06T15:05:00+01:00</updated><author><name>alain</name></author><id>tag:None,2010-01-06:/2010/01/rapport-de-stage-sur-la-mise-en-place-de-squid-et-egroupware.html</id><summary type="html">&lt;p&gt;J’ai longuement hésité à mettre ce rapport de stage en ligne pour
+plusieurs raisons. Tout d’abord, ce rapport n’est pas vraiment
+représentatif du travail fournit. La majorité des solutions expliquées
+m’ont demandées beaucoup de temps de recherche et d’arrachage de cheveux
+(notamment pour la migration …&lt;/p&gt;</summary><content type="html">&lt;p&gt;J’ai longuement hésité à mettre ce rapport de stage en ligne pour
+plusieurs raisons. Tout d’abord, ce rapport n’est pas vraiment
+représentatif du travail fournit. La majorité des solutions expliquées
+m’ont demandées beaucoup de temps de recherche et d’arrachage de cheveux
+(notamment pour la migration des comptes sous Lotus Notes). Ensuite, la
+qualité rédactionnel est loin d’être au rendez-vous. On m’a beaucoup
+reproché que ce rapport était trop technique et c’est plutôt vrai.
+Enfin, ce document ne décrit pas vraiment l’installation de Squid et
+d’Egroupware. Ces parties sont survolées et je m’attarde plus sur la
+résolution des problèmes rencontrés (résoudre un conflit de schéma LDAP
+quand on a jamais vu OpenLDAP de sa vie n’est pas chose aisée).&lt;/p&gt;
+&lt;p&gt;Un mois après la fin de la formation, je me décide tout de même à le
+mettre en ligne. Je pense que ce rapport décrit plutôt bien ce que peut
+être le métier de technicien réseau dans une administration ou une PME.
+Le problème lors de la mise en place d’un nouveau service n’est pas
+l’installation et la configuration de ce service mais la migration des
+anciens services utilisés vers les nouveaux. Surtout lorsque l’ancien
+service est un système propriétaire vieillissant (Je veux parler ici de
+Lotus Notes 5).&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.squid-cache.org/"&gt;Squid&lt;/a&gt;
+est un proxy http très utilisé, dont j’ai pu découvrir une partie des
+possibilités.
+&lt;a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.egroupware.org/"&gt;Egroupware&lt;/a&gt;
+est un groupware fournissant un agenda, un client mail, un carnet
+d’adresses, un système de réservations des ressources et plusieurs
+autres choses, le tout dans une interface web. Je vous invite à tester
+la &lt;a class="reference external" href="https://web.archive.org/web/20110722200015/http://www.stylite.de/egroupware_demo_login"&gt;demo sur le site du
+projet.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ce rapport fait 38 pages et voici son sommaire:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;strong&gt;Remerciements&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Objectif du stage&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;L’entreprise&lt;/strong&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Historique&lt;/li&gt;
+&lt;li&gt;La structure actuelle&lt;/li&gt;
+&lt;li&gt;Le service informatique&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spécifications&lt;/strong&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Environnement de travail&lt;/li&gt;
+&lt;li&gt;L’existant&lt;/li&gt;
+&lt;li&gt;Besoins et contraintes&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;em&gt;Squid&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Egroupware&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mise en œuvre&lt;/strong&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Proxy&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;em&gt;Planning prévisionnel&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Mise en œuvre&lt;/em&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Squid&lt;/li&gt;
+&lt;li&gt;Sarg&lt;/li&gt;
+&lt;li&gt;Squidguard&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Problèmes rencontrés&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Annexes&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;eGroupware&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;em&gt;Schéma fonctionnel&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Planning previsionnel&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Mise en œuvre&lt;/em&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Configuration de openldap&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Problèmes rencontrés&lt;/em&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Conflit de schéma openldap&lt;/li&gt;
+&lt;li&gt;Configuration de felamimail&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Préparation de la migration des utilisateurs&lt;/em&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Création du carnet d’adresses principal&lt;/li&gt;
+&lt;li&gt;Importation des agendas Lotus Notes&lt;/li&gt;
+&lt;li&gt;Importation des carnet d’adresse Lotus Notes&lt;/li&gt;
+&lt;li&gt;Exportation des mails depuis LotusNotes dans eGroupware&lt;/li&gt;
+&lt;li&gt;Importation mail depuis roundcube&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Annexes&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Procédure de migration serveur&lt;/strong&gt;&lt;ol class="arabic"&gt;
+&lt;li&gt;Sur Revy&lt;/li&gt;
+&lt;li&gt;Sur Revnew&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2015/08/RapportDeStage-Squid-Egroupware.pdf"&gt;RapportDeStage-Squid-Egroupware&lt;/a&gt;&lt;/p&gt;
+</content><category term="Tech"></category></entry><entry><title>GNU/Linux : Résolution de problèmes</title><link href="/2009/12/gnulinux-resolution-de-problemes.html" rel="alternate"></link><published>2009-12-25T19:34:00+01:00</published><updated>2009-12-25T19:34:00+01:00</updated><author><name>alain</name></author><id>tag:None,2009-12-25:/2009/12/gnulinux-resolution-de-problemes.html</id><summary type="html">&lt;p&gt;Une grande partie du travail sur les forums concernant les logiciels
+libres est d'obtenir plus d'informations sur les problèmes des novices.
+Il est très agréable d'aider les autres comme il peut être assez agaçant
+d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider
+lui-même. Je ne pense pas que …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Une grande partie du travail sur les forums concernant les logiciels
+libres est d'obtenir plus d'informations sur les problèmes des novices.
+Il est très agréable d'aider les autres comme il peut être assez agaçant
+d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider
+lui-même. Je ne pense pas que cela soit dû à de la fainéantise de la
+part de celui qui pose la question. C'est simplement parce que les
+novices ne connaissent pas les premières étapes de résolution des
+problèmes sur GNU/Linux et ne savent pas quels types d'informations
+rechercher ni comment les obtenir. J'espère que ce petit guide sera
+utile pour ceux qui font leurs premiers pas sur linux.&lt;/p&gt;
+&lt;div class="section" id="i-diagnostiquer-soi-meme"&gt;
+&lt;h2&gt;I - Diagnostiquer soi-même&lt;/h2&gt;
+&lt;div class="section" id="la-premiere-etape-est-la-collecte-d-informations"&gt;
+&lt;h3&gt;1 - La première étape est la collecte d'informations.&lt;/h3&gt;
+&lt;p&gt;Si un programme plante ou ne fait pas ce qu'il est censé faire, il faut
+se poser et réfléchir calmement.&lt;/p&gt;
+&lt;p&gt;Ouvrez un nouveau fichier dans votre éditeur de texte favori et
+écrivez-y ce que vous faisiez quand le problème est apparu ainsi que
+tous les messages d'erreurs reçus. Ces messages d'erreurs doivent être
+recopiés exactement tel qu'ils sont apparus. Utilisez le copier/coller
+si cela est possible.&lt;/p&gt;
+&lt;p&gt;Ouvrez un terminal et tapez &lt;strong&gt;tail /var/log/messages&lt;/strong&gt;. Cette commande
+affichera les 10 dernières lignes des logs du système. Si celui ci
+contient un ou des messages qui sont clairement en rapport avec votre
+problème, recopiez les également.&lt;/p&gt;
+&lt;p&gt;Les erreurs des applications graphiques sont en général dans le fichier
+.Xsession-errors ou .xsession-errors dans votre dossier /home. La
+commande pour visualiser les 10 dernières lignes est donc &lt;strong&gt;tail
+~/.xsession-errors&lt;/strong&gt;. Comme pour le fichier /var/log/messages, ajoutez
+les lignes en rapport avec votre problème dans votre fichier de départ.
+Si vous n'avez trouvé aucune information dans ces fichiers, essayez de
+lancer l'application concernée depuis votre terminal. Lors de
+l'apparition du bug, des messages devraient s'afficher.&lt;/p&gt;
+&lt;p&gt;Si votre système ne démarre plus suite à un problème, démarrez alors sur
+une autre distribution (soit en dual-boot si vous en avez soit depuis un
+live-cd). Il est toujours bon d'avoir un live-cd sous la main pour ce
+genre d'opération. Une fois que vous avez démarré sur le live-cd, montez
+votre partition root et récupérez les informations dans les fichiers
+cités plus haut.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="le-probleme-est-il-reproductible"&gt;
+&lt;h3&gt;2 - Le problème est-il reproductible?&lt;/h3&gt;
+&lt;p&gt;S'il est possible de reproduire le problème facilement, faites-le.
+N'oubliez pas de le faire sur des fichiers peu important ou sur une
+copie du fichier concerné afin de ne pas endommager vos données.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="est-ce-un-probleme-materiel"&gt;
+&lt;h3&gt;3 - Est-ce un problème matériel ?&lt;/h3&gt;
+&lt;p&gt;Les problèmes non reproductibles sont souvent dus au matériel. Si vous
+pensez que c'est le cas, regardez alors dans le fichier
+&lt;strong&gt;/var/log/boot&lt;/strong&gt; ainsi que &lt;strong&gt;/var/log/kern.log&lt;/strong&gt; ou
+&lt;strong&gt;/var/log/kernel.log&lt;/strong&gt; suivant votre distribution pour voir si le
+kernel reconnait bien votre matériel. Ce fichier étant très long, la
+commande tail ne vous sera pas d'un grand secours. Utilisez plutôt
+&lt;strong&gt;less /var/log/boot&lt;/strong&gt;et parcourez les pages à la recherche d'un
+message en rapport avec votre problème. Recopiez également ce message
+dans votre fichier de départ.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="lisez-la-documentation-du-programme"&gt;
+&lt;h3&gt;4 - Lisez la documentation du programme.&lt;/h3&gt;
+&lt;p&gt;Ceci est à faire en particulier si le programme ne réagit pas de la
+manière souhaitée. Lisez l'aide en ligne du programme et utilisez
+également le manuel universel (dans un terminal : man
+nom_du_programme).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="recherchez-votre-message-d-erreur-sur-internet"&gt;
+&lt;h3&gt;5 - Recherchez votre message d'erreur sur internet&lt;/h3&gt;
+&lt;p&gt;Copiez/collez le message d'erreur dans un moteur de recherche ou un
+meta-moteur tel que ixquick et ajoutez-y le nom du programme. Vous
+trouverez certainement des messages sur des forums d'utilisateurs qui
+ont le même problème que vous. Lisez le thread complet, vous y trouverez
+peut-être une solution.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reflechissez-avec-logique"&gt;
+&lt;h3&gt;6 - Réfléchissez avec logique&lt;/h3&gt;
+&lt;p&gt;Si, arrivé ici, vous commencez à avoir une idée sur la cause du
+problème, vous pouvez peut être tester cette idée. Il y a beaucoup de
+petites commandes simples qui peuvent vous aider à recueillir plus
+d'informations sur votre problème et votre système, qui vont seront d'un
+grand secours.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;lspci&lt;/strong&gt; pour lister votre matériel&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;lsusb&lt;/strong&gt; pour lister les périphériques usb&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cat /proc/cpuinfo&lt;/strong&gt; pour avoir les caractéristiques de votre CPU&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;free -m&lt;/strong&gt; pour connaitre le taux de charge de votre RAM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="maintenant-vous-pouvez-penser-a-demander-de-l-aide"&gt;
+&lt;h3&gt;7 - Maintenant, vous pouvez penser à demander de l'aide.&lt;/h3&gt;
+&lt;p&gt;Si après tout ça, vous n'avez toujours pas résolu votre problème, il est
+temps de demander de l'aide sur un forum d'utilisateurs. Avant de passer
+à cette étape, rappelez vous que les utilisateurs des forums ne sont pas
+payés pour répondre à vos questions. Ce sont seulement des utilisateurs
+ayant une certaine expérience et qui font cela bénévolement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ii-obtenir-de-l-aide"&gt;
+&lt;h2&gt;II - Obtenir de l'aide&lt;/h2&gt;
+&lt;div class="section" id="d-abord-observer"&gt;
+&lt;h3&gt;1 - D'abord, observer&lt;/h3&gt;
+&lt;p&gt;Commencez par choisir votre forum. Il est préférable dans un premier
+temps de choisir le forum de votre distribution, puis le forum du
+programme concerné. Si ce forum possède une FAQ, lisez-la. Lisez aussi
+les règles du forum. Si votre question ne respecte pas les règles, il y
+a de grandes chances pour que vous n'obteniez pas de réponse.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ne-soyez-pas-hors-sujet"&gt;
+&lt;h3&gt;2 - Ne soyez pas hors-sujet&lt;/h3&gt;
+&lt;p&gt;Trouvez le sous-forum qui correspond à votre problème. Ne postez pas
+votre message dans plusieurs sous-forums, ceci est très mal vu.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="choisissez-bien-le-titre-de-votre-topic"&gt;
+&lt;h3&gt;3 - Choisissez bien le titre de votre topic.&lt;/h3&gt;
+&lt;p&gt;N'utilisez pas de sujet tel que &amp;quot;Besoin d'aide&amp;quot; ou &amp;quot;J'ai un problème&amp;quot;.
+Ceci a tendance à irriter les gens.&lt;/p&gt;
+&lt;p&gt;Votre titre doit indiquer le plus clairement quel problème vous avez.
+Ainsi, une personne qui pense pouvoir vous aider sera plus encline à
+lire votre sujet et poster une réponse. Soyez aussi précis que possible.
+Par exemple &amp;quot;Impossible d'obtenir une adresse IP&amp;quot; sera plus utile que
+&amp;quot;Je n'arrive pas à aller sur internet&amp;quot;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="donnez-des-informations"&gt;
+&lt;h3&gt;4 - Donnez des informations&lt;/h3&gt;
+&lt;p&gt;Dans le corps de votre message, donnez le nom et la version de votre
+distribution, le nom et la version du programme utilisé et les
+informations sur votre matériel si cela est nécessaire. Recopiez-y aussi
+les messages d'erreurs (c'est là que le fichier que vous avez créé au
+début devient utile). Indiquez ce que vous avez fait pour tenter de
+résoudre le problème. En faisant cela, vous montrerez aux autres que
+vous ne vous êtes pas jeté sur le forum dès que le problème est apparu.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="pas-de-langage-sms"&gt;
+&lt;h3&gt;5 - Pas de langage SMS&lt;/h3&gt;
+&lt;p&gt;Ça saoule! Ça n'aide pas à vous faire comprendre et on vous répondra
+d'autant moins.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ne-perdez-pas-une-opportunite-d-apprendre"&gt;
+&lt;h3&gt;6 - Ne perdez pas une opportunité d'apprendre&lt;/h3&gt;
+&lt;p&gt;Ne suivez pas les conseils aveuglément. Vous êtes ici pour apprendre
+quelque chose. Si on vous demande d'utiliser un outil en ligne de
+commande, utilisez les pages man pour savoir à quoi sert cet outil. Vous
+pourrez ensuite réutiliser cet outil si vous rencontrez un problème
+similaire. Si on vous demande de poster un fichier pour plus
+d'informations, recherchez l'utilité de ce fichier. Les fichiers
+systèmes importants possèdent souvent une page man dédiée.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="dites-merci"&gt;
+&lt;h3&gt;7 - Dites merci&lt;/h3&gt;
+&lt;p&gt;Les logiciels libres reposent sur la communauté. Personne n'est payé
+pour vous aider. Les personnes qui vous aident le font car elles ont
+elles-mêmes reçu de l'aide dans le passé et veulent rendre la pareille.
+En plus de dire merci, vous pouvez également aider les autres qui ne
+savent peut-être pas quelque chose que vous savez. Vous ressentirez
+alors une certaine satisfaction que les logiciels propriétaires ne
+peuvent vous apporter.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="aide"></category><category term="GNU"></category><category term="Linux"></category><category term="probleme"></category></entry></feed>

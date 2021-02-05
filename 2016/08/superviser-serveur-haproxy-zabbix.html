@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Superviser un serveur HAproxy avec Zabbix | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2016/08/superviser-serveur-haproxy-zabbix.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Après avoir monté le cluster MariaDB Galera et placé un serveur HAproxy en frontal, il me restait encore à mettre en place la supervision de ce cluster. Je voulais notamment, en dehors de la supervision de base qu'on peut déployer sur un serveur (classiquement processeurs / RAM / disques / Réseau) pouvoir visualiser …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Superviser un serveur HAproxy avec Zabbix
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2016-08-01T08:30:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Mon 01 August 2016
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/supervision.html">Supervision</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Après avoir monté le <a class="reference external" href="/monter-cluster-galera-mariadb.html">cluster MariaDB
+Galera</a>
+et placé un serveur <a class="reference external" href="/galera-load-balancing-failover-haproxy.html">HAproxy en
+frontal</a>,
+il me restait encore à mettre en place la supervision de ce cluster. Je
+voulais notamment, en dehors de la supervision de base&nbsp;qu'on peut
+déployer sur un serveur (classiquement processeurs / RAM / disques /
+Réseau) pouvoir visualiser l'état du cluster rapidement.</p>
+<p>Je me suis lancé dans la recherche d'un template Zabbix déjà existant
+pour superviser HAproxy mais je n'ai rien trouvé de convainquant.&nbsp;Je me
+suis décidé à écrire mon propre template et donc le script qui va avec.</p>
+<p>Avant d'utiliser ce script, il faut activer les stats dans le fichiers
+de configuration d'HAproxy dans la section [global]</p>
+<pre class="code sh literal-block">
+<span class="c1"># turn on stats unix socket
+</span>stats socket /var/lib/haproxy/stats
+</pre>
+<p>Le script Python va ensuite lire les données en communiquant avec le
+socket d'HAproxy directement et retourner la statistique demandée pour
+le couple frontend/serveur.</p>
+<p>Voici le script.</p>
+<div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/python</span>
+
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">req</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">queryStat</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s2">&quot;Usage: run script with one or three arguments</span><span class="se">\n</span><span class="s2">One argument: </span><span class="se">\n</span><span class="s2">    discovery : json output of discovered pxname and svname </span><span class="se">\n\n</span><span class="s2">Three arguments:</span><span class="se">\n</span><span class="s2">    pxname : pxname in which you want to process the stat</span><span class="se">\n</span><span class="s2">    svname : svname in the pxname in which you want to process the stat</span><span class="se">\n</span><span class="s2">    stat : stat you want to query for pxname,svname&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">allstats</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s1">&#39;echo &quot;show stat&quot; | socat /var/lib/haproxy/stats stdio&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">req</span> <span class="o">==</span> <span class="s2">&quot;discovery&quot;</span><span class="p">:</span>
+    <span class="n">haDiscovery</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">myLine</span> <span class="ow">in</span> <span class="n">allstats</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">lineStats</span> <span class="o">=</span> <span class="n">myLine</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">pxname</span> <span class="o">=</span> <span class="n">lineStats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">svname</span> <span class="o">=</span> <span class="n">lineStats</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">haDiscovery</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;{#PXNAME}&#39;</span> <span class="p">:</span> <span class="n">pxname</span><span class="p">,</span> <span class="s1">&#39;{#SVNAME}&#39;</span> <span class="p">:</span> <span class="n">svname</span><span class="p">})</span>
+    <span class="nb">print</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">haDiscovery</span><span class="p">})</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="n">statNameList</span> <span class="o">=</span> <span class="n">allstats</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">monDico</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">myLine</span> <span class="ow">in</span> <span class="n">allstats</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">statList</span> <span class="o">=</span> <span class="n">myLine</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">px</span> <span class="o">==</span> <span class="n">statList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">sv</span> <span class="o">==</span> <span class="n">statList</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">monDico</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="n">statNameList</span><span class="p">,</span><span class="n">statList</span><span class="p">))</span>
+        <span class="nb">print</span> <span class="n">monDico</span><span class="p">[</span><span class="n">queryStat</span><span class="p">]</span>
+</pre></div>
+<p>Une fois toutes ces métriques récupérées, j'ai pu construire un
+dashboard Grafana afin d'avoir rapidement sous les yeux l'état général
+du cluster.</p>
+<p><a class="reference external" href="/images/Grafana-Galera.png"><img alt="Grafana-GaleraMariaDB et HAproxy" class="image-process-large-photo" src="/images/Grafana-Galera.png" /></a></p>
+<p>Le script, le template Zabbix et le fichier de paramétrage de l'agent
+sont disponible <a class="reference external" href="https://github.com/aldevar/Zabbix_HAproxy">sur
+Github</a></p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

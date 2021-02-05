@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Template Nutanix pour Zabbix | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2016/03/template_nutanix_pour_zabbix.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="This post is also available in english Afin de superviser correctement notre cluster Nutanix sans passer trop de temps à configurer les objets à surveiller, j'ai construit un template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe de découvrir automatiquement les containers, les CVM, les disques durs, les hyperviseurs …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Template Nutanix pour Zabbix
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2016-03-31T17:32:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Thu 31 March 2016
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/supervision.html">Supervision</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="/tag/nutanix.html">#nutanix</a>,               <a href="/tag/supervision.html">#supervision</a>,               <a href="/tag/template.html">#template</a>,               <a href="/tag/zabbix.html">#zabbix</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>This post is also available in english</p>
+<p>Afin de superviser correctement notre cluster Nutanix sans passer trop
+de temps à configurer les objets à surveiller, j'ai construit un
+template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe
+de découvrir automatiquement les containers, les CVM, les disques durs,
+les hyperviseurs ainsi que les machines virtuelles.</p>
+<p>Une fois les objets découverts, un certains nombre de relevés de
+métriques, de graphs et de triggers sont mis en place.</p>
+<p>Pour utiliser ce template correctement, il est nécessaire de paramétrer
+le serveur snmp de prism central, de récupérer la MIB de Nutanix pour
+l'intégrer dans le serveur Zabbix et de configurer quelques macro au
+niveau de l'hôte prism dans Zabbix. Nous allons tout de suite détailler
+ces quelques étapes.</p>
+<p>Le template est paramétré pour utiliser SNMPv3 en mode authPriv avec
+Auth SHA et Privacy AES.</p>
+<div class="section" id="prism-central">
+<h2>Prism Central</h2>
+<p>La configuration de prism se fait de façon assez simple via l'interface
+de paramétrage SNMP.</p>
+<p><img alt="2016-03-18 09_52_19-Nutanix Web Console" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /></p>
+<p>Assurez-vous que le transport soit bien configuré en UDP, sur le port de
+votre choix (161 par défaut)</p>
+<p><img alt="2016-03-18 09_52_56-Nutanix Web Console" src="images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /></p>
+<p>Se rendre ensuite dans l'onglet Users et ajouter un nouvel utilisateur
+pour que zabbix puisse se connecter</p>
+<p><img alt="2016-03-18 09_53_41-Nutanix Web Console" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /></p>
+<p>Profitez-en pour télécharger la MIB via le bouton Download MIB, nous
+allons en avoir besoin.</p>
+<p>Cliquez sur Save. La configuration de prism est terminée</p>
+</div>
+<div class="section" id="mib-nutanix">
+<h2>MIB Nutanix</h2>
+<p>Une fois la MIB Nutanix récupérée, il faut la placer sur le serveur
+Zabbix. Sur un serveur CentOS, il faut placer le fichier dans
+/usr/share/snmp/mibs</p>
+<pre class="literal-block">
+# ls /usr/share/snmp/mibs/NUTANIX*
+/usr/share/snmp/mibs/NUTANIX-MIB
+</pre>
+<p>Afin que Zabbix prenne ce nouveau fichier en considération, il est
+nécessaire de redémarrer le service</p>
+<pre class="literal-block">
+# systemctl restart zabbix-server
+</pre>
+<p>Pour tester le bon fonctionnement de la MIB et de la configuration de
+prism, utilisons la commande snmpwalk qui va, dans cet exemple, lister
+les noms des containers Nutanix.</p>
+<pre class="literal-block">
+snmpwalk -v 3 -a SHA -A VOTREMOTDEPASSESHA -u zabbix -x AES -X VOTREMOTDEPASSEAES IP.DE.PRISM.CENTRAL -l AuthPriv citContainerName
+NUTANIX-MIB::citContainerName.1 = STRING: container00.
+NUTANIX-MIB::citContainerName.2 = STRING: containerA.
+NUTANIX-MIB::citContainerName.3 = STRING: containerB.
+NUTANIX-MIB::citContainerName.4 = STRING: containerC.
+NUTANIX-MIB::citContainerName.5 = STRING: RESERVED_SPACE.
+NUTANIX-MIB::citContainerName.6 = STRING: containerD.
+</pre>
+<p>La configuration du serveur est terminée. On peut passer à la
+configuration de Zabbix.</p>
+</div>
+<div class="section" id="zabbix">
+<h2>Zabbix</h2>
+<p>Si ce n'est pas déjà fait, créez un nouvel hôte pour prism central dans
+Zabbix. Cet hôte à besoin de 3 macros pour que le template Nutanix
+fonctionne. Ces 3 macros sont l'utilisateurs SNMP, le mot de passe SHA
+et le mot de passe AES.</p>
+<p>Ces macros sont :</p>
+<ul class="simple">
+<li>{$NTX_SNMP_USER}</li>
+<li>{$NTX_SNMP_AUTH}</li>
+<li>{$NTX_SNMP_PRIV}</li>
+</ul>
+<p><img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" src="images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /></p>
+<p>Importez ensuite ce
+<a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml">Template</a>
+dans Zabbix et appliquez le sur votre hôte Prism Central.</p>
+<p>Par défaut, la découverte des VM est désactivée car il n'est pas
+possible de créer proprement des hôtes depuis ce processus LLD.</p>
+<p>Si vous avez un cluster Nutanix volumineux et que Zabbix ne peux
+remonter les informations à cause d'une erreur de timeout, pensez à
+augmenter ce timeout dans la configuration de Zabbix</p>
+<pre class="literal-block">
+Timeout=10
+</pre>
+<p>Les bugs rencontrés actuellement sont les suivants :</p>
+<ul class="simple">
+<li>Jusqu'à la version 4.6 de NOS, le Discovery n'arrive pas à remonter
+tous les hyperviseurs. Le comportement est le même avec snmpwalk. Il
+semble que ce soit un problème du coté de Nutanix. Le problème est
+corrigé en 4.6.</li>
+<li>Le nombre de VM remontées est limité à 250. Sans doute une limitation
+coté Nutanix également.</li>
+</ul>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

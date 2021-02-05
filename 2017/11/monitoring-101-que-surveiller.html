@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Monitoring 101 : Que faut-il surveiller? | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="/2017/11/monitoring-101-que-surveiller.html">
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/theme.css">
+  <link rel="stylesheet" href="/theme/css/oldstyle.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Introduction Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="/">
+        <img class="img-fluid rounded" src=/images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="/">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Un Blog IT</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="/pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="/feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Monitoring 101 : Que faut-il surveiller?
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2017-11-12T16:52:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Sun 12 November 2017
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="/category/supervision.html">Supervision</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que nous en faisons. Dans la manjorité des architectures de supervision, on se concentre sur la détection simple des problèmes: détecter si un evènement ou un état à eu lieu (une ligne d'erreur dans un log, un processus qui tombe). Puis, quand on reçoit la notification du problème, on se connecte sur la plateforme de supervision pour visualiser les métriques et essayer de comprendre ce qu'il se passe. Dans cette version de la supervision, les métriques sont vues comme un supplément à la detection d'erreurs.</p>
+<p>Afin de tenter de sortir de l'ornière et utiliser pleinement les métriques comme moyen d'alerte, nous devons nous mettre d'accord sur la définition de métrique. Je vous donne donc ma version de cette définition.
+Les métriques sont les mesures des propriétés d'une partie d'un logiciel ou de materiel. Pour qu'une métrique soit utile, il faut conserver une trace de son état en général en enregistrant l'observation d'une valeur à un temps donné. Une observation contient une valeur, un timestamp et parfois des propriétés (source, tag...)</p>
+</div>
+<div class="section" id="les-metriques">
+<h2>Les Métriques</h2>
+<p>Il y a 3 catégories de métriques. Les métriques systèmes, les métriques applicatives et les évenements. Chacune de ses catégories se traite différemment et ne sert pas le même objectif.</p>
+<div class="section" id="les-metriques-systemes">
+<h3>Les Métriques Systèmes</h3>
+<p>Ce sont les métriques liées à l'infrastructure servant la partie applicative. Cette infrastrcuture est composée de différentes ressources qui peuvent être de bas niveau comme le materiel physique (CPU, RAM, Disques, Réseau) ou de plus haut niveau comme une base de données qui peut aussi être considéré comme une ressource afin qu'une application puisse fournir des résultats. C'est la notion de middleware. Ces métriques peuvent être classées en 3 grandes catégories :</p>
+<ul class="simple">
+<li><strong>Taux de disponiblité</strong>: Pourcentage de temps durant lequel la ressource est capable de répondre à des requêtes.</li>
+<li><strong>Taux d'utilisation</strong>: Pourcentage de temps durant lequel la ressource est occupée à répondre à des requêtes.</li>
+<li><strong>Contention</strong>: C'est la quantité de requêtes que la ressource ne peut servir car elle est occupée. Cela peut être une file d'attente, des I/O Wait...</li>
+</ul>
+<p>Voici quelques exemples de métriques systèmes :</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="23%" />
+<col width="30%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Ressource</th>
+<th class="head">Disponibilité</th>
+<th class="head">Utilisation</th>
+<th class="head">Contention</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Base de données</td>
+<td>% de temps durant
+lequel la DB est
+joignable</td>
+<td>% de temps durant
+lequel chaque
+connection est occupée</td>
+<td>Nombre de requêtes
+en file d'attente</td>
+</tr>
+<tr><td>Mémoire Vive</td>
+<td>N/A</td>
+<td>% de la RAM totale
+utilisée</td>
+<td>Utilisation du swap</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="les-metriques-applicatives">
+<h3>Les Métriques Applicatives</h3>
+<p>C'est ici qu'est mesurée l'experience utilisateur ainsi que la santé global du service. Comme pour les métriques système, elles sont classées en plusieurs catégories.</p>
+<ul class="simple">
+<li><strong>Performance</strong>: Cette métrique quantifie l'efficacité d'un composant. La métrique de performance la plus commune est la latence, qui représente le temps nécessaire pour accomplir une tâche. Il y a plusieurs façon d'exprimer cette métrique. On peut en faire une moyenne ou utiliser les percentiles, du type &quot;99% des requêtes ont reçu une réponse en moins de 0.2 secondes&quot;.</li>
+<li><strong>Debit</strong>: ou également <strong>entrées sorties</strong>. C'est la quantité de requêtes traitée par unité de temps. Par exemple, un nombre de pages affichées par seconde.</li>
+<li><strong>Succès</strong>: C'est le pourcentage d'entrées sorties traitées dont l'execution s'est bien déroulée. Par exemple, le nombre de code HTTP 2XX.</li>
+<li><strong>Echec</strong>: A l'inverse, le pourcentage d'entrée sorties traitées dont l'execution s'est mal déroulée. Par exemple, le nombre de code HTTP 5XX.</li>
+</ul>
+<p>Ces métriques permettent de rapidement répondre aux questions qui intéressent les utilisateurs finaux du service. Le service est-il disponible et remplit-il sa mission? A quelle vitesse le fait-il? Avec quelles résultats?</p>
+<p>Voici quelques exemples de métriques applicatives pour un service web:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="68%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Catégorie</th>
+<th class="head">Description</th>
+<th class="head">Valeur</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Performance</td>
+<td>99ème percentil du temps de réponse (s)</td>
+<td>0.3</td>
+</tr>
+<tr><td>Débit</td>
+<td>Requêtes par seconde</td>
+<td>220</td>
+</tr>
+<tr><td>Succès</td>
+<td>Pourcentage de code retour HTTP 2XX</td>
+<td>99.5</td>
+</tr>
+<tr><td>Echec</td>
+<td>Pourcentage de code retour HTTP 5XX</td>
+<td>0.2</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="les-evenements">
+<h3>Les Evenements</h3>
+<p>En plus des métriques systèmes et applicatives, il y a certaine information qu'on souhaite récupérer de façon plus sporadique. Certains systèmes permettent de superviser des évenements. Les évenements n'ont pas lieu de façon fréquentes et il est souvent difficile voir impossible de les prévoir.</p>
+<ul class="simple">
+<li>Tâche planifiée en échec</li>
+<li>Virus détecté dans un système de fichier</li>
+<li>Trap SNMP</li>
+</ul>
+<p>Contrairement aux métriques qui doivent être analysées dans leur context, les évenements contiennent en général en eux-même suffisamment d'informations pour être directement interprétés.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion</h3>
+<p>Dans le doute, ne pas hésiter à collecter les données. Sachant que ces données doivent être <strong>bien comprises</strong> (je sais ce que cette donnée signifie), avoir une <strong>granularité</strong> adequat (si la granularité est trop large, je perds en précision; si la granularité est trop fine je risque d'impacter le système que je supervise) et être <strong>conservée suffisamment</strong> longtemps pour comprendre quels sont les comportements normaux et anormaux.</p>
+</div>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="/tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
