@@ -1,213 +1,160 @@
-<!doctype html>
-<html lang="fr">
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Aldevar - Le Blog - aldevar</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+            <link rel="stylesheet" href="../theme/css/normalize.css">
+        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../theme/css/main.css">
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../theme/css/blog.css">
+    <link rel="stylesheet" href="../theme/css/github.css">
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog Atom Feed" />
+        <script src="../theme/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
 
-  <title>  aldevar Articles | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../author/aldevar.html">
+        <div id="wrapper">
+<header id="sidebar" class="side-shadow">
+    <hgroup id="site-header">
+        <a id="site-title" href=".."><h1><i class="icon-coffee"></i> Aldevar - Le Blog</h1></a>
+        <p id="site-desc"> Un Blog IT </p>
+    </hgroup>
+    <nav>
+        <ul id="nav-links">
+        </ul>
+    </nav>
+<footer id="site-info">
+    <p>
+        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
+    </p>
+    <p>
+        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
+    </p>
+</footer></header>
+    <div id="post-container">
+        <ol id="post-list">
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2017-11-12T16:52:00+01:00" pubdate>
+                            Sun 12 November 2017
+                        </time>
+                        <a href="../2017/11/monitoring-101-que-surveiller.html" rel="bookmark"><h1>Monitoring 101 : Que faut-il surveiller?</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …</p></div>
+                    </section>
+                </article>
+            </li>
+            <hr/>
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2017-11-03T22:45:00+01:00" pubdate>
+                            Fri 03 November 2017
+                        </time>
+                        <a href="../2017/11/hypertexte-acte-1.html" rel="bookmark"><h1>HyperText Acte 1</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <p class="first last">Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.</p>
 
+                    </section>
+                </article>
+            </li>
+            <hr/>
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2017-11-02T22:45:00+01:00" pubdate>
+                            Thu 02 November 2017
+                        </time>
+                        <a href="../2017/11/migration-blog-pelican.html" rel="bookmark"><h1>Migration du Blog sur Pelican</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <p class="first last">Migration du blog sur Pelican, generateur de site static en Python.</p>
 
-  <link rel="stylesheet" href="../theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
-  <link rel="stylesheet" href="../theme/css/theme.css">
-  <link rel="stylesheet" href="../theme/css/oldstyle.css">
+                    </section>
+                </article>
+            </li>
+            <hr/>
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2016-03-31T17:32:00+02:00" pubdate>
+                            Thu 31 March 2016
+                        </time>
+                        <a href="../2016/03/template_nutanix_pour_zabbix.html" rel="bookmark"><h1>Template Nutanix pour Zabbix</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <p>This post is also available in english</p>
+<p>Afin de superviser correctement notre cluster Nutanix sans passer trop
+de temps à configurer les objets à surveiller, j'ai construit un
+template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe
+de découvrir automatiquement les containers, les CVM, les disques durs,
+les hyperviseurs …</p>
+                    </section>
+                </article>
+            </li>
+            <hr/>
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2015-08-19T21:57:00+02:00" pubdate>
+                            Wed 19 August 2015
+                        </time>
+                        <a href="../2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html" rel="bookmark"><h1>Prise en main de GNS3 pour la simulation réseau</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <p>Comme moi, vous connaissez peut être l'utilitaire <a class="reference external" href="https://www.netacad.com/about-networking-academy/packet-tracer">Packet Tracer de
+Cisco</a>
+qui permet de simuler un réseau Cisco et d'y faire quelques exercices.
+C'est un très bon outil pour les étudiants mais relativement peu
+exploitable en entreprise car il ne simule que du Cisco et ne sais pas
+simuler autre …</p>
+                    </section>
+                </article>
+            </li>
+            <hr/>
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2009-08-17T18:30:00+02:00" pubdate>
+                            Mon 17 August 2009
+                        </time>
+                        <a href="../2009/08/qrqvb-le-modele-osi.html" rel="bookmark"><h1>QRQVB : Le modèle OSI</h1></a>
+                    </header>
+                    <section class="post-content">
+                        <p>Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous
+propose de (re)découvrir avec moi, quelques notions fondamentales de
+réseau. Ces articles s'adressent en particulier à ceux qui souhaitent
+comprendre les mécanismes d'Internet et/ou du routage en&nbsp;WAN&nbsp;ou en&nbsp;LAN.
+J'essaierai d'être le plus clair …</p>
+                    </section>
+                </article>
+            </li>
+            <hr/>
+        </ol>
+        <div class="paginator">
+            Page 1 / 1
+        </div>
 
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="/feeds/all.atom.xml">
-  
-
-
-</head>
-
-<body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../">
-        <img class="img-fluid rounded" src=../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Un Blog IT</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../feeds/all.atom.xml" target="_blank"></a></li>
-      </ul>
-  </div>
-</div>    </div>
-  </header>
+        </div>
 
-  <div class="main">
-    <div class="container">
-      <h1>  aldevar Articles
-</h1>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2017-11-12T16:52:00+01:00">
-            <i class="fa fa-clock-o"></i>
-            Sun 12 November 2017
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/supervision.html">Supervision</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2017/11/monitoring-101-que-surveiller.html">Monitoring 101 : Que faut-il surveiller?</a>
-        </h4>
-        <div class="content">
-          Introduction Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …
-        </div>
-      </div>
-    </article>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2017-11-03T22:45:00+01:00">
-            <i class="fa fa-clock-o"></i>
-            Fri 03 November 2017
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/tech.html">Tech</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2017/11/hypertexte-acte-1.html">HyperText Acte 1</a>
-        </h4>
-        <div class="content">
-          Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.
-        </div>
-      </div>
-    </article>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2017-11-02T22:45:00+01:00">
-            <i class="fa fa-clock-o"></i>
-            Thu 02 November 2017
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/mylife.html">MyLife</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2017/11/migration-blog-pelican.html">Migration du Blog sur Pelican</a>
-        </h4>
-        <div class="content">
-          Migration du blog sur Pelican, generateur de site static en Python.
-        </div>
-      </div>
-    </article>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2016-03-31T17:32:00+02:00">
-            <i class="fa fa-clock-o"></i>
-            Thu 31 March 2016
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/supervision.html">Supervision</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2016/03/template_nutanix_pour_zabbix.html">Template Nutanix pour Zabbix</a>
-        </h4>
-        <div class="content">
-          This post is also available in english Afin de superviser correctement notre cluster Nutanix sans passer trop de temps à configurer les objets à surveiller, j'ai construit un template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe de découvrir automatiquement les containers, les CVM, les disques durs, les hyperviseurs …
-        </div>
-      </div>
-    </article>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2015-08-19T21:57:00+02:00">
-            <i class="fa fa-clock-o"></i>
-            Wed 19 August 2015
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/reseaux.html">Réseaux</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html">Prise en main de GNS3 pour la simulation réseau</a>
-        </h4>
-        <div class="content">
-          Comme moi, vous connaissez peut être l'utilitaire Packet Tracer de Cisco qui permet de simuler un réseau Cisco et d'y faire quelques exercices. C'est un très bon outil pour les étudiants mais relativement peu exploitable en entreprise car il ne simule que du Cisco et ne sais pas simuler autre …
-        </div>
-      </div>
-    </article>
-      <hr>
-    <article class="row teaser">
-      <header class="col-sm-4 text-muted">
-        <ul>
-          <li title="2009-08-17T18:30:00+02:00">
-            <i class="fa fa-clock-o"></i>
-            Mon 17 August 2009
-          </li>
-          <li>
-            <i class="fa fa-folder-open-o"></i>
-            <a href="../category/qrqvb.html">QRQVB</a>
-          </li>
-        </ul>
-      </header>
-      <div class="col-sm-8">
-        <h4 class="title">
-          <a href="../2009/08/qrqvb-le-modele-osi.html">QRQVB : Le modèle OSI</a>
-        </h4>
-        <div class="content">
-          Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous propose de (re)découvrir avec moi, quelques notions fondamentales de réseau. Ces articles s'adressent en particulier à ceux qui souhaitent comprendre les mécanismes d'Internet et/ou du routage en WAN ou en LAN. J'essaierai d'être le plus clair …
-        </div>
-      </div>
-    </article>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
-</body>
-
+        <script src="../theme/js/main.js"></script>
+    </body>
 </html>
