@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - QRQVB</title><link href="/" rel="alternate"></link><link href="/feeds/qrqvb.atom.xml" rel="self"></link><id>/</id><updated>2010-02-02T07:00:00+01:00</updated><subtitle>Un Blog IT</subtitle><entry><title>QRQVB : Protocole TCP</title><link href="/2010/02/qrqvb-protocole-tcp.html" rel="alternate"></link><published>2010-02-02T07:00:00+01:00</published><updated>2010-02-02T07:00:00+01:00</updated><author><name>alain</name></author><id>tag:None,2010-02-02:/2010/02/qrqvb-protocole-tcp.html</id><summary type="html">&lt;p&gt;Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - QRQVB</title><link href="/" rel="alternate"></link><link href="feeds/qrqvb.atom.xml" rel="self"></link><id>/</id><updated>2010-02-02T07:00:00+01:00</updated><subtitle>Un Blog IT</subtitle><entry><title>QRQVB : Protocole TCP</title><link href="2010/02/qrqvb-protocole-tcp.html" rel="alternate"></link><published>2010-02-02T07:00:00+01:00</published><updated>2010-02-02T07:00:00+01:00</updated><author><name>alain</name></author><id>tag:None,2010-02-02:2010/02/qrqvb-protocole-tcp.html</id><summary type="html">&lt;p&gt;Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission
 Control Protocol, Protocole de Contrôle de Transmission). &amp;nbsp;Comme son
 petit frère UDP, TCP se situe en couche 4 du &lt;a class="reference external" href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=232"&gt;modèle
 OSI&lt;/a&gt;.&lt;/p&gt;
@@ -110,7 +110,7 @@ acquittement de la séquence du serveur (ACK = 1).&lt;/p&gt;
 &lt;p&gt;Une fois achevée cette phase appelée «&amp;nbsp;Three-way handshake&amp;nbsp;», les 2
 applications sont en mesure d’échanger des données.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="QRQVB"></category></entry><entry><title>QRQVB : Les paquets UDP</title><link href="/2009/12/qrqvb-les-paquets-udp.html" rel="alternate"></link><published>2009-12-29T11:23:00+01:00</published><updated>2009-12-29T11:23:00+01:00</updated><author><name>alain</name></author><id>tag:None,2009-12-29:/2009/12/qrqvb-les-paquets-udp.html</id><summary type="html">&lt;p&gt;Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau
+</content><category term="QRQVB"></category></entry><entry><title>QRQVB : Les paquets UDP</title><link href="2009/12/qrqvb-les-paquets-udp.html" rel="alternate"></link><published>2009-12-29T11:23:00+01:00</published><updated>2009-12-29T11:23:00+01:00</updated><author><name>alain</name></author><id>tag:None,2009-12-29:2009/12/qrqvb-les-paquets-udp.html</id><summary type="html">&lt;p&gt;Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau
 donc. Je comptais me lancer dans la description des paquets TCP, mais je
 pense qu’il est plus intéressant de se pencher d’abord sur UDP avant
 d’appréhender TCP.&lt;/p&gt;
@@ -232,7 +232,7 @@ risque supplémentaire de perte de données.&lt;/p&gt;
 &lt;p&gt;Nous verrons comment TCP peut palier à ce problème dans la prochaine
 QRQVB&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="QRQVB"></category></entry><entry><title>QRQVB : L'adresse IP</title><link href="/2009/09/qrqvb-adresse-ip.html" rel="alternate"></link><published>2009-09-16T19:12:00+02:00</published><updated>2009-09-16T19:12:00+02:00</updated><author><name>alain</name></author><id>tag:None,2009-09-16:/2009/09/qrqvb-adresse-ip.html</id><summary type="html">&lt;div class="section" id="definition"&gt;
+</content><category term="QRQVB"></category></entry><entry><title>QRQVB : L'adresse IP</title><link href="2009/09/qrqvb-adresse-ip.html" rel="alternate"></link><published>2009-09-16T19:12:00+02:00</published><updated>2009-09-16T19:12:00+02:00</updated><author><name>alain</name></author><id>tag:None,2009-09-16:2009/09/qrqvb-adresse-ip.html</id><summary type="html">&lt;div class="section" id="definition"&gt;
 &lt;h2&gt;Définition :&lt;/h2&gt;
 &lt;p&gt;Une adresse IP identifie de manière unique une machine ainsi que le
 réseau sur lequel elle est située. Chaque adresse est une série de 4
@@ -351,7 +351,7 @@ ajouter un nouveau sous réseau à notre entreprise pour y connecter un
 nouveau bâtiment par exemple. Ça a vite tendance à tourner cacahuète si
 on fait pas attention.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="QRQVB"></category><category term="ip"></category><category term="qrqvb"></category><category term="réseaux"></category></entry><entry><title>QRQVB : Datagramme IP</title><link href="/2009/09/qrqvb-datagramme-ip.html" rel="alternate"></link><published>2009-09-16T11:07:00+02:00</published><updated>2009-09-16T11:07:00+02:00</updated><author><name>alain</name></author><id>tag:None,2009-09-16:/2009/09/qrqvb-datagramme-ip.html</id><summary type="html">&lt;p&gt;Je vais tenter dans cet article de décortiquer un datagramme IP et
+</content><category term="QRQVB"></category><category term="ip"></category><category term="qrqvb"></category><category term="réseaux"></category></entry><entry><title>QRQVB : Datagramme IP</title><link href="2009/09/qrqvb-datagramme-ip.html" rel="alternate"></link><published>2009-09-16T11:07:00+02:00</published><updated>2009-09-16T11:07:00+02:00</updated><author><name>alain</name></author><id>tag:None,2009-09-16:2009/09/qrqvb-datagramme-ip.html</id><summary type="html">&lt;p&gt;Je vais tenter dans cet article de décortiquer un datagramme IP et
 notamment son en-tête. Nous allons commencer par l’observation des
 encapsulations des données suivant le &lt;a class="reference external" href="http://blog.devarieux.net/2009/08/qrqvb-le-modele-osi/"&gt;modèle
 OSI&lt;/a&gt; que nous
@@ -508,7 +508,7 @@ fois, j’essaierai d’expliquer le contenu d’un en-tête &amp;nbsp;de niveau
 ethernet). Si vous trouvez que cet article manque de précision n’hésitez
 pas à m’en faire part.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="QRQVB"></category></entry><entry><title>QRQVB : Le modèle OSI</title><link href="/2009/08/qrqvb-le-modele-osi.html" rel="alternate"></link><published>2009-08-17T18:30:00+02:00</published><updated>2009-08-17T18:30:00+02:00</updated><author><name>aldevar</name></author><id>tag:None,2009-08-17:/2009/08/qrqvb-le-modele-osi.html</id><summary type="html">&lt;p&gt;Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous
+</content><category term="QRQVB"></category></entry><entry><title>QRQVB : Le modèle OSI</title><link href="2009/08/qrqvb-le-modele-osi.html" rel="alternate"></link><published>2009-08-17T18:30:00+02:00</published><updated>2009-08-17T18:30:00+02:00</updated><author><name>aldevar</name></author><id>tag:None,2009-08-17:2009/08/qrqvb-le-modele-osi.html</id><summary type="html">&lt;p&gt;Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous
 propose de (re)découvrir avec moi, quelques notions fondamentales de
 réseau. Ces articles s'adressent en particulier à ceux qui souhaitent
 comprendre les mécanismes d'Internet et/ou du routage en&amp;nbsp;WAN&amp;nbsp;ou en&amp;nbsp;LAN.
