@@ -1,239 +1,317 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Aldevar - Le Blog - Tech</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-            <link rel="stylesheet" href="../theme/css/normalize.css">
-        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../theme/css/main.css">
+<!doctype html>
+<html lang="fr">
 
-    <link rel="stylesheet" href="../theme/css/blog.css">
-    <link rel="stylesheet" href="../theme/css/github.css">
-        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog Atom Feed" />
-        <script src="../theme/js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <div id="wrapper">
-<header id="sidebar" class="side-shadow">
-    <hgroup id="site-header">
-        <a id="site-title" href=".."><h1><i class="icon-coffee"></i> Aldevar - Le Blog</h1></a>
-        <p id="site-desc"> Un Blog IT </p>
-    </hgroup>
-    <nav>
-        <ul id="nav-links">
-        </ul>
-    </nav>
-<footer id="site-info">
-    <p>
-        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
-    </p>
-    <p>
-        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
-    </p>
-</footer></header>
-    <div id="post-container">
-        <ol id="post-list">
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2021-02-03T21:40:00+01:00" pubdate>
-                            Wed 03 February 2021
-                        </time>
-                        <a href="../2021/02/reset-hyperflex-replication-network.html" rel="bookmark"><h1>Cisco Hyperflex - Supprimer la configuration réseau de réplication</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Cette semaine, j'ai pris le temps de jouer avec une instance de demo Cisco Hyperflex sur dcloud.cisco.com. Cette demo permet de jouer un peu avec deux instances Hyperflex et notamment de mettre en place un PRA entre ces deux instances.
-Pour mettre en oeuvre ce PRA, il faut …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2017-11-03T22:45:00+01:00" pubdate>
-                            Fri 03 November 2017
-                        </time>
-                        <a href="../2017/11/hypertexte-acte-1.html" rel="bookmark"><h1>HyperText Acte 1</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p class="first last">Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.</p>
+  <title>  Tech Articles | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../category/tech.html">
 
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-06-24T08:30:00+02:00" pubdate>
-                            Fri 24 June 2016
-                        </time>
-                        <a href="../2016/06/relais-smtp-authentifie-zimbra.html" rel="bookmark"><h1>Zimbra : Envoi de mails via un relais SMTP authentifié</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Héberger soi même ses données c'est bien, le faire correctement c'est
-mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
-est qu'il est difficile de s'assurer que les mails soient bien reçus par
-nos correspondants.</p>
-<p>Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un
-bloc …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-06-20T22:40:00+02:00" pubdate>
-                            Mon 20 June 2016
-                        </time>
-                        <a href="../2016/06/monter-cluster-galera-mariadb.html" rel="bookmark"><h1>Pas à pas - monter un cluster Galera Mariadb</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
-pour remplacer notre cluster Mysql, je pensais trouver facilement de la
-documentation en ligne. On trouve en effet beaucoup d'articles de blogs
-expliquant comment créer son cluster Galera malheureusement cette techno
-évolue vite et les articles sont …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-05-27T23:02:00+02:00" pubdate>
-                            Fri 27 May 2016
-                        </time>
-                        <a href="../2016/05/pydio-migration-upgrade-package-en.html" rel="bookmark"><h1>Pydio - migration, upgrade, package [EN]</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Cet article est également disponible <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/">en
-français</a>.</p>
-<p>This unclear title reveals an operation i've just done to make 3 moves
-in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
-tar.gz archive.</p>
-<p>The primary goal was to upgrade Pydio to 6.4. Unfortunately …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-05-27T23:02:00+02:00" pubdate>
-                            Fri 27 May 2016
-                        </time>
-                        <a href="../2016/05/pydio-migration-upgrade-package-fr.html" rel="bookmark"><h1>Pydio : migration, upgrade, package [FR]</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>The article is also available <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en/">in
-english</a>.</p>
-<p>Sous ce titre peu clair se cache une opération de que je viens de mener
-afin d'opérer 3 opérations sur une instance pydio. Pour mettre les
-choses dans leur contexte, Pydio était installé via l'archive tar.gz,
-sur un serveur CentOS 6 et …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2015-10-30T23:24:00+01:00" pubdate>
-                            Fri 30 October 2015
-                        </time>
-                        <a href="../2015/10/migration-openldap-2-2-vers-openldap-2-4.html" rel="bookmark"><h1>Migration OpenLDAP 2.2 vers OpenLDAP 2.4</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y
-prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner
-des applications assez sensible, parfois même critique.</p>
-<p>C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans
-licence (donc sans yum) et dont la version …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2015-08-24T09:17:00+02:00" pubdate>
-                            Mon 24 August 2015
-                        </time>
-                        <a href="../2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html" rel="bookmark"><h1>Firefox comme navigateur par défaut de SailfishOS</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
-avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
-des navigateurs intégrés et surtout du navigateur par défaut.</p>
-<p>Malheureusement, l'interface ne propose actuellement aucune option pour
-modifier ce comportement. Ainsi, lorsqu'on clique sur un lien …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2015-08-23T14:00:00+02:00" pubdate>
-                            Sun 23 August 2015
-                        </time>
-                        <a href="../2015/08/vmware-client-integration-plugin-hs-dans-firefox.html" rel="bookmark"><h1>Vmware Client Integration Plugin HS dans Firefox</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Depuis quelques semaines, le plugin d'intégration client VMware ne
-fonctionne plus dans Firefox. La case &quot;Utiliser les identifiants
-Windows&quot; est grisée et d'après l'interface de vCenter, le plugin n'est
-pas installé sur votre machine.</p>
-<p>Ce problème est apparu avec Firefox 39 et concerne toutes les nouvelles
-versions de Firefox depuis …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2015-08-22T23:58:00+02:00" pubdate>
-                            Sat 22 August 2015
-                        </time>
-                        <a href="../2015/08/comprendre-la-prediction-de-noms-des-interfaces-reseau-de-systemd.html" rel="bookmark"><h1>Comprendre la prédiction de noms des interfaces réseau de systemd</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p><em>Cet article est une traduction d'`un article
-original &lt;https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/&gt;`__
-de Major Hayden, publié `sur son blog &lt;https://major.io/&gt;`__ le 21 Aout
-2015. Article traduit avec son aimable autorisation.</em></p>
-<p>J'ai un peu parlé des nom des interfaces réseau de systemd dans …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-        </ol>
-        <div class="paginator">
-            Page 1 / 3
-                <a href="../category/tech2.html">
-                    <i class="icon-circle-arrow-right"></i>
-                </a>
-        </div>
 
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../">
+        <img class="img-fluid rounded" src=../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
     </div>
-        </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
 
-        <script src="../theme/js/main.js"></script>
-    </body>
+  <div class="main">
+    <div class="container">
+      <h1>  Tech Articles
+</h1>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2021-02-03T21:40:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Wed 03 February 2021
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2021/02/reset-hyperflex-replication-network.html">Cisco Hyperflex - Supprimer la configuration réseau de réplication</a>
+        </h4>
+        <div class="content">
+          Cette semaine, j'ai pris le temps de jouer avec une instance de demo Cisco Hyperflex sur dcloud.cisco.com. Cette demo permet de jouer un peu avec deux instances Hyperflex et notamment de mettre en place un PRA entre ces deux instances. Pour mettre en oeuvre ce PRA, il faut …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2017-11-03T22:45:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 03 November 2017
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2017/11/hypertexte-acte-1.html">HyperText Acte 1</a>
+        </h4>
+        <div class="content">
+          Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-06-24T08:30:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 24 June 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/06/relais-smtp-authentifie-zimbra.html">Zimbra : Envoi de mails via un relais SMTP authentifié</a>
+        </h4>
+        <div class="content">
+          Héberger soi même ses données c'est bien, le faire correctement c'est mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails est qu'il est difficile de s'assurer que les mails soient bien reçus par nos correspondants. Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un bloc …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-06-20T22:40:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Mon 20 June 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/06/monter-cluster-galera-mariadb.html">Pas à pas - monter un cluster Galera Mariadb</a>
+        </h4>
+        <div class="content">
+          Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb pour remplacer notre cluster Mysql, je pensais trouver facilement de la documentation en ligne. On trouve en effet beaucoup d'articles de blogs expliquant comment créer son cluster Galera malheureusement cette techno évolue vite et les articles sont …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-05-27T23:02:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 27 May 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/05/pydio-migration-upgrade-package-en.html">Pydio - migration, upgrade, package [EN]</a>
+        </h4>
+        <div class="content">
+          Cet article est également disponible en français. This unclear title reveals an operation i've just done to make 3 moves in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the tar.gz archive. The primary goal was to upgrade Pydio to 6.4. Unfortunately …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-05-27T23:02:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 27 May 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/05/pydio-migration-upgrade-package-fr.html">Pydio : migration, upgrade, package [FR]</a>
+        </h4>
+        <div class="content">
+          The article is also available in english. Sous ce titre peu clair se cache une opération de que je viens de mener afin d'opérer 3 opérations sur une instance pydio. Pour mettre les choses dans leur contexte, Pydio était installé via l'archive tar.gz, sur un serveur CentOS 6 et …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2015-10-30T23:24:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 30 October 2015
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2015/10/migration-openldap-2-2-vers-openldap-2-4.html">Migration OpenLDAP 2.2 vers OpenLDAP 2.4</a>
+        </h4>
+        <div class="content">
+          Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner des applications assez sensible, parfois même critique. C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans licence (donc sans yum) et dont la version …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2015-08-24T09:17:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Mon 24 August 2015
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html">Firefox comme navigateur par défaut de SailfishOS</a>
+        </h4>
+        <div class="content">
+          Jolla et son SailfishOS sont vraiment de beaux outils mais il faut avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité des navigateurs intégrés et surtout du navigateur par défaut. Malheureusement, l'interface ne propose actuellement aucune option pour modifier ce comportement. Ainsi, lorsqu'on clique sur un lien …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2015-08-23T14:00:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Sun 23 August 2015
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2015/08/vmware-client-integration-plugin-hs-dans-firefox.html">Vmware Client Integration Plugin HS dans Firefox</a>
+        </h4>
+        <div class="content">
+          Depuis quelques semaines, le plugin d'intégration client VMware ne fonctionne plus dans Firefox. La case "Utiliser les identifiants Windows" est grisée et d'après l'interface de vCenter, le plugin n'est pas installé sur votre machine. Ce problème est apparu avec Firefox 39 et concerne toutes les nouvelles versions de Firefox depuis …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2015-08-22T23:58:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Sat 22 August 2015
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2015/08/comprendre-la-prediction-de-noms-des-interfaces-reseau-de-systemd.html">Comprendre la prédiction de noms des interfaces réseau de systemd</a>
+        </h4>
+        <div class="content">
+          Cet article est une traduction d'`un article original <https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/>`__ de Major Hayden, publié `sur son blog <https://major.io/>`__ le 21 Aout 2015. Article traduit avec son aimable autorisation. J'ai un peu parlé des nom des interfaces réseau de systemd dans …
+        </div>
+      </div>
+    </article>
+  <hr>
+  <ul class="pagination">
+    <li class="page-item">
+      <span class="page-link">1 of 3</span>
+    </li>
+      <li class="page-item">
+        <a class="page-link" href="../category/tech2.html">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+  </ul>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
 </html>

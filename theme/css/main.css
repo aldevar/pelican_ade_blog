@@ -77,7 +77,8 @@ textarea {
    ========================================================================== */
 #site-info {
   margin-top: 1.5em;
-  font-size: 0.7em;
+  text-align: center;
+  letter-spacing: 10px;
   text-align: center;
   color: #38c5c5; }
   #site-info a {

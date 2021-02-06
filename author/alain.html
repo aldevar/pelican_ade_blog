@@ -1,249 +1,316 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Aldevar - Le Blog - alain</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-            <link rel="stylesheet" href="../theme/css/normalize.css">
-        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../theme/css/main.css">
+<!doctype html>
+<html lang="fr">
 
-    <link rel="stylesheet" href="../theme/css/blog.css">
-    <link rel="stylesheet" href="../theme/css/github.css">
-        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog Atom Feed" />
-        <script src="../theme/js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <div id="wrapper">
-<header id="sidebar" class="side-shadow">
-    <hgroup id="site-header">
-        <a id="site-title" href=".."><h1><i class="icon-coffee"></i> Aldevar - Le Blog</h1></a>
-        <p id="site-desc"> Un Blog IT </p>
-    </hgroup>
-    <nav>
-        <ul id="nav-links">
-        </ul>
-    </nav>
-<footer id="site-info">
-    <p>
-        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
-    </p>
-    <p>
-        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
-    </p>
-</footer></header>
-    <div id="post-container">
-        <ol id="post-list">
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2021-02-03T21:40:00+01:00" pubdate>
-                            Wed 03 February 2021
-                        </time>
-                        <a href="../2021/02/reset-hyperflex-replication-network.html" rel="bookmark"><h1>Cisco Hyperflex - Supprimer la configuration réseau de réplication</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Cette semaine, j'ai pris le temps de jouer avec une instance de demo Cisco Hyperflex sur dcloud.cisco.com. Cette demo permet de jouer un peu avec deux instances Hyperflex et notamment de mettre en place un PRA entre ces deux instances.
-Pour mettre en oeuvre ce PRA, il faut …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2017-10-29T19:30:00+01:00" pubdate>
-                            Sun 29 October 2017
-                        </time>
-                        <a href="../2017/10/monitoring-101-alertes-durant-astreintes.html" rel="bookmark"><h1>Monitoring 101 : Les alertes durant les astreintes</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <div class="section" id="introduction">
-<h2>Introduction</h2>
-<p>Après avoir déployé un système de supervision dans une infrastructure de
-taille moyenne et avoir passé quelques temps en rotation dans une équipe
-d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que
-devrait être la supervision et surtout les alertes qui doivent être
-levées lors des astreintes …</p></div>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-08-10T15:36:00+02:00" pubdate>
-                            Wed 10 August 2016
-                        </time>
-                        <a href="../2016/08/state-saltstack-deploiement-de-zabbix-agent.html" rel="bookmark"><h1>State SaltStack pour déploiement de Zabbix-agent</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>SaltStack est un gestionnaire de configuration comparable à Ansible,
-Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur
-Salt est appelé 'master' et les clients des 'minions'. Les states sont
-des listes de commandes que le serveur fait exécuter par le client. On
-utilise YAML pour écrire les …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-08-01T08:30:00+02:00" pubdate>
-                            Mon 01 August 2016
-                        </time>
-                        <a href="../2016/08/superviser-serveur-haproxy-zabbix.html" rel="bookmark"><h1>Superviser un serveur HAproxy avec Zabbix</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Après avoir monté le <a class="reference external" href="/monter-cluster-galera-mariadb.html">cluster MariaDB
-Galera</a>
-et placé un serveur <a class="reference external" href="/galera-load-balancing-failover-haproxy.html">HAproxy en
-frontal</a>,
-il me restait encore à mettre en place la supervision de ce cluster. Je
-voulais notamment, en dehors de la supervision de base&nbsp;qu'on peut
-déployer sur un serveur (classiquement processeurs / RAM / disques /
-Réseau) pouvoir visualiser …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-07-05T21:45:00+02:00" pubdate>
-                            Tue 05 July 2016
-                        </time>
-                        <a href="../2016/07/zabbix-superviser-cluster-ceph.html" rel="bookmark"><h1>Zabbix - Superviser un cluster Ceph</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Ceph est une solution open source de stockage distribué avec réplication
-des données et une forte tolérance aux pannes. Différentes commandes
-existent pour vérifier l'état du cluster et nous allons voir comment les
-exploiter avec des scripts Python pour que Zabbix puisse récupérer les
-métriques.</p>
-<p><img alt="Ceph_Logo" src="/images/Ceph_Logo.png" /></p>
-<p>Je suis parti d'un <a class="reference external" href="https://github.com/thelan/ceph-zabbix">template …</a></p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-06-24T08:30:00+02:00" pubdate>
-                            Fri 24 June 2016
-                        </time>
-                        <a href="../2016/06/relais-smtp-authentifie-zimbra.html" rel="bookmark"><h1>Zimbra : Envoi de mails via un relais SMTP authentifié</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Héberger soi même ses données c'est bien, le faire correctement c'est
-mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
-est qu'il est difficile de s'assurer que les mails soient bien reçus par
-nos correspondants.</p>
-<p>Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un
-bloc …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-06-21T21:47:00+02:00" pubdate>
-                            Tue 21 June 2016
-                        </time>
-                        <a href="../2016/06/galera-load-balancing-failover-haproxy.html" rel="bookmark"><h1>Galera Mariadb: Load balancing et Failover HAproxy</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Après avoir mis en place le <a class="reference external" href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/">cluster Galera
-Mariadb</a>,
-nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
-être un proxy mysql ou tout autre serveur HA.</p>
-<p>Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie
-les paquets vers la machine ayant le moins de connexions …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-06-20T22:40:00+02:00" pubdate>
-                            Mon 20 June 2016
-                        </time>
-                        <a href="../2016/06/monter-cluster-galera-mariadb.html" rel="bookmark"><h1>Pas à pas - monter un cluster Galera Mariadb</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
-pour remplacer notre cluster Mysql, je pensais trouver facilement de la
-documentation en ligne. On trouve en effet beaucoup d'articles de blogs
-expliquant comment créer son cluster Galera malheureusement cette techno
-évolue vite et les articles sont …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-05-27T23:02:00+02:00" pubdate>
-                            Fri 27 May 2016
-                        </time>
-                        <a href="../2016/05/pydio-migration-upgrade-package-en.html" rel="bookmark"><h1>Pydio - migration, upgrade, package [EN]</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Cet article est également disponible <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/">en
-français</a>.</p>
-<p>This unclear title reveals an operation i've just done to make 3 moves
-in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
-tar.gz archive.</p>
-<p>The primary goal was to upgrade Pydio to 6.4. Unfortunately …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-05-27T23:02:00+02:00" pubdate>
-                            Fri 27 May 2016
-                        </time>
-                        <a href="../2016/05/pydio-migration-upgrade-package-fr.html" rel="bookmark"><h1>Pydio : migration, upgrade, package [FR]</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>The article is also available <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en/">in
-english</a>.</p>
-<p>Sous ce titre peu clair se cache une opération de que je viens de mener
-afin d'opérer 3 opérations sur une instance pydio. Pour mettre les
-choses dans leur contexte, Pydio était installé via l'archive tar.gz,
-sur un serveur CentOS 6 et …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-        </ol>
-        <div class="paginator">
-            Page 1 / 5
-                <a href="../author/alain2.html">
-                    <i class="icon-circle-arrow-right"></i>
-                </a>
-        </div>
+  <title>  alain Articles | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../author/alain.html">
 
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../">
+        <img class="img-fluid rounded" src=../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
     </div>
-        </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
 
-        <script src="../theme/js/main.js"></script>
-    </body>
+  <div class="main">
+    <div class="container">
+      <h1>  alain Articles
+</h1>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2017-10-29T19:30:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Sun 29 October 2017
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2017/10/monitoring-101-alertes-durant-astreintes.html">Monitoring 101 : Les alertes durant les astreintes</a>
+        </h4>
+        <div class="content">
+          Introduction Après avoir déployé un système de supervision dans une infrastructure de taille moyenne et avoir passé quelques temps en rotation dans une équipe d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que devrait être la supervision et surtout les alertes qui doivent être levées lors des astreintes …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-08-10T15:36:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Wed 10 August 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/08/state-saltstack-deploiement-de-zabbix-agent.html">State SaltStack pour déploiement de Zabbix-agent</a>
+        </h4>
+        <div class="content">
+          SaltStack est un gestionnaire de configuration comparable à Ansible, Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur Salt est appelé 'master' et les clients des 'minions'. Les states sont des listes de commandes que le serveur fait exécuter par le client. On utilise YAML pour écrire les …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-08-01T08:30:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Mon 01 August 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/08/superviser-serveur-haproxy-zabbix.html">Superviser un serveur HAproxy avec Zabbix</a>
+        </h4>
+        <div class="content">
+          Après avoir monté le cluster MariaDB Galera et placé un serveur HAproxy en frontal, il me restait encore à mettre en place la supervision de ce cluster. Je voulais notamment, en dehors de la supervision de base qu'on peut déployer sur un serveur (classiquement processeurs / RAM / disques / Réseau) pouvoir visualiser …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-07-05T21:45:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Tue 05 July 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/07/zabbix-superviser-cluster-ceph.html">Zabbix - Superviser un cluster Ceph</a>
+        </h4>
+        <div class="content">
+          Ceph est une solution open source de stockage distribué avec réplication des données et une forte tolérance aux pannes. Différentes commandes existent pour vérifier l'état du cluster et nous allons voir comment les exploiter avec des scripts Python pour que Zabbix puisse récupérer les métriques. Je suis parti d'un template …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-06-24T08:30:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 24 June 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/06/relais-smtp-authentifie-zimbra.html">Zimbra : Envoi de mails via un relais SMTP authentifié</a>
+        </h4>
+        <div class="content">
+          Héberger soi même ses données c'est bien, le faire correctement c'est mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails est qu'il est difficile de s'assurer que les mails soient bien reçus par nos correspondants. Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un bloc …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-06-21T21:47:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Tue 21 June 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/linux-tech.html">Linux, Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/06/galera-load-balancing-failover-haproxy.html">Galera Mariadb: Load balancing et Failover HAproxy</a>
+        </h4>
+        <div class="content">
+          Après avoir mis en place le cluster Galera Mariadb, nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut être un proxy mysql ou tout autre serveur HA. Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie les paquets vers la machine ayant le moins de connexions …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-06-20T22:40:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Mon 20 June 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/06/monter-cluster-galera-mariadb.html">Pas à pas - monter un cluster Galera Mariadb</a>
+        </h4>
+        <div class="content">
+          Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb pour remplacer notre cluster Mysql, je pensais trouver facilement de la documentation en ligne. On trouve en effet beaucoup d'articles de blogs expliquant comment créer son cluster Galera malheureusement cette techno évolue vite et les articles sont …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-05-27T23:02:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 27 May 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/05/pydio-migration-upgrade-package-en.html">Pydio - migration, upgrade, package [EN]</a>
+        </h4>
+        <div class="content">
+          Cet article est également disponible en français. This unclear title reveals an operation i've just done to make 3 moves in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the tar.gz archive. The primary goal was to upgrade Pydio to 6.4. Unfortunately …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-05-27T23:02:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Fri 27 May 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/tech.html">Tech</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/05/pydio-migration-upgrade-package-fr.html">Pydio : migration, upgrade, package [FR]</a>
+        </h4>
+        <div class="content">
+          The article is also available in english. Sous ce titre peu clair se cache une opération de que je viens de mener afin d'opérer 3 opérations sur une instance pydio. Pour mettre les choses dans leur contexte, Pydio était installé via l'archive tar.gz, sur un serveur CentOS 6 et …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-03-31T17:35:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Thu 31 March 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/03/nutanix-template-for-zabbix.html">Nutanix Template for Zabbix</a>
+        </h4>
+        <div class="content">
+          Cet article est également disponible en français For the needs of our infrastructure, I built a Nutanix Template for the monitoring plateforme Zabbix. This template automatically discover containers, CVMs, hard drives, hypervisors and virtual machines. Once the items are discovered, some metrics, graphs and triggers are deployed To be able …
+        </div>
+      </div>
+    </article>
+  <hr>
+  <ul class="pagination">
+    <li class="page-item">
+      <span class="page-link">1 of 5</span>
+    </li>
+      <li class="page-item">
+        <a class="page-link" href="../author/alain2.html">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+  </ul>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
 </html>

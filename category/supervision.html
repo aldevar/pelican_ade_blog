@@ -1,193 +1,236 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Aldevar - Le Blog - Supervision</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-            <link rel="stylesheet" href="../theme/css/normalize.css">
-        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../theme/css/main.css">
+<!doctype html>
+<html lang="fr">
 
-    <link rel="stylesheet" href="../theme/css/blog.css">
-    <link rel="stylesheet" href="../theme/css/github.css">
-        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog Atom Feed" />
-        <script src="../theme/js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <div id="wrapper">
-<header id="sidebar" class="side-shadow">
-    <hgroup id="site-header">
-        <a id="site-title" href=".."><h1><i class="icon-coffee"></i> Aldevar - Le Blog</h1></a>
-        <p id="site-desc"> Un Blog IT </p>
-    </hgroup>
-    <nav>
-        <ul id="nav-links">
-        </ul>
-    </nav>
-<footer id="site-info">
-    <p>
-        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
-    </p>
-    <p>
-        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
-    </p>
-</footer></header>
-    <div id="post-container">
-        <ol id="post-list">
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2017-11-12T16:52:00+01:00" pubdate>
-                            Sun 12 November 2017
-                        </time>
-                        <a href="../2017/11/monitoring-101-que-surveiller.html" rel="bookmark"><h1>Monitoring 101 : Que faut-il surveiller?</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <div class="section" id="introduction">
-<h2>Introduction</h2>
-<p>Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …</p></div>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2017-10-29T19:30:00+01:00" pubdate>
-                            Sun 29 October 2017
-                        </time>
-                        <a href="../2017/10/monitoring-101-alertes-durant-astreintes.html" rel="bookmark"><h1>Monitoring 101 : Les alertes durant les astreintes</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <div class="section" id="introduction">
-<h2>Introduction</h2>
-<p>Après avoir déployé un système de supervision dans une infrastructure de
-taille moyenne et avoir passé quelques temps en rotation dans une équipe
-d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que
-devrait être la supervision et surtout les alertes qui doivent être
-levées lors des astreintes …</p></div>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-08-10T15:36:00+02:00" pubdate>
-                            Wed 10 August 2016
-                        </time>
-                        <a href="../2016/08/state-saltstack-deploiement-de-zabbix-agent.html" rel="bookmark"><h1>State SaltStack pour déploiement de Zabbix-agent</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>SaltStack est un gestionnaire de configuration comparable à Ansible,
-Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur
-Salt est appelé 'master' et les clients des 'minions'. Les states sont
-des listes de commandes que le serveur fait exécuter par le client. On
-utilise YAML pour écrire les …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-08-01T08:30:00+02:00" pubdate>
-                            Mon 01 August 2016
-                        </time>
-                        <a href="../2016/08/superviser-serveur-haproxy-zabbix.html" rel="bookmark"><h1>Superviser un serveur HAproxy avec Zabbix</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Après avoir monté le <a class="reference external" href="/monter-cluster-galera-mariadb.html">cluster MariaDB
-Galera</a>
-et placé un serveur <a class="reference external" href="/galera-load-balancing-failover-haproxy.html">HAproxy en
-frontal</a>,
-il me restait encore à mettre en place la supervision de ce cluster. Je
-voulais notamment, en dehors de la supervision de base&nbsp;qu'on peut
-déployer sur un serveur (classiquement processeurs / RAM / disques /
-Réseau) pouvoir visualiser …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-07-05T21:45:00+02:00" pubdate>
-                            Tue 05 July 2016
-                        </time>
-                        <a href="../2016/07/zabbix-superviser-cluster-ceph.html" rel="bookmark"><h1>Zabbix - Superviser un cluster Ceph</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Ceph est une solution open source de stockage distribué avec réplication
-des données et une forte tolérance aux pannes. Différentes commandes
-existent pour vérifier l'état du cluster et nous allons voir comment les
-exploiter avec des scripts Python pour que Zabbix puisse récupérer les
-métriques.</p>
-<p><img alt="Ceph_Logo" src="/images/Ceph_Logo.png" /></p>
-<p>Je suis parti d'un <a class="reference external" href="https://github.com/thelan/ceph-zabbix">template …</a></p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-03-31T17:35:00+02:00" pubdate>
-                            Thu 31 March 2016
-                        </time>
-                        <a href="../2016/03/nutanix-template-for-zabbix.html" rel="bookmark"><h1>Nutanix Template for Zabbix</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>Cet article est également disponible <a class="reference external" href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/">en
-français</a></p>
-<p>For the needs of our infrastructure, I built a Nutanix Template for the
-monitoring plateforme Zabbix. This template automatically discover
-containers, CVMs, hard drives, hypervisors and virtual machines.</p>
-<p>Once the items are discovered, some metrics, graphs and triggers are
-deployed</p>
-<p>To be able …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-            <li>
-                <article class="post-entry">
-                    <header class="entry-header">
-                        <time class="post-time" datetime="2016-03-31T17:32:00+02:00" pubdate>
-                            Thu 31 March 2016
-                        </time>
-                        <a href="../2016/03/template_nutanix_pour_zabbix.html" rel="bookmark"><h1>Template Nutanix pour Zabbix</h1></a>
-                    </header>
-                    <section class="post-content">
-                        <p>This post is also available in english</p>
-<p>Afin de superviser correctement notre cluster Nutanix sans passer trop
-de temps à configurer les objets à surveiller, j'ai construit un
-template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe
-de découvrir automatiquement les containers, les CVM, les disques durs,
-les hyperviseurs …</p>
-                    </section>
-                </article>
-            </li>
-            <hr/>
-        </ol>
-        <div class="paginator">
-            Page 1 / 1
-        </div>
+  <title>  Supervision Articles | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../category/supervision.html">
 
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../">
+        <img class="img-fluid rounded" src=../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
     </div>
-        </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
 
-        <script src="../theme/js/main.js"></script>
-    </body>
+  <div class="main">
+    <div class="container">
+      <h1>  Supervision Articles
+</h1>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2017-11-12T16:52:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Sun 12 November 2017
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2017/11/monitoring-101-que-surveiller.html">Monitoring 101 : Que faut-il surveiller?</a>
+        </h4>
+        <div class="content">
+          Introduction Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2017-10-29T19:30:00+01:00">
+            <i class="fa fa-clock-o"></i>
+            Sun 29 October 2017
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2017/10/monitoring-101-alertes-durant-astreintes.html">Monitoring 101 : Les alertes durant les astreintes</a>
+        </h4>
+        <div class="content">
+          Introduction Après avoir déployé un système de supervision dans une infrastructure de taille moyenne et avoir passé quelques temps en rotation dans une équipe d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que devrait être la supervision et surtout les alertes qui doivent être levées lors des astreintes …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-08-10T15:36:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Wed 10 August 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/08/state-saltstack-deploiement-de-zabbix-agent.html">State SaltStack pour déploiement de Zabbix-agent</a>
+        </h4>
+        <div class="content">
+          SaltStack est un gestionnaire de configuration comparable à Ansible, Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur Salt est appelé 'master' et les clients des 'minions'. Les states sont des listes de commandes que le serveur fait exécuter par le client. On utilise YAML pour écrire les …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-08-01T08:30:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Mon 01 August 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/08/superviser-serveur-haproxy-zabbix.html">Superviser un serveur HAproxy avec Zabbix</a>
+        </h4>
+        <div class="content">
+          Après avoir monté le cluster MariaDB Galera et placé un serveur HAproxy en frontal, il me restait encore à mettre en place la supervision de ce cluster. Je voulais notamment, en dehors de la supervision de base qu'on peut déployer sur un serveur (classiquement processeurs / RAM / disques / Réseau) pouvoir visualiser …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-07-05T21:45:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Tue 05 July 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/07/zabbix-superviser-cluster-ceph.html">Zabbix - Superviser un cluster Ceph</a>
+        </h4>
+        <div class="content">
+          Ceph est une solution open source de stockage distribué avec réplication des données et une forte tolérance aux pannes. Différentes commandes existent pour vérifier l'état du cluster et nous allons voir comment les exploiter avec des scripts Python pour que Zabbix puisse récupérer les métriques. Je suis parti d'un template …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-03-31T17:35:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Thu 31 March 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/03/nutanix-template-for-zabbix.html">Nutanix Template for Zabbix</a>
+        </h4>
+        <div class="content">
+          Cet article est également disponible en français For the needs of our infrastructure, I built a Nutanix Template for the monitoring plateforme Zabbix. This template automatically discover containers, CVMs, hard drives, hypervisors and virtual machines. Once the items are discovered, some metrics, graphs and triggers are deployed To be able …
+        </div>
+      </div>
+    </article>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2016-03-31T17:32:00+02:00">
+            <i class="fa fa-clock-o"></i>
+            Thu 31 March 2016
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="../category/supervision.html">Supervision</a>
+          </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="../2016/03/template_nutanix_pour_zabbix.html">Template Nutanix pour Zabbix</a>
+        </h4>
+        <div class="content">
+          This post is also available in english Afin de superviser correctement notre cluster Nutanix sans passer trop de temps à configurer les objets à surveiller, j'ai construit un template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe de découvrir automatiquement les containers, les CVM, les disques durs, les hyperviseurs …
+        </div>
+      </div>
+    </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
 </html>
