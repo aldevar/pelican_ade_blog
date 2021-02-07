@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Migrer des règles de NAT VyOS vers NSX-V | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../drafts/migrate-nat-vyos-nsxv.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Il y a quelques temps, j'ai procédé une modification majeure de l'architecture BGP d'un hébergeur. Cette modification imposait de transposer les règles de NAT présentent sur les routeurs BGP VyOS vers les routeurs NSX-V, plus proche du coeur de réseau. Il y avait environ 400 règles de NAT à transposer …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../">
+        <img class="img-fluid rounded" src=../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Migrer des règles de NAT VyOS vers NSX-V
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2021-02-10T09:22:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 10 February 2021
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../tag/automatisation.html">#automatisation</a>,               <a href="../tag/python.html">#python</a>,               <a href="../tag/vyos.html">#vyos</a>,               <a href="../tag/nsx.html">#nsx</a>,               <a href="../tag/reseau.html">#reseau</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Il y a quelques temps, j'ai procédé une modification majeure de l'architecture BGP d'un hébergeur. Cette modification imposait de transposer les règles de NAT présentent sur les routeurs BGP VyOS vers les routeurs NSX-V, plus proche du coeur de réseau.
+Il y avait environ 400 règles de NAT à transposer. Ceux qui ont déjà fait du NAT sur NSX savent que réaliser ce genre de manipulation manuellement n'est pas une sinécure. L'interface n'est clairement pas adaptée pour ce genre de tâche. Par contre, NSX dispose d'une API plutot bien documenté.
+De l'autre coté, VyOS. VyOS est un système d'exploitation réseau, basé sur Debian avec des commandes similaires à ce qu'on peut trouver sur un routeur.</p>
+<p>En discutant avec Daniil Baturin sur la meilleur façon de procéder, celui ci m'a indiqué le <a class="reference external" href="https://github.com/vyos/vyos-1x/blob/current/python/vyos/configtree.py">script configtree</a> qui permet de manipuler un fichier de configuration VyOS. Avec l'aide de ce script, j'ai pu écrire ce script Python qui lit le fichier vyos.conf préalablement récupéré par mes soins et génére puis pousse les règles de NAT vers NSX-V.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">vyos.configtree</span>
+  <span class="kn">import</span> <span class="nn">requests</span>
+  <span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">HTTPBasicAuth</span>
+
+  <span class="c1"># Set variables for edg_id and nsxmanager</span>
+  <span class="n">edge_id</span> <span class="o">=</span> <span class="s1">&#39;edge-XXX&#39;</span>
+  <span class="n">nsx_manager</span> <span class="o">=</span> <span class="s1">&#39;nsxmanager.localdomain&#39;</span>
+
+  <span class="k">def</span> <span class="nf">get_nat_dest_rule</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+      <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">      From VyOS config section &quot;nat destination rule X&quot;</span>
+<span class="sd">      Return the DNAT rule X as dict</span>
+<span class="sd">      &#39;&#39;&#39;</span>
+      <span class="n">rule</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;dstaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;srcaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;inbound-interface&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;inbound-interface&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;inbound-interface&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;translation&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;translateaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;translation&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+
+      <span class="k">return</span> <span class="n">rule</span>
+
+  <span class="k">def</span> <span class="nf">get_nat_source_rule</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+      <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">      From VyOS config section &quot;nat source rule X&quot;</span>
+<span class="sd">      Return the SNAT rule X as dict</span>
+<span class="sd">      &#39;&#39;&#39;</span>
+      <span class="n">rule</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;srcaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;dstaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;outbound-interface&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;outbound-interface&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;outbound-interface&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;protocol&quot;</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;translation&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">]):</span>
+          <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;translateaddr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">return_value</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;translation&quot;</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">])</span>
+
+      <span class="k">return</span> <span class="n">rule</span>
+
+  <span class="k">def</span> <span class="nf">create_dstnat_payload</span><span class="p">(</span><span class="n">natdst</span><span class="p">):</span>
+      <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">      From all VyOS DNAT rules, create a XML payload that can be sent to NSX</span>
+<span class="sd">      &#39;&#39;&#39;</span>
+      <span class="n">start_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;natRules&gt;&quot;</span>
+      <span class="n">end_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;/natRules&gt;&quot;</span>
+      <span class="n">mid_payload</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+      <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">natdst</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+          <span class="n">base_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;natRule&gt;&lt;action&gt;dnat&lt;/action&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;originalAddress&gt;</span><span class="si">{0}</span><span class="s2">&lt;/originalAddress&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;translatedAddress&gt;</span><span class="si">{1}</span><span class="s2">&lt;/translatedAddress&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;loggingEnabled&gt;false&lt;/loggingEnabled&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;enabled&gt;true&lt;/enabled&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;originalPort&gt;any&lt;/originalPort&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;translatedPort&gt;any&lt;/translatedPort&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;dstaddr&#39;</span><span class="p">],</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;translateaddr&#39;</span><span class="p">])</span>
+          <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="n">descr_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;description&gt;</span><span class="si">{0}</span><span class="s2">&lt;/description&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+              <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">descr_payload</span>
+          <span class="k">if</span> <span class="s2">&quot;protocol&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+                  <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;any&lt;/protocol&gt;&quot;</span>
+              <span class="k">else</span><span class="p">:</span>
+                  <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;</span><span class="si">{0}</span><span class="s2">&lt;/protocol&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">])</span>
+
+          <span class="k">else</span><span class="p">:</span>
+              <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;any&lt;/protocol&gt;&quot;</span>
+          <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">proto_payload</span>
+          <span class="k">if</span> <span class="s2">&quot;srcaddr&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="n">src_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;dnatMatchSourceAddress&gt;</span><span class="si">{0}</span><span class="s2">&lt;/dnatMatchSourceAddress&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;srcaddr&#39;</span><span class="p">])</span>
+              <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">src_payload</span>
+
+          <span class="n">mid_payload</span> <span class="o">=</span> <span class="n">mid_payload</span> <span class="o">+</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="s2">&quot;&lt;/natRule&gt;&quot;</span>
+
+      <span class="n">payload</span> <span class="o">=</span> <span class="n">start_payload</span> <span class="o">+</span> <span class="n">mid_payload</span> <span class="o">+</span> <span class="n">end_payload</span>
+      <span class="k">return</span> <span class="n">payload</span>
+
+  <span class="k">def</span> <span class="nf">create_srcnat_payload</span><span class="p">(</span><span class="n">natsrc</span><span class="p">):</span>
+      <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">      From all VyOS SNAT rules, create a XML payload that can be sent to NSX</span>
+<span class="sd">      &#39;&#39;&#39;</span>
+      <span class="n">start_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;natRules&gt;&quot;</span>
+      <span class="n">end_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;/natRules&gt;&quot;</span>
+      <span class="n">mid_payload</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+      <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">natsrc</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+          <span class="n">base_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;natRule&gt;&lt;action&gt;snat&lt;/action&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;originalAddress&gt;</span><span class="si">{0}</span><span class="s2">&lt;/originalAddress&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;translatedAddress&gt;</span><span class="si">{1}</span><span class="s2">&lt;/translatedAddress&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;loggingEnabled&gt;false&lt;/loggingEnabled&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;enabled&gt;true&lt;/enabled&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;originalPort&gt;any&lt;/originalPort&gt;</span><span class="se">\</span>
+<span class="s2">                          &lt;translatedPort&gt;any&lt;/translatedPort&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;srcaddr&#39;</span><span class="p">],</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;translateaddr&#39;</span><span class="p">])</span>
+          <span class="k">if</span> <span class="s2">&quot;description&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="n">descr_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;description&gt;</span><span class="si">{0}</span><span class="s2">&lt;/description&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+              <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">descr_payload</span>
+          <span class="k">if</span> <span class="s2">&quot;protocol&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+                  <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;any&lt;/protocol&gt;&quot;</span>
+              <span class="k">else</span><span class="p">:</span>
+                  <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;</span><span class="si">{0}</span><span class="s2">&lt;/protocol&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">])</span>
+
+          <span class="k">else</span><span class="p">:</span>
+              <span class="n">proto_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;protocol&gt;any&lt;/protocol&gt;&quot;</span>
+          <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">proto_payload</span>
+          <span class="k">if</span> <span class="s2">&quot;dstaddr&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
+              <span class="n">src_payload</span> <span class="o">=</span> <span class="s2">&quot;&lt;snatMatchDestinationAddress&gt;</span><span class="si">{0}</span><span class="s2">&lt;/snatMatchDestinationAddress&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;dstaddr&#39;</span><span class="p">])</span>
+              <span class="n">base_payload</span> <span class="o">=</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="n">src_payload</span>
+
+          <span class="n">mid_payload</span> <span class="o">=</span> <span class="n">mid_payload</span> <span class="o">+</span> <span class="n">base_payload</span> <span class="o">+</span> <span class="s2">&quot;&lt;/natRule&gt;&quot;</span>
+
+      <span class="n">payload</span> <span class="o">=</span> <span class="n">start_payload</span> <span class="o">+</span> <span class="n">mid_payload</span> <span class="o">+</span> <span class="n">end_payload</span>
+      <span class="k">return</span> <span class="n">payload</span>
+
+  <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;vyos.conf&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+          <span class="n">config_string</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+      <span class="n">config</span> <span class="o">=</span> <span class="n">vyos</span><span class="o">.</span><span class="n">configtree</span><span class="o">.</span><span class="n">ConfigTree</span><span class="p">(</span><span class="n">config_string</span><span class="p">)</span>
+
+      <span class="c1"># We start with DNAT rules</span>
+      <span class="n">destrulesid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">list_nodes</span><span class="p">([</span><span class="s2">&quot;nat&quot;</span><span class="p">,</span> <span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">])</span>
+      <span class="n">natdest_all</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">destruleid</span> <span class="ow">in</span> <span class="n">destrulesid</span><span class="p">:</span>
+          <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">          We build a huge DNAT dict where keys are rules id and items are dict of rule parameter :</span>
+<span class="sd">          &#39;1&#39;: {&#39;dstaddr&#39;: &#39;1.2.3.4&#39;,</span>
+<span class="sd">                &#39;outbound-interface&#39;: &#39;eth1&#39;,</span>
+<span class="sd">                &#39;log&#39;: &#39;enable&#39;,</span>
+<span class="sd">                &#39;protocol&#39;: &#39;all&#39;,</span>
+<span class="sd">                &#39;translateaddr&#39;: &#39;10.1.2.3&#39;}</span>
+<span class="sd">          &#39;&#39;&#39;</span>
+          <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nat&quot;</span><span class="p">,</span> <span class="s2">&quot;destination&quot;</span><span class="p">,</span> <span class="s2">&quot;rule </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">destruleid</span><span class="p">)]</span>
+          <span class="n">natdest</span> <span class="o">=</span> <span class="n">get_nat_dest_rule</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+          <span class="n">natdest_all</span><span class="p">[</span><span class="n">destruleid</span><span class="p">]</span> <span class="o">=</span> <span class="n">natdest</span>
+      <span class="c1">#print(natdest_all)</span>
+
+      <span class="c1"># Continue with SNAT rules</span>
+      <span class="n">srcrulesid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">list_nodes</span><span class="p">([</span><span class="s2">&quot;nat&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;rule&quot;</span><span class="p">])</span>
+      <span class="n">natsrc_all</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">srcruleid</span> <span class="ow">in</span> <span class="n">srcrulesid</span><span class="p">:</span>
+          <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">          Same as the DNAT dict</span>
+<span class="sd">          &#39;&#39;&#39;</span>
+          <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nat&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;rule </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">srcruleid</span><span class="p">)]</span>
+          <span class="n">srcdest</span> <span class="o">=</span> <span class="n">get_nat_source_rule</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+          <span class="n">natsrc_all</span><span class="p">[</span><span class="n">srcruleid</span><span class="p">]</span> <span class="o">=</span> <span class="n">srcdest</span>
+      <span class="c1">#print(natsrc_all)</span>
+
+      <span class="c1"># We now have two huge dictionnaries with DNAT and SNAT rules from VyOS</span>
+      <span class="c1"># We are going to process them and POST them to NSX :crossed_fingers:</span>
+
+      <span class="c1"># Replace edge-XXX with the right edge-id</span>
+      <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://</span><span class="si">{0}</span><span class="s2">/api/4.0/edges/</span><span class="si">{1}</span><span class="s2">/nat/config/rules&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nsx_manager</span><span class="p">,</span> <span class="n">edge_id</span><span class="p">)</span>
+      <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/xml&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/xml&#39;</span>
+      <span class="p">}</span>
+
+      <span class="n">dstnat_payload</span> <span class="o">=</span> <span class="n">create_dstnat_payload</span><span class="p">(</span><span class="n">natdest_all</span><span class="p">)</span>
+      <span class="n">srcnat_payload</span> <span class="o">=</span> <span class="n">create_srcnat_payload</span><span class="p">(</span><span class="n">natsrc_all</span><span class="p">)</span>
+
+      <span class="c1"># This script is ment to be be run only once</span>
+      <span class="c1"># Write your Vsphere login and password here</span>
+      <span class="c1"># Don&#39;t commit your login and passord to git!!!!!!!!!</span>
+      <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+      <span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;password&#39;</span>
+
+      <span class="c1"># POST DNAT rules</span>
+      <span class="c1"># This request append the rules to the existing ones</span>
+      <span class="c1">#print(dstnat_payload)</span>
+      <span class="n">dstresponse</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">dstnat_payload</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">),</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">dstresponse</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">dstresponse</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+
+      <span class="c1"># POST SNAT rules</span>
+      <span class="c1"># This request append the rules to the existing ones</span>
+      <span class="c1">#print(srcnat_payload)</span>
+      <span class="n">srcresponse</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">srcnat_payload</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">),</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">srcresponse</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">srcresponse</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+
+  <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+      <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
