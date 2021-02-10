@@ -63,7 +63,7 @@
         </li>
         <li class="list-inline-item">
           <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/tech.html">Tech</a>
+          <a href="../../category/automatisation.html">Automatisation</a>
         </li>
           <li class="list-inline-item">
             <i class="fa fa-files-o"></i>
@@ -72,9 +72,9 @@
     </header>
     <div class="content">
       <p>Il y a quelques temps, j'ai procédé une modification majeure de l'architecture BGP d'un hébergeur. Cette modification imposait de transposer les règles de NAT présentent sur les routeurs BGP VyOS vers les routeurs NSX-V, plus proche du coeur de réseau.
-Il y avait environ 400 règles de NAT à transposer. Ceux qui ont déjà fait du NAT sur NSX savent que réaliser ce genre de manipulation manuellement n'est pas une sinécure. L'interface n'est clairement pas adaptée pour ce genre de tâche. Par contre, NSX dispose d'une API plutot bien documenté.
+Il y avait environ 400 règles de NAT à transposer. Ceux qui ont déjà fait du NAT sur NSX savent que réaliser ce genre de manipulation manuellement n'est pas une sinécure. L'interface n'est clairement pas adaptée pour ce genre de tâche. Par contre, NSX dispose d'une API plutot bien documentée.
 De l'autre coté, VyOS. VyOS est un système d'exploitation réseau, basé sur Debian avec des commandes similaires à ce qu'on peut trouver sur un routeur.</p>
-<p>En discutant avec Daniil Baturin sur la meilleur façon de procéder, celui ci m'a indiqué le script configtree qui permet de manipuler un fichier de configuration VyOS. Avec l'aide de ce script, j'ai pu écrire ce script Python qui lit le fichier vyos.conf préalablement récupéré par mes soins et génére puis pousse les règles de NAT vers NSX-V.</p>
+<p>En discutant avec <a class="reference external" href="https://baturin.org/">Daniil Baturin</a>, principal mainteneur de VyOS, sur la meilleur façon de procéder, celui ci m'a indiqué la <a class="reference external" href="https://github.com/vyos/vyos-1x/blob/current/python/vyos/configtree.py">lib configtree</a> qui permet de manipuler un fichier de configuration VyOS. Avec l'aide de cette lib, j'ai pu écrire ce script Python qui lit le fichier vyos.conf préalablement récupéré par mes soins et génére puis pousse les règles de NAT vers NSX-V.</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
   3
