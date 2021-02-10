@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Humeur</title><link href="/" rel="alternate"></link><link href="feeds/humeur.atom.xml" rel="self"></link><id>/</id><updated>2015-09-25T07:14:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Scripter, programmer</title><link href="2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>alain</name></author><id>tag:None,2015-09-25:2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Humeur</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feeds/humeur.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-09-25T07:14:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Scripter, programmer</title><link href="https://blog.devarieux.net/2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-09-25:/2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
 ingénieur réseau chez Brocade, a présenté un discours très intéressant
 au &lt;a class="reference external" href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
 sujet de la programmabilité en réseau.&lt;/p&gt;
@@ -67,7 +67,7 @@ religion de l'IT. Si vous avez besoin d'une scie, utilisez une scie. Si
 vous avez besoin d'une scie sauteuse pour mieux scier, construisez votre
 scie sauteuse mais faite attention de ne pas devenir un constructeur de
 scie sauteuse qui a oublié comment scier.&lt;/p&gt;
-</content><category term="Humeur"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>alain</name></author><id>tag:None,2013-06-26:2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
+</content><category term="Humeur"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-06-26:/2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
 confirmé. Tous les plus grands services en ligne américains mettent
 quasi à disposition les données qu'ils possèdent sur leurs utilisateurs
 aux services gouvernementaux des USA. Cela pose plusieurs problèmes.
@@ -124,7 +124,7 @@ données perso des serveurs de Google, le géant du web aura toujours mes
 données&amp;nbsp;grâce&amp;nbsp;à mes amis qui synchronisent leurs contacts
 et&amp;nbsp;reçoivent&amp;nbsp;mes emails.&lt;/p&gt;
 &lt;p&gt;Ouais, je sais, c'est&amp;nbsp;ballot...&lt;/p&gt;
-</content><category term="Humeur"></category><category term="google"></category><category term="owncloud"></category><category term="prism"></category><category term="snowden"></category></entry><entry><title>To bulle or not to bulle</title><link href="2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>alain</name></author><id>tag:None,2012-05-22:2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
+</content><category term="Humeur"></category><category term="google"></category><category term="owncloud"></category><category term="prism"></category><category term="snowden"></category></entry><entry><title>To bulle or not to bulle</title><link href="https://blog.devarieux.net/2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-05-22:/2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
 confiance, pour l'instant en tout cas, en Facebook et sa capacité à
 générer des revenus. Le titre FB a eu du mal à se maintenir pour son
 premier jour de cotation Vendredi 18 Mai puis a dévissé complètement le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
@@ -212,7 +212,7 @@ startups de se développer sur les idées novatrices. Ceci risque de
 nécroser le developpement du net et ralentir son developpement. Cette
 problématique mériterait un article dédié, nous en reparlerons donc dans
 un prochain billet.&lt;/p&gt;
-</content><category term="Humeur"></category><category term="bulle"></category><category term="économie"></category><category term="facebook"></category><category term="finance"></category></entry><entry><title>Lettre ouverte à Google</title><link href="2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>alain</name></author><id>tag:None,2011-08-11:2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
+</content><category term="Humeur"></category><category term="bulle"></category><category term="économie"></category><category term="facebook"></category><category term="finance"></category></entry><entry><title>Lettre ouverte à Google</title><link href="https://blog.devarieux.net/2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-08-11:/2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
 &lt;p&gt;Je me souviens encore de notre première rencontre il y a une douzaine
 d’années.&lt;/p&gt;
 &lt;p&gt;Douze ans, dans l’informatique, c’est long. Sur Internet c’est même une
@@ -284,7 +284,7 @@ moins glorieuses. Je te fais confiance pour&amp;nbsp;reconnaître&amp;nbsp;tes e
 quand tu en commettras, comme tu l’as déjà fait par le passé. Pour tout
 cela, moi et tous les autres utilisateurs seront vigilant afin que le
 pire ne se produise pas.&lt;/p&gt;
-</content><category term="Humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>alain</name></author><id>tag:None,2011-07-24:2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
+</content><category term="Humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="https://blog.devarieux.net/2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-07-24:/2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
 avant le boom des réseaux sociaux. Internet était alors une chambre
 secrète que peu de personnes avaient visité. Nous trollions avant que ce
 soit appelé 'troller' et nous le faisions plus pour l'exercice
