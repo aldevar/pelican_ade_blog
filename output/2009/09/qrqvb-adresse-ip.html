@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  QRQVB : L'adresse IP | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2009/09/qrqvb-adresse-ip.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Définition : Une adresse IP identifie de manière unique une machine ainsi que le réseau sur lequel elle est située. Chaque adresse est une série de 4 octets dont une partie correspond à l’identificateur du réseau et l’autre partie à l’identificateur de la machine. | Exemple d’adresse IP …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  QRQVB : L'adresse IP
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2009-09-16T19:12:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 16 September 2009
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/qrqvb.html">QRQVB</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/ip.html">#ip</a>,               <a href="../../tag/qrqvb.html">#qrqvb</a>,               <a href="../../tag/reseaux.html">#réseaux</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <div class="section" id="definition">
+<h2>Définition :</h2>
+<p>Une adresse IP identifie de manière unique une machine ainsi que le
+réseau sur lequel elle est située. Chaque adresse est une série de 4
+octets dont une partie correspond à l’<strong>identificateur du réseau</strong>&nbsp;et
+l’autre partie à l’<strong>identificateur de la machine</strong>.
+|  Exemple d’adresse IP : 172.19.174.125.</p>
+<p>Concrètement, qu’est ce que cela signifie? En fait, puisque les machines
+ne savent traiter qu’avec des nombres binaires (0 ou 1) l’adresse est
+codée en binaire sur 4 octets. Sachant qu’un octet correspond à 8 bits,
+cela nous donne, pour chaque octet 256 possibilités (2^8) pour une
+valeur comprise en 0 et 255.</p>
+</div>
+<div class="section" id="allons-un-peu-plus-loin">
+<h2>Allons un peu plus loin!</h2>
+<p>C’est bien sympa d’avoir une adresse, encore faut-il qu’on puisse m’y
+contacter! On vient de voir dans la définition que l’adresse IP est
+divisée en 2 sous parties :&nbsp;<strong>l’identificateur de
+réseau</strong>&nbsp;et&nbsp;<strong>l’identificateur d’hôte</strong>. C’est là qu’intervient le
+masque de réseau. Alors puisque je ne suis pas fort en blablatage, je
+vais plutôt vous montrer un exemple.
+|  Voici une adresse IP : 192.168.1.15
+|  Voici un masque de réseau : 255.255.255.0</p>
+<p><a class="reference external" href="/images/netmask1.png"><img alt="netmask1" src="/images/netmask1.png" /></a></p>
+<p>En fait, pour être plus précis, les bits se situant dans la partie de
+l’identificateur réseau sont tous positionnés sur 1 et les bits de la
+partie hôte sur 0. En procédant à une opération de ET logique entre
+l’adresse IP et le masque de réseau, on trouve l’adresse réseau. Les
+opérations de ET logique suivent cette règle :</p>
+<pre class="literal-block">
+0 ET 0 = 0
+0 Et 1 = 0
+1 ET 0 = 0
+1 ET 1 = 1
+</pre>
+<p>Grâce à cette adresse réseau, un routeur pourra déterminer quel chemin
+doivent emprunter nos paquets IP. Pour bien comprendre ce système, nous
+allons jouer un peu avec le binaire, même si je sais que ça va en
+rebuter plus d’un :p</p>
+<p><a class="reference external" href="/images/binaire.png"><img alt="binaire" src="/images/binaire.png" /></a></p>
+<p>Ceci est important puisque c’est de cette manière qu’on va pouvoir
+déterminer le nombre maximal de machines qui peuvent appartenir à un
+réseau. Il faut également savoir que sur 1 réseau, 2 adresses sont
+réservées. L’adresse&nbsp;<strong>‘bits hôte à 0′</strong>&nbsp;car c’est elle qui va définir
+justement l’adresse de notre réseau, comme on vient de le voir, et
+l’adresse&nbsp;<strong>‘bits hôte à 1′</strong>&nbsp;car elle correspond à l’adresse de
+diffusion (broadcast). L’adresse de broadcast est nécessaire pour
+diffuser un message sur tout le réseau. Le message de ce genre le plus
+classique est la requête&nbsp;ARP. Celle ci permet à une machine de trouver
+une autre machine sur le réseau en l’appelant.</p>
+<p>Voici un exemple de capture de trame avec wireshark :</p>
+<p><a class="reference external" href="/images/arp2.png"><img alt="arp2" src="/images/arp2.png" /></a></p>
+<p>Le premier paquet est donc une requête ARP. La machine source envoie ce
+message sur tout le réseau : ‘who has 192.168.1.51? &nbsp;Tell 192.168.1.25′.
+La machine qui a pour IP 192.168.1.51 envoie donc sa réponse directement
+à 192.168.1.15 et lui dit que c’est l’adresse MAC 00:0a:78:9e:8a qui
+possède cette IP.&nbsp;Tout ça pour vous dire que l’adresse IP ‘bits hôte à
+1′ est donc réservée pour ce type de message.</p>
+</div>
+<div class="section" id="dimensionnement-de-reseau">
+<h2>Dimensionnement de réseau</h2>
+<p>Puisque le masque de réseau détermine le nombre maximal de machines sur
+un réseau et que les adresses IP ne sont pas illimitées, on va pouvoir
+travailler sur le dimensionnement du réseau en modifiant le masque. En
+effet,&nbsp;<strong>il est possible d’emprunter des bits à la partie hôte pour
+les donner à la partie réseau</strong>. Par exemple, le masque 255.255.255.0
+permet d’avoir 256-2 = 254 hôtes différents sur le même réseau. Hors,
+rares sont ceux qui disposent de 254 machines à interconnecter.</p>
+<p>Admettons que mon réseau possède l’ip 192.168.1.0 (totalement au
+hasard!) de masque 255.255.255.0 . Je dispose de 5 machines à connecter
+sur ce réseau, jamais plus.</p>
+<ul class="simple">
+<li>Si je garde 1bit dans la partie hôte, je vais disposer de 2^1 = 2
+hôtes possibles. &nbsp;On vient de voir plus haut que 2 adresses sont
+reservées sur le réseau, (sisi, rapellez vous, juste au dessus!).
+Donc 2-2 = 0, ce qui me fait 0 hôte disponible.</li>
+<li>Si je garde 2 bits pour ma partie hôte, il va me rester (2^2)-2 = 2
+hôtes possibles. Ce n’est toujours pas suffisant!!</li>
+<li>Si je garde 3 bits pour la partie hôtes, j’obtiens (3^2)-2 = 6 hôtes
+possibles. Ouf!! j’ai assez de place pour caser mes machines. On va
+donc construire notre masque de réseau en gardant ces 3 bits sur 0,
+ce qui nous donne :</li>
+</ul>
+<div class="line-block">
+<div class="line">11111111.11111111.11111111.11111 &nbsp;&nbsp; 000</div>
+<div class="line-block">
+<div class="line">Partie réseau &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;Partie hôte</div>
+<div class="line">Ce qui, transformé en décimal nous donne un masque : 255.255.255.248.</div>
+</div>
+</div>
+<p>Ce qu’on vient de faire ici, c’est de créer des sous réseaux du réseau
+192.168.1.0. Plusieurs sous réseaux composé chacun de 8 adresses IP.</p>
+<pre class="literal-block">
+Sous réseau 1 : de 192.168.1.0 à 192.168.1.7 (avec 192.168.1.0 adresse de sous réseau et 192.168.1.7 adresse de broadcast)
+Sous réseau 2 : de 192.168.1.8 (adresse du réseau) à 192.168.1.15 (adresse de broadcast)
+Sous réseau 3 : de 192.168.1.16(adresse du réseau) à 192.168.1.23 (adresse de broadcast)
+etc etc..
+dernier sous réseau : de 192.168.1.248 (adresse de réseau) à 192.168.1.255 (adresse de broadcast)
+</pre>
+<p>Voilà donc ce qui se cache derrière les adresses IP. Plus mon sous
+réseau sera petit, moins j’aurais de broadcast sur ce réseau. Parce que
+mine ça papote pas mal la dedans et ça a tendance à broadcaster dans
+tous les sens. Malheureusement, le broadcast n’est pas gratuit. Il coûte
+de la bande passante. Et quand la bande passante sature, on commence à
+perdre des paquets.</p>
+<p>C’est pour ça qu’il est important, en entreprise en tout cas, de bien
+calculer le dimensionnement de son réseau et l’adressage IP de
+l’entreprise, sans oublier de prévoir que si l’entreprise s’agrandit, il
+va falloir rajouter des hôtes sur certains sous réseaux et en plus
+ajouter un nouveau sous réseau à notre entreprise pour y connecter un
+nouveau bâtiment par exemple. Ça a vite tendance à tourner cacahuète si
+on fait pas attention.</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

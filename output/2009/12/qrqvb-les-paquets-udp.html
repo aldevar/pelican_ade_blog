@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  QRQVB : Les paquets UDP | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2009/12/qrqvb-les-paquets-udp.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau donc. Je comptais me lancer dans la description des paquets TCP, mais je pense qu’il est plus intéressant de se pencher d’abord sur UDP avant d’appréhender TCP. UDP (Pour User Datagram Protocol) se situe dans …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  QRQVB : Les paquets UDP
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2009-12-29T11:23:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Tue 29 December 2009
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/qrqvb.html">QRQVB</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau
+donc. Je comptais me lancer dans la description des paquets TCP, mais je
+pense qu’il est plus intéressant de se pencher d’abord sur UDP avant
+d’appréhender TCP.</p>
+<p>UDP (Pour <em>User Datagram Protocol</em>) se situe dans la couche 4 du <a class="reference external" href="http://blog.devarieux.net/2009/08/qrqvb-le-modele-osi/">modèle
+OSI</a> (couche
+transport). Pour rappel, au niveau de la couche 3 (IP), <a class="reference external" href="http://blog.devarieux.net/2009/09/qrqvb-datagramme-ip/">les
+datagrammes</a>
+sont routés d’une machine à une autre en fonction des adresses IP (en
+fait, le routage se fait en fonction de l’adresse réseau, voir <a class="reference external" href="http://blog.devarieux.net/2009/09/309/">QRQVB :
+L’adresse IP</a>). Lors de cette
+opération de routage, aucune distinction n’est faite entre les
+différents services pour lesquels ces paquets peuvent être destinés. Que
+ce soit pour une connexion SSH (port 22) ou HTTP (port 80) ou autre, les
+datagrammes IP sont tous indifféremment mélangés.</p>
+<p>La couche 4 du modèle OSI ajoute un mécanisme qui permet
+l’identification du service &nbsp;concerné. Plusieurs programmes de plusieurs
+utilisateurs pouvant simultanément circuler sur le réseau, il est
+indispensable de faire un tri entre les applications. Ici, l’idée est
+d’associer la destination du paquet à une fonction. L’identification de
+cette fonction ce fait à l’aide d’un chiffre nommé <strong>Port</strong>.</p>
+<div class="section" id="en-tete-udp">
+<h2>En tête UDP</h2>
+<p><a class="reference external" href="/images/encaps.png"><img alt="encaps" src="/images/encaps.png" /></a></p>
+<p>Lors de l’étude des <a class="reference external" href="qrqvb-datagramme-ip.html">datagramme
+IP</a>, nous
+avions vu le contenu de l’entête du paquet (partie verte). Ici, nous
+allons observer le contenu de l’entête du message (partie jaune) lorsque
+l’on traite un p&gt;aquet UDP.</p>
+<p>Le paquet UDP est composé de 8 octets.</p>
+<blockquote>
+<a class="reference external" href="/images/entete.png"><img alt="entete" src="/images/entete.png" /></a></blockquote>
+<p><strong>Les 2 premiers octets contiennent le port source</strong>. Codé sur 16 bits
+donc. C’est le numéro de port de l’émetteur du paquet. C’est aussi le
+numéro de port sur lequel le destinataire doit envoyer sa réponse.</p>
+<p><strong>Les octets 3 et 4 stockent le port de destination.</strong> C’est sur ce port
+que sera remis le paquet lors de sa livraison à la machine ciblée.</p>
+<p>Le port étant un entier positif de 16 bits, on en déduit que les bornes
+sont 0 – 65535 (2^16). Cependant, le port 0 n’est pas exploitable.</p>
+<p><strong>Les octets 5 et 6 contiennent la longueur de l’entête UDP</strong> et du
+message. Sa longueur minimal est 8 (entête UDP avec 0 données à
+transporter) et sa longueur maximal 2^16 = 65535 (64ko).</p>
+<p><strong>Les 2 derniers octets contiennent le cheksum</strong>. C’est la somme de
+contrôle de l’entête UDP et des données qui suivent.</p>
+</div>
+<div class="section" id="ports-reserves">
+<h2>Ports réservés</h2>
+<p>Toute machine qui utilise la pile TCP/IP se doit de connaitre un
+certains nombre de services bien connus, aussi appelé «&nbsp;well known port
+number&nbsp;» pour pouvoir dialoguer avec les autres machines sur internet.
+Sur une machines Unix, cette liste est placée dans le fichier
+<strong>*/etc/services*</strong> et se doit d’être lisible par tous les utilisateurs
+et toutes les applications. Voici un extrait du contenu de ce fichier :</p>
+<pre class="literal-block">
+Nom             Port/Protocol     Commentaire
+
+netstat        15/tcp
+ qotd       17/tcp      quote
+ msp        18/tcp      # message send protocol
+ msp        18/udp
+ chargen    19/tcp      ttytst source
+ chargen    19/udp      ttytst source
+ ftp-data   20/tcp
+ ftp        21/tcp
+ fsp        21/udp      fspd
+ ssh        22/tcp      # SSH Remote Login Protocol
+ ssh        22/udp
+ telnet     23/tcp
+ smtp       25/tcp      mail
+ time       37/tcp      timserver
+ time       37/udp      timserver
+ rlp        39/udp      resource    # resource location
+ nameserver 42/tcp      name        # IEN 116
+ whois      43/tcp      nicname
+ tacacs     49/tcp              # Login Host Protocol (TACACS)
+ tacacs     49/udp
+ re-mail-ck 50/tcp              # Remote Mail Checking Protocol
+ re-mail-ck 50/udp
+ domain     53/tcp              # name-domain server
+ domain     53/udp
+ mtp        57/tcp              # deprecated
+ tacacs-ds  65/tcp              # TACACS-Database Service
+ tacacs-ds  65/udp
+ bootps     67/tcp              # BOOTP server
+ bootps     67/udp
+ bootpc     68/tcp              # BOOTP client
+ bootpc     68/udp
+ tftp       69/udp
+ gopher     70/tcp              # Internet Gopher
+ gopher     70/udp
+ rje        77/tcp      netrjs
+ finger     79/tcp
+ www        80/tcp      http        # WorldWideWeb HTTP
+ www        80/udp              # HyperText Transfer Protocol
+</pre>
+<p>Les ports 1 à 1023 sont réservés aux « well known ports ». Ils ne
+peuvent être utilisés que par des applications qui s’exécutent avec des
+droits privilégiés (root). Les autres ports peuvent être utilisés
+librement sans privilège particulier et sont en général employés par les
+applications clientes. Par exemple, sur ma machine, en ce moment, mon
+client IRC utilise le port 59175 pour communiquer avec le serveur irc
+holmes.freenode.net.</p>
+</div>
+<div class="section" id="mode-non-connecte">
+<h2>Mode non connecté</h2>
+<p>Contrairement à TCP, UDP est conçu pour permettre un échange de données
+entre 2 applications sans échange préliminaire. UDP est utilisé si les
+données à transmettre n’ont pas besoin d’être fragmentées en plusieurs
+paquet. La paquet est ainsi envoyé sans s’assurer qu’il arrive bien à
+destination. UDP est appelé mode de transport non connecté par
+opposition à TCP. Plus particulièrement, les paquets a destination d’une
+application UDP sont conservés dans une pile de type FIFO. Si
+l’application destinatrice ne les “consomme” pas assez rapidement, les
+plus anciens paquets risquent d’être écrasés par les plus récents… Un
+risque supplémentaire de perte de données.</p>
+<p>Nous verrons comment TCP peut palier à ce problème dans la prochaine
+QRQVB</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

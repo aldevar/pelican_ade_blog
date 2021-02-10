@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Migration OpenLDAP 2.2 vers OpenLDAP 2.4 | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2015/10/migration-openldap-2-2-vers-openldap-2-4.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner des applications assez sensible, parfois même critique. C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans licence (donc sans yum) et dont la version …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Migration OpenLDAP 2.2 vers OpenLDAP 2.4
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2015-10-30T23:24:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Fri 30 October 2015
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/centos.html">#centos</a>,               <a href="../../tag/migration.html">#migration</a>,               <a href="../../tag/openldap.html">#openldap</a>,               <a href="../../tag/slap.html">#slap</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Parfois, certains serveurs sont là depuis tellement longtemps qu'on n'y
+prête même plus attention. Et pourtant, il arrive qu'ils fassent tourner
+des applications assez sensible, parfois même critique.</p>
+<p>C'est le cas de ce serveur OpenLDAP qui tourne sur une RedHat 5, sans
+licence (donc sans yum) et dont la version 2.2 d'OpenLDAP installée a
+été compilée dans /usr/local. Typiquement le genre de serveur dont
+personne ne veut s'occuper parce qu'il est difficile à maintenir et il
+est également difficile de s'en débarrasser car il faut pouvoir sortir
+les applications qui y tournent.</p>
+<p>Avec un collègue nous nous sommes donc attelé à cette tâche, non sans
+peine. Il n'était à priori pas difficile de sortir un annuaire OpenLDAP
+2.2 vers un nouvel annuaire OpenLDAP 2.2 mais l’intérêt de cette
+manipulation était assez limité. Nous avons donc décidé de migrer vers
+la version 2.4 d'OpenLDAP proposée dans les dépôts de CentOS 7. Nous
+souhaitions également profiter de cette migration pour passer d'une
+configuration fichier (slapd.conf) à une configuration en base (olc, en
+gros OpenLDAP stock sa configuration dans une base LDAP). Voici la
+méthode employée pour réussir cette opération :</p>
+<p>La première étape est de récupérer les informations dont nous avons
+besoin sur l'ancien serveur. Nous avons besoin de son fichier de
+configuration (slapd.conf, que nous allons renommer vieuxslapd.conf) et
+du contenu de la base. Pour cela nous allons utiliser l'outil
+<tt class="docutils literal">slapcat</tt> qui va générer un fichier <tt class="docutils literal">ldif</tt>. Ces 2 fichiers seront à
+transférer sur le nouveau serveur. Si vous utilisez des schémas
+spécifique, il faudra également les récupérer.</p>
+<pre class="code literal-block">
+[aldevar&#64;vieuxserveur]# slapcat -f /chemin/vers/vieuwslapd.conf -l /tmp/vieuxslap.ldif
+</pre>
+<p>Sur notre nouvelle machine CentOS 7, à jour, on installe
+openldap-servers et openldap-clients</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# yum -y install openldap-servers openldap-clients
+</pre>
+<p>Configuration des logs d'OpenLDAP</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# echo &quot;local4.*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /var/log/slapd.log&quot; &gt; /etc/rsyslog.d/slapd.conf
+[aldevar&#64;serveur]# systemctl restart rsyslog.service
+</pre>
+<p>Dans notre cas, il était nécessaire de nettoyer l'ancien fichier de
+configuration.
+|  Pour vérifier si que le fichier de conf est valide, on utilise
+<tt class="docutils literal">slaptest</tt></p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# slaptest -f vieuxslapd.conf
+</pre>
+<p>Celui ci nous retourne des erreurs que nous corrigeons.</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# sed -i -e &quot;s/attr=/attrs=/g&quot; vieuxslapd.conf
+[aldevar&#64;serveur]# sed -i -e &quot;/pidfile/d&quot; /root/vieuxslapd.conf
+[aldevar&#64;serveur]# sed -i -e &quot;/argsfile/d&quot; /root/vieuxslapd.conf
+[aldevar&#64;serveur]# sed -i -e &quot;s;directory /var/ldap/annuaireldap;directory /var/lib/ldap;&quot; /root/vieuxslapd.conf
+</pre>
+<p>Nous utilisons le schéma de samba, pour le récupérer nous installons
+samba</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# yum -y install samba
+</pre>
+<p>On copie les fichiers schéma récupérés sur l'ancien serveur dans le bon
+répertoire :</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# cp *.schema /etc/openldap/schema/
+[aldevar&#64;serveur]# chown ldap. /etc/openldap/schema/*
+</pre>
+<p>Maintenant, nous allons corriger une incompatibilité sur laquelle nous
+avons bloqué un bon moment. OpenLDAP ajoute pour chaque entrée un
+attribut <tt class="docutils literal">entryUUID</tt> qu'il provisionne automatiquement. Entre la
+version 2.2 et notre version 2.4, la format de la valeur
+d'<tt class="docutils literal">entryUUID</tt> a changé. Il est passé d'une suite de caractères
+aléatoire à 4 série de caractères hexadécimaux séparés par des <tt class="docutils literal">-</tt>.
+Tant que nous n'avions pas trouver de solution à cette incompatibilité,
+aucune entrée de ne pouvait être ajoutée dans notre nouvelle base. C'est
+d’ailleurs la raison pour laquelle nous ne pouvions pas mettre en place
+de synchronisation entre les 2 instances.</p>
+<p>La solution, radicale et rapide est de supprimer les entrées
+<tt class="docutils literal">entryUUID</tt></p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# sed -i -e &quot;/entryUUID/d&quot; vieuxslap.ldif
+</pre>
+<p>Une fois ces étapes effectuée, nous devrions être prêt pour tester
+l'import des données. Pour cela, nous utilisons l'outil <tt class="docutils literal">slapadd</tt> qui
+à l'avantage de pouvoir travailler sans daemon ldap actif. En lui
+fournissant le fichier de configuration il est capable d'écrire
+directement dans les fichiers de la base. Dans un premier temps, nous le
+lançons avec l'option <tt class="docutils literal"><span class="pre">-u</span></tt> afin de le lancer en mode <tt class="docutils literal"><span class="pre">dry-run</span></tt>.</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# slapadd -f vieuxslapd.conf&nbsp; -c -u -o schema-check=yes -l vieuxslap.ldif
+</pre>
+<p>Si cette commande ne sort pas d'erreurs, on peut la faire en réelle.</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# slapadd -f vieuxslapd.conf&nbsp; -c -o schema-check=yes -l vieuxslap.ldif
+</pre>
+<p>A partir de là, on dispose d'une base ldap fonctionnelle et si on lance
+la daemon slapd en lui fournissant le fichier de configuration, tout
+devrait fonctionner.</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# slapd -u ldap -f vieuxslapd.conf
+</pre>
+<p>Mais, comme je l'ai dit plus haut, la bonne pratique est plutôt de
+stocker la configuration en base olc. Cette base se trouve dans
+<tt class="docutils literal">/etc/openldap/slapd.d</tt> et contient déjà de quoi faire fonctionner un
+slapd basique mais vide. L'utilitaire <tt class="docutils literal">slaptest</tt> que nous avons
+utilisé pour vérifier le fichier de configuration est également utilisé
+pour faire cette migration. En lui fournissant d'un coté le fichier de
+configuration et de l'autre le dossier de destination, il va transformer
+le contenu du fichier en instructions ldif.</p>
+<p>Avant tout, on supprime le contenu actuel du répertoire.</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# rm -Rf /etc/openldap/slapd.d/*
+</pre>
+<p>On lance la migration de la configuration</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# slaptest -f vieuxslapd.conf -F /etc/openldap/slapd.d/
+</pre>
+<p>0n corrige les droits pour que le daemon puisse travailler</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# chown -R ldap. /etc/openldap/slapd.d/
+</pre>
+<p>Enfin, on importe le fichier <tt class="docutils literal">DB_CONFIG</tt> afin d'avoir des performances
+normales sur la base</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+[aldevar&#64;serveur]# chown ldap. /var/lib/ldap/DB_CONFIG
+</pre>
+<p>Pour finir, on peut démarrer le daemon</p>
+<pre class="literal-block">
+[aldevar&#64;serveur]# systemctl start slapd
+[aldevar&#64;serveur]# systemctl enable slapd
+</pre>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

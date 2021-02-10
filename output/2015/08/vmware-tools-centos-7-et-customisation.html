@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Vmware tools, Centos 7 et customisation | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2015/08/vmware-tools-centos-7-et-customisation.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas utiliser le script perl fournit mais de passer plutôt par les open-vm-tools qu'on peut directement trouvé dans le gestionnaire de paquet. yum install open-vm-tools C'est simple, rapide …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Vmware tools, Centos 7 et customisation
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2015-08-14T22:39:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Fri 14 August 2015
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
+une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas
+utiliser le script perl fournit mais de passer plutôt par les
+open-vm-tools qu'on peut directement trouvé dans le gestionnaire de
+paquet.</p>
+<pre class="literal-block">
+yum install open-vm-tools
+</pre>
+<p>C'est simple, rapide, ça facilite les mise à jour des tools et c'est
+conseillé par VMware directement, il y a même <a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2073803">un
+KB</a>
+pour ça et <a class="reference external" href="https://github.com/vmware/open-vm-tools">un projet
+GitHub</a>.</p>
+<p>Pour rappel, l'insallation des vm-tools permet d'accéder à ces
+fonctionnalité vSphere :</p>
+<ul class="simple">
+<li>Synchronisation de l'horloge de l'OS invité avec celle de la
+plateforme de virtualisation</li>
+<li>Permet à l'hyperviseur de procéder à des appels système afin par
+exemple de demander à l'OS de s'arréter.</li>
+<li>Support de vSphere High Availability (HA) grace à un système de
+heartbeat.</li>
+<li>Permet à l'hyperviseur de récolter des informations sur la
+consommation des ressources CPU, RAM, réseau.</li>
+</ul>
+<p>Dans cette liste, il manque tout de même un outil important. Si vous
+clonez ou si vous créez un template à partir d'une VM ayant les
+open-vm-tools, vous serez dans l'incapacité de customiser la nouvelle VM
+à sa création. Exit donc le changement du mot de passe root et surtout
+la configuration réseau. Cette fonctionnalité est apportée par un plugin
+pour open-vm-tools nommé DeployPkg.</p>
+<p>La page <a class="reference external" href="http://partnerweb.vmware.com/GOSIG/RHEL_7.html">Red Hat Enterprise Linux 7 Guest Operating System Installation
+Guide</a> mentionne bien
+ce plugin mais il y manque certaines informations. La procédure complète
+est mieux décrite dans la <a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2075048">Knowledge Base de
+VMware.</a>Celle
+ci consiste a récupérer les clés public du dépots VMware, importer les
+clés, créer le fichier de repo pour yum et procéder enfin à
+l'installation.</p>
+<p>Dans un premier temps, on récupère les clés ici
+<a class="reference external" href="http://packages.vmware.com/tools/keys">http://packages.vmware.com/tools/keys</a> et on les place dans le répertoire
+/tmp du serveur</p>
+<p>On importe les clés avec rpm</p>
+<pre class="literal-block">
+rpm --import /tmp/key1
+rpm --import /tmp/key2
+</pre>
+<p>Création du fichier <em>/etc/yum.repos.d/vmware-tools.repo</em> avec ce contenu
+:</p>
+<pre class="literal-block">
+[vmware-tools]
+name = VMware Tools
+baseurl = http://packages.vmware.com/packages/rhel7/x86_64/
+enabled = 1
+gpgcheck = 1
+</pre>
+<p>Installation du paquet</p>
+<pre class="literal-block">
+yum install open-vm-tools-deploypkg
+</pre>
+<p>Installation de perl, nécessaire pour les scripts de customisation</p>
+<pre class="literal-block">
+yum install perl
+</pre>
+<p>On termine par le rechargement du service pour prendre en compte
+l'installation du plugin</p>
+<pre class="literal-block">
+systemctl restart vmtoolsd
+</pre>
+<p>Vous pouvez maintenant transformer votre VM en template en toute
+sérénité.</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

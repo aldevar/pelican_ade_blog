@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Prise en main de GNS3 pour la simulation réseau | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Comme moi, vous connaissez peut être l'utilitaire Packet Tracer de Cisco qui permet de simuler un réseau Cisco et d'y faire quelques exercices. C'est un très bon outil pour les étudiants mais relativement peu exploitable en entreprise car il ne simule que du Cisco et ne sais pas simuler autre …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Prise en main de GNS3 pour la simulation réseau
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2015-08-19T21:57:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 19 August 2015
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/reseaux.html">Réseaux</a>
+        </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Comme moi, vous connaissez peut être l'utilitaire <a class="reference external" href="https://www.netacad.com/about-networking-academy/packet-tracer">Packet Tracer de
+Cisco</a>
+qui permet de simuler un réseau Cisco et d'y faire quelques exercices.
+C'est un très bon outil pour les étudiants mais relativement peu
+exploitable en entreprise car il ne simule que du Cisco et ne sais pas
+simuler autre chose que des hôtes très basiques. Impossible d'y simuler
+un serveur pfsense par exemple.</p>
+<p>J'ai récemment fait la découverte de GNS3 qui est un logiciel assez
+similaire mais vous vous en doutez bien plus complet et qui possède la
+capacité de simuler un réseau de production. Vous pouvez créer des
+projets avec switchs et routeurs mais également ajouter des VMs que vous
+aurez pris le soin de créer avec VirtualBox ou Qemu. Wireshark est
+intégré afin de capturer des paquets réseau comme on le souhaite.</p>
+<p>GNS3 a vu le jour suite à l'apparition de Dynamips, un émulateur de l'OS
+de Cisco : IOS (à ne pas confondre avec l'iOS d'Apple). Dynamips est un
+outil qui se manipule en ligne de commande et qui demande un solide
+bagage technique. GNS3 a alors été développé pour faciliter cette
+configuration et apporter beaucoup d'autres fonctionnalités qui ne sont
+pas présentes dans Dynamips comme par exemple le support de Cisco PIX et
+ASA, ainsi que de Juniper avec JunOS.</p>
+<p>Avant de commencer, il faut noter que la seule façon de simuler un vrai
+environnement IOS est de posséder une image d'IOS. Dynamips et GNS3 ne
+contiennent pas ces images pour d'évidents problèmes de droits, tout
+comme VirtualBox ne vous propose pas d'image Windows. Il y a plusieurs
+façon légales de se procurer ces images (par exemple si vous possédez un
+switch ou un routeur Cisco) et d'autres moins légales (trouvable
+facilement).</p>
+<p>Pour récupérer la dernière version de GNS3 (v1.3.9 aujourd'hui), vous
+devez vous inscrire <a class="reference external" href="http://www.gns3.com/">sur leur site</a> et
+télécharger le paquet qu'il vous faut. L'appli est multiplateforme,
+compatible Windows, Linux et Mac. L'installeur va installer pour vous
+tous les outils nécessaire pour la virtualisation et la capture de
+paquets.</p>
+<p><a class="reference external" href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"><img alt="2015-08-17 23_30_55-GNS3 1.3.9 Setup" src="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /></a></p>
+<p>Sous Windows, l'installation
+est assez classique. Après avoir lancé l'installeur, la fenêtre de setup
+apparaît, il suffit alors de suivre les indications jusqu'à arriver à
+cette fenêtre :</p>
+<p><a class="reference external" href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"><img alt="2015-08-17 23_33_08-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /></a></p>
+<p>Il est préférable de laisser
+tout cocher, ainsi si des logiciels ont besoin de mise à jour, elles
+seront faites. En cliquant sur Next, l'installeur va lancer
+l'installation de winPcap</p>
+<p><a class="reference external" href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"><img alt="2015-08-17 23_33_29-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /></a></p>
+<p><a class="reference external" href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"><img alt="2015-08-17 23_33_42-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /></a></p>
+<p>On laisse cocher le lancement automatique du driver au démarrage.</p>
+<p>Ensuite, l'installeur télécharge et installe Wireshark</p>
+<p><a class="reference external" href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"><img alt="2015-08-17 23_33_59-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /></a> <a class="reference external" href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"><img alt="2015-08-17 23_34_14-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /></a> <a class="reference external" href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"><img alt="2015-08-17 23_34_39-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /></a></p>
+<p>WinPcap est déjà installé donc on décoche l'option
+<a class="reference external" href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"><img alt="2015-08-1723_34_56-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /></a> <a class="reference external" href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"><img alt="2015-08-17 23_35_47-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /></a></p>
+<p>On décoche 'Run Wireshark',
+on ne va pas en avoir besoin tout de suite.</p>
+<p>L'installation se poursuit avec cette fois SolarWinds Response Time
+Viewer qui est une application d'analyse de capture Wireshark</p>
+<p><a class="reference external" href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"><img alt="2015-08-17 23_37_13-SolarWinds Registration" src="images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /></a></p>
+<p>Ici, vous pouvez mettre ce que vous voulez, l'adresse n'est pas vérifiée</p>
+<p><a class="reference external" href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"><img alt="2015-08-17 23_38_54-SolarWinds Response Time Viewer for Windows" src="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /></a></p>
+<p>L'application se lance automatiquement. Je vous invite à en
+faire un tour rapide avant de la fermer</p>
+<p><a class="reference external" href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"><img alt="2015-08-17 23_40_09-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /></a> <a class="reference external" href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"><img alt="2015-08-17 23_40_30-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /></a></p>
+<p>SolarWinds vous propose une licence gratuite pour son
+software. Je n'ai pas testé comment acquérir cette licence et je ne sais
+pas sous quelle condition elle s'acquière.</p>
+<p>Voilà pour la description et l'installation de GNS3. La prochaine fois,
+on verra comment le configurer et y créer de nouveau routeur, switchs et
+VM.</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

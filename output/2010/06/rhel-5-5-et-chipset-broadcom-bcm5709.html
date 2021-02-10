@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  RHEL 5.5 et chipset broadcom BCM5709 | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Nous avons récemment installé une nouvelle machine qui sert de serveur principal pour notre nouveau système de sauvegarde. Lors des tests des sauvegardes complètes du week end, le chipset réseau du serveur s'écroulait lamentablement sous la charge du nombre de paquets qui arrivaient. Même si le réseau semblait toujours fonctionnel …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  RHEL 5.5 et chipset broadcom BCM5709
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2010-06-28T19:36:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Mon 28 June 2010
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/broadcom.html">#broadcom</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/pilote.html">#pilote</a>,               <a href="../../tag/red-hat.html">#Red hat</a>,               <a href="../../tag/reseau.html">#réseau</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Nous avons récemment installé une nouvelle machine qui sert de serveur
+principal pour notre nouveau système de sauvegarde. Lors des tests des
+sauvegardes complètes du week end, le chipset réseau du serveur
+s'écroulait lamentablement sous la charge du nombre de paquets qui
+arrivaient. Même si le réseau semblait toujours fonctionnel (service
+réseau lancé, ifconfig ne signal rien d'anormal), la machine était
+injoignable et ne répondait pas au ping. Dans certains cas, un
+redémarrage du service réseau ne suffit pas à retrouver une
+connectivité.</p>
+<p>A l'heure où la sauvegarde s'arrêtait, voici ce qu'on pouvait trouver
+dans /var/log/messages :</p>
+<pre class="literal-block">
+server1 kernel: NETDEV WATCHDOG: eth0: transmit timed out
+server1 kernel: bnx2: eth0 NIC Copper Link is Down
+</pre>
+<p>La résolution du problème passe par une mise à jour du pilote. On trouve
+le pilote pour ce chipset à cette page :
+<a class="reference external" href="http://www.broadcom.com/support/ethernet_nic/netxtremeii.php">http://www.broadcom.com/support/ethernet_nic/netxtremeii.php</a> Après avoir
+extrait l'archive, on installe les sources :</p>
+<pre class="literal-block">
+rpm -ivh netxtreme2-&lt;version&gt;.src.rpm
+</pre>
+<p>Installation de kernel-devel pour pouvoir compiler les sources du
+pilotes :</p>
+<pre class="literal-block">
+yum install kernel-devel
+</pre>
+<p>Construction du paquet :</p>
+<pre class="literal-block">
+cd /usr/src/redhat
+rpm -bb SPECS/netxtreme2.spec
+</pre>
+<p>Installation du paquet fraichement installé :</p>
+<pre class="literal-block">
+rpm -ivh RPMS/&lt;arch&gt;/netxtreme2-&lt;version&gt;.&lt;arch&gt;.rpm
+</pre>
+<p>déchargement de l'ancien module :</p>
+<pre class="literal-block">
+rmmode bnx2
+</pre>
+<p>Chargement du nouveau module :</p>
+<pre class="literal-block">
+modprobe bnx2
+</pre>
+<p>Suite à cette petite manipulation, plus de soucis de chipset réseau qui
+ne répond plus. Problème résolu :D</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

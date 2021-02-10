@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Owncloud et fail2ban derrière un reverse proxy | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Dans le dernier article, j'expliquais comment mettre en place fail2ban sur son serveur pour protéger son instance Owncloud lorsqu'elle est connectée sur un serveur Ldap. En général, lorsqu'on utilise un serveur Ldap pour l'authentification, c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas si simple …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Owncloud et fail2ban derrière un reverse proxy
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2013-12-05T18:32:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Thu 05 December 2013
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/fail2ban.html">#fail2ban</a>,               <a href="../../tag/owncloud.html">#owncloud</a>,               <a href="../../tag/proxy.html">#proxy</a>,               <a href="../../tag/remote-log.html">#remote log</a>,               <a href="../../tag/reverse.html">#reverse</a>,               <a href="../../tag/reverse-proxy.html">#reverse proxy</a>,               <a href="../../tag/rsyslog.html">#rsyslog</a>,               <a href="../../tag/syslog.html">#syslog</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Dans le <a class="reference external" href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html">dernier
+article</a>,
+j'expliquais comment mettre en place fail2ban sur son serveur pour
+protéger son instance Owncloud lorsqu'elle est connectée sur un serveur
+Ldap.</p>
+<p>En général, lorsqu'on utilise un serveur Ldap pour l'authentification,
+c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas
+si simple. Par exemple, dans mon cas, le serveur owncloud ne se trouve
+pas directement en frontale sur le net mais est caché derrière un
+reverse proxy.</p>
+<p>Du coup, le serveur owncloud ne voit qu'une seule IP : celle du reverse
+proxy. La mise en place de fail2ban sur ce serveur poserait alors un
+gros problème car cela reviendrait à faire bannir l'IP du reverse proxy
+et interdire tout accès à owncloud depuis l’extérieur. Dans cet article,
+nous allons donc voir comment corriger ce problème à l'aide de syslog.</p>
+<div class="section" id="sur-le-serveur-owncloud">
+<h2>Sur le serveur Owncloud</h2>
+<div class="section" id="modification-d-owncloud">
+<h3>Modification d'owncloud</h3>
+<div class="section" id="configuration-du-serveur-owncloud">
+<h4>Configuration du serveur owncloud</h4>
+<p>Afin d’assurer une cohérence dans l’écriture des logs, il faut que la
+timezone soit correctement configurée sur le serveur.</p>
+<pre class="literal-block">
+[root&#64;owncloud]# tzselect
+</pre>
+<p>Création du fichier qui recevra les écritures des logs des échecs de
+connexions :</p>
+<pre class="literal-block">
+[root&#64;owncloud]# touch /var/log/owncloud-fail.log
+[root&#64;owncloud]# chmod 660 /var/log/owncloud-fail.log
+[root&#64;owncloud]# chown root.apache /var/log/owncloud-fail.log
+</pre>
+</div>
+<div class="section" id="modification-du-backend-d-owncloud">
+<h4>Modification du backend d'owncloud</h4>
+<p>Dans le fichier <em>/var/www/html/owncloud/lib/user/database.php</em>, ligne
+202. Dans la fonction <strong>checkPassword</strong>, entre le else et le return
+false, insérez le code suivant :</p>
+<pre class="literal-block">
+$headers = apache_request_headers();
+$real_client_ip = $headers[&quot;X-Forwarded-for&quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&quot;owncloud&quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &quot;Password check failed for: &quot; . &quot;$IPClient&quot; . &quot; &quot; . &quot;$real_client_ip&quot;);
+closelog();
+</pre>
+<p>Dans le fichier <em>/var/www/html/owncloud/apps/user_ldap/user_ldap.php</em>,
+ligne 75. Dans la fonction <strong>checkPassword</strong>, entre le
+if(count($ldap_users) &lt; 1) { et le return false; insérez le code
+suivant :</p>
+<pre class="literal-block">
+if($uid!=&quot;admin&quot;) {
+$headers = apache_request_headers();
+$real_client_ip = $headers[&quot;X-Forwarded-For&quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&quot;owncloud&quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &quot;Password check failed for: &quot; . &quot;$IPClient&quot; . &quot; &quot; . &quot;$real_client_ip&quot;);
+closelog();
+</pre>
+<p>Puis, en dessous du return false, fermez l’instruction if en ajoutant un</p>
+<p><tt class="docutils literal">}</tt></p>
+<p>Toujours dans le même fichier, ligne 97, juste après
+<strong>if(!$this→areCredentialsValid($dn, $password)) {</strong> Et au-dessus du
+<strong>return false;</strong> correspondant ajouter le code suivant :</p>
+<pre class="literal-block">
+$headers = apache_request_headers();
+$real_client_ip = $headers[&quot;X-Forwarded-For&quot;];
+$IPClient=$_SERVER['REMOTE_ADDR'];
+openlog(&quot;owncloud&quot;, LOG_PID, LOG_LOCAL0);
+syslog(LOG_WARNING, &quot;Password check failed for: &quot; . &quot;$IPClient&quot; . &quot; &quot; . &quot;$real_client_ip&quot;);
+closelog();
+</pre>
+</div>
+<div class="section" id="explication-du-code">
+<h4>Explication du code</h4>
+<pre class="literal-block">
+$headers = apache_request_headers()
+</pre>
+<p>Récupère l’entête des requêtes http venant du reverse proxy sous forme
+de tableau</p>
+<pre class="literal-block">
+$real_client_ip = $headers[ &quot;X-forwarded-For &quot;] ;
+</pre>
+<p>Récupère l’adresse IP réelle du client dans le tableau $headers</p>
+<pre class="literal-block">
+$IPClient = $_SERVER[‘REMOTE_ADDR’] ;
+</pre>
+<p>Récupère l’adresse IP du client. Si le client vient de l’extérieur du
+SIB, cette IP sera celle du reverse proxy.</p>
+<p>Openlog, Syslog et closelog sont les fonctions PHP pour écrire les
+échecs de connexions en passant par syslog.</p>
+</div>
+</div>
+<div class="section" id="configuration-de-rsyslog">
+<h3>Configuration de rsyslog</h3>
+<div class="section" id="log-locaux">
+<h4>Log locaux</h4>
+<p>Pour loguer les échecs de connexion venant d’owncloud, il faut dire à
+rsyslog ce qu’il doit faire avec ces entrées. On crée pour cela un
+fichier supplémentaire <em>/etc/rsyslog.d/owncloud.conf</em> contenant une
+seule ligne :</p>
+<pre class="literal-block">
+local0.*   /var/log/owncloud-fail.log
+</pre>
+<p>Ainsi, tous les messages reçus sur l’interface LOCAL0 de rsyslog seront
+redirigé vers le fichier <em>/var/log/owncloud-fail.log</em></p>
+</div>
+<div class="section" id="log-distant">
+<h4>Log distant</h4>
+<p>Le serveur owncloud ne peut pas bannir lui-même les IP car il ne voit
+que l’IP du reverse proxy pour toutes les connexions venant de
+l’extérieur. Il faut donc remonter les logs des échecs de connexions
+vers le reverse proxy qui bannira lui-même les IP. On crée pour cela un
+nouveau fichier de configuration de rsyslog :
+<em>/etc/rsyslog.d/fail2ban.conf</em>.</p>
+<pre class="literal-block">
+local0.*        &#64;nomdevotrereverse.proxy:514
+</pre>
+<p>Ceci a pour effet d’envoyer tous les messages reçu sur l’interface
+LOCAL0 de rsyslog vers le service syslog du reverse proxy.</p>
+</div>
+</div>
+<div class="section" id="prise-en-compte-des-modifications">
+<h3>Prise en compte des modifications</h3>
+<p>On redémarre le service rsyslog</p>
+<pre class="literal-block">
+/etc/init.d/rsyslog restart
+</pre>
+<p>Afin de voir si les modifications effectuées n’ont pas générée d’erreur
+:</p>
+<pre class="literal-block">
+grep rsyslog /var/log/messages
+</pre>
+</div>
+</div>
+<div class="section" id="sur-le-reverse-proxy">
+<h2>Sur le reverse proxy</h2>
+<div class="section" id="configuration-de-syslog">
+<h3>Configuration de syslog</h3>
+<p>Par défaut, le service syslog n’écoute pas le réseau et ne peut donc pas
+recevoir de logs distants. Pour corriger cela, on édite le fichier
+<em>/etc/sysconfig/syslog</em>. Modification de la ligne SYSLOGD_OPTIONS en
+ajoutant l’option –r</p>
+<pre class="literal-block">
+SYSLOGD_OPTIONS=&quot;-r -m 0&quot;
+</pre>
+<p>Puis, on relance le service afin d’activer l’écoute réseau :</p>
+<pre class="literal-block">
+/etc/init.d/syslog restart
+</pre>
+</div>
+<div class="section" id="configuration-de-fail2ban">
+<h3>Configuration de fail2ban</h3>
+<div class="section" id="installation">
+<h4>Installation</h4>
+<p>L’installation se fait simplement par le gestionnaire de paquet :</p>
+<pre class="literal-block">
+yum install fail2ban
+</pre>
+</div>
+<div class="section" id="configuration-de-la-prison">
+<h4>Configuration de la prison</h4>
+<p>On édite pour cela le fichier <em>/etc/fail2ban/jail.conf</em> et on y ajoute
+les lignes suivantes :</p>
+<pre class="literal-block">
+[owncloud]
+enabled = true
+port = https
+filter = owncloud
+action = iptables[name=httpd,port=https,protocal=all]
+logpath = /var/log/messages
+maxretry = 5
+</pre>
+<p>Toutes les autres prisons peuvent être positionnées sur enabled = false
+puisque nous n’en avons pas besoin ici.</p>
+</div>
+<div class="section" id="creation-du-filtre">
+<h4>Création du filtre</h4>
+<p>Dans la configuration du jail, nous avons dit à fail2ban d’utiliser le
+filtre owncloud, nous allons maintenant créer le filtre :</p>
+<p>Création du fichier <em>/etc/fail2ban/filter.d/owncloud.conf</em></p>
+<pre class="literal-block">
+[Definition]
+failregex = Password check failed for: ip.du.reverse.proxy &lt;HOST&gt;
+ignoreregex =
+</pre>
+<p>Puisque nous ne souhaitons que bannir les IP externes, nous ne
+récupérons que les lignes qui contiennent l’IP du reverse proxy ET l’IP
+réelle du client. Le ligne ignoreregex n’est pas nécessaire mais il faut
+tout de même qu’elle soit présente afin que fail2ban valide la
+configuration.</p>
+</div>
+<div class="section" id="demarrage-du-service">
+<h4>Démarrage du service</h4>
+<p>On lance le service fail2ban :</p>
+<pre class="literal-block">
+/etc/init.d/fail2ban start
+</pre>
+<p>Si le lancement tombe en échec, c’est qu’il y a un problème de
+configuration. Pour repérer ce problème, il faut lancer le daemon à la
+main :</p>
+<pre class="literal-block">
+fail2ban-server
+</pre>
+<p>Puis on lance un reload du client qui va tester pour nous la
+configuration</p>
+<pre class="literal-block">
+fail2ban-client reload
+</pre>
+<p>S’il y a une erreur, cette commande nous le dira.</p>
+</div>
+<div class="section" id="test-de-la-configuration">
+<h4>Test de la configuration</h4>
+<p>Afin de tester la valididité de la regex, fail2ban propose l’outil
+fail2ban-regex. Créer pour cela quelques échecs de connexion et tester
+avec la commande :</p>
+<pre class="literal-block">
+fail2ban-regex /var/log/messages /etc/fail2ban/filter.d/owncloud.conf
+</pre>
+<pre class="literal-block">
+Running tests
+=============
+Use regex file : /etc/fail2ban/filter.d/owncloud.conf
+Use log file   : /var/log/messages
+
+Results
+=======
+Failregex
+|- Regular expressions:
+|  [1] Password check failed for: ip.du.reverse.proxy &lt;HOST&gt;
+|
+`- Number of matches:
+   [1] 6 match(es)
+
+Ignoreregex
+|- Regular expressions:
+|
+`- Number of matches:
+
+Summary
+=======
+
+Addresses found:
+[1]
+    X.X.X.X (Thu Dec 05 10:02:11 2013)
+    X.X.X.X (Thu Dec 05 10:05:24 2013)
+    X.X.X.X (Thu Dec 05 10:05:34 2013)
+    X.X.X.X (Thu Dec 05 10:05:42 2013)
+    X.X.X.X (Thu Dec 05 10:05:47 2013)
+    X.X.X.X (Thu Dec 05 10:05:53 2013)
+
+Date template hits:
+18154 hit(s): MONTH Day Hour:Minute:Second
+
+Success, the total number of match is 6
+However, look at the above section 'Running tests' which could contain important info
+</pre>
+</div>
+</div>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

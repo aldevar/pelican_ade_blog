@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  GNU/Linux : Résolution de problèmes | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2009/12/gnulinux-resolution-de-problemes.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Une grande partie du travail sur les forums concernant les logiciels libres est d'obtenir plus d'informations sur les problèmes des novices. Il est très agréable d'aider les autres comme il peut être assez agaçant d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider lui-même. Je ne pense pas que …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  GNU/Linux : Résolution de problèmes
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2009-12-25T19:34:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Fri 25 December 2009
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/aide.html">#aide</a>,               <a href="../../tag/gnu.html">#GNU</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/probleme.html">#probleme</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Une grande partie du travail sur les forums concernant les logiciels
+libres est d'obtenir plus d'informations sur les problèmes des novices.
+Il est très agréable d'aider les autres comme il peut être assez agaçant
+d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider
+lui-même. Je ne pense pas que cela soit dû à de la fainéantise de la
+part de celui qui pose la question. C'est simplement parce que les
+novices ne connaissent pas les premières étapes de résolution des
+problèmes sur GNU/Linux et ne savent pas quels types d'informations
+rechercher ni comment les obtenir. J'espère que ce petit guide sera
+utile pour ceux qui font leurs premiers pas sur linux.</p>
+<div class="section" id="i-diagnostiquer-soi-meme">
+<h2>I - Diagnostiquer soi-même</h2>
+<div class="section" id="la-premiere-etape-est-la-collecte-d-informations">
+<h3>1 - La première étape est la collecte d'informations.</h3>
+<p>Si un programme plante ou ne fait pas ce qu'il est censé faire, il faut
+se poser et réfléchir calmement.</p>
+<p>Ouvrez un nouveau fichier dans votre éditeur de texte favori et
+écrivez-y ce que vous faisiez quand le problème est apparu ainsi que
+tous les messages d'erreurs reçus. Ces messages d'erreurs doivent être
+recopiés exactement tel qu'ils sont apparus. Utilisez le copier/coller
+si cela est possible.</p>
+<p>Ouvrez un terminal et tapez <strong>tail /var/log/messages</strong>. Cette commande
+affichera les 10 dernières lignes des logs du système. Si celui ci
+contient un ou des messages qui sont clairement en rapport avec votre
+problème, recopiez les également.</p>
+<p>Les erreurs des applications graphiques sont en général dans le fichier
+.Xsession-errors ou .xsession-errors dans votre dossier /home. La
+commande pour visualiser les 10 dernières lignes est donc <strong>tail
+~/.xsession-errors</strong>. Comme pour le fichier /var/log/messages, ajoutez
+les lignes en rapport avec votre problème dans votre fichier de départ.
+Si vous n'avez trouvé aucune information dans ces fichiers, essayez de
+lancer l'application concernée depuis votre terminal. Lors de
+l'apparition du bug, des messages devraient s'afficher.</p>
+<p>Si votre système ne démarre plus suite à un problème, démarrez alors sur
+une autre distribution (soit en dual-boot si vous en avez soit depuis un
+live-cd). Il est toujours bon d'avoir un live-cd sous la main pour ce
+genre d'opération. Une fois que vous avez démarré sur le live-cd, montez
+votre partition root et récupérez les informations dans les fichiers
+cités plus haut.</p>
+</div>
+<div class="section" id="le-probleme-est-il-reproductible">
+<h3>2 - Le problème est-il reproductible?</h3>
+<p>S'il est possible de reproduire le problème facilement, faites-le.
+N'oubliez pas de le faire sur des fichiers peu important ou sur une
+copie du fichier concerné afin de ne pas endommager vos données.</p>
+</div>
+<div class="section" id="est-ce-un-probleme-materiel">
+<h3>3 - Est-ce un problème matériel ?</h3>
+<p>Les problèmes non reproductibles sont souvent dus au matériel. Si vous
+pensez que c'est le cas, regardez alors dans le fichier
+<strong>/var/log/boot</strong> ainsi que <strong>/var/log/kern.log</strong> ou
+<strong>/var/log/kernel.log</strong> suivant votre distribution pour voir si le
+kernel reconnait bien votre matériel. Ce fichier étant très long, la
+commande tail ne vous sera pas d'un grand secours. Utilisez plutôt
+<strong>less /var/log/boot</strong>et parcourez les pages à la recherche d'un
+message en rapport avec votre problème. Recopiez également ce message
+dans votre fichier de départ.</p>
+</div>
+<div class="section" id="lisez-la-documentation-du-programme">
+<h3>4 - Lisez la documentation du programme.</h3>
+<p>Ceci est à faire en particulier si le programme ne réagit pas de la
+manière souhaitée. Lisez l'aide en ligne du programme et utilisez
+également le manuel universel (dans un terminal : man
+nom_du_programme).</p>
+</div>
+<div class="section" id="recherchez-votre-message-d-erreur-sur-internet">
+<h3>5 - Recherchez votre message d'erreur sur internet</h3>
+<p>Copiez/collez le message d'erreur dans un moteur de recherche ou un
+meta-moteur tel que ixquick et ajoutez-y le nom du programme. Vous
+trouverez certainement des messages sur des forums d'utilisateurs qui
+ont le même problème que vous. Lisez le thread complet, vous y trouverez
+peut-être une solution.</p>
+</div>
+<div class="section" id="reflechissez-avec-logique">
+<h3>6 - Réfléchissez avec logique</h3>
+<p>Si, arrivé ici, vous commencez à avoir une idée sur la cause du
+problème, vous pouvez peut être tester cette idée. Il y a beaucoup de
+petites commandes simples qui peuvent vous aider à recueillir plus
+d'informations sur votre problème et votre système, qui vont seront d'un
+grand secours.</p>
+<ul class="simple">
+<li><strong>lspci</strong> pour lister votre matériel</li>
+<li><strong>lsusb</strong> pour lister les périphériques usb</li>
+<li><strong>cat /proc/cpuinfo</strong> pour avoir les caractéristiques de votre CPU</li>
+<li><strong>free -m</strong> pour connaitre le taux de charge de votre RAM</li>
+</ul>
+</div>
+<div class="section" id="maintenant-vous-pouvez-penser-a-demander-de-l-aide">
+<h3>7 - Maintenant, vous pouvez penser à demander de l'aide.</h3>
+<p>Si après tout ça, vous n'avez toujours pas résolu votre problème, il est
+temps de demander de l'aide sur un forum d'utilisateurs. Avant de passer
+à cette étape, rappelez vous que les utilisateurs des forums ne sont pas
+payés pour répondre à vos questions. Ce sont seulement des utilisateurs
+ayant une certaine expérience et qui font cela bénévolement.</p>
+</div>
+</div>
+<div class="section" id="ii-obtenir-de-l-aide">
+<h2>II - Obtenir de l'aide</h2>
+<div class="section" id="d-abord-observer">
+<h3>1 - D'abord, observer</h3>
+<p>Commencez par choisir votre forum. Il est préférable dans un premier
+temps de choisir le forum de votre distribution, puis le forum du
+programme concerné. Si ce forum possède une FAQ, lisez-la. Lisez aussi
+les règles du forum. Si votre question ne respecte pas les règles, il y
+a de grandes chances pour que vous n'obteniez pas de réponse.</p>
+</div>
+<div class="section" id="ne-soyez-pas-hors-sujet">
+<h3>2 - Ne soyez pas hors-sujet</h3>
+<p>Trouvez le sous-forum qui correspond à votre problème. Ne postez pas
+votre message dans plusieurs sous-forums, ceci est très mal vu.</p>
+</div>
+<div class="section" id="choisissez-bien-le-titre-de-votre-topic">
+<h3>3 - Choisissez bien le titre de votre topic.</h3>
+<p>N'utilisez pas de sujet tel que &quot;Besoin d'aide&quot; ou &quot;J'ai un problème&quot;.
+Ceci a tendance à irriter les gens.</p>
+<p>Votre titre doit indiquer le plus clairement quel problème vous avez.
+Ainsi, une personne qui pense pouvoir vous aider sera plus encline à
+lire votre sujet et poster une réponse. Soyez aussi précis que possible.
+Par exemple &quot;Impossible d'obtenir une adresse IP&quot; sera plus utile que
+&quot;Je n'arrive pas à aller sur internet&quot;.</p>
+</div>
+<div class="section" id="donnez-des-informations">
+<h3>4 - Donnez des informations</h3>
+<p>Dans le corps de votre message, donnez le nom et la version de votre
+distribution, le nom et la version du programme utilisé et les
+informations sur votre matériel si cela est nécessaire. Recopiez-y aussi
+les messages d'erreurs (c'est là que le fichier que vous avez créé au
+début devient utile). Indiquez ce que vous avez fait pour tenter de
+résoudre le problème. En faisant cela, vous montrerez aux autres que
+vous ne vous êtes pas jeté sur le forum dès que le problème est apparu.</p>
+</div>
+<div class="section" id="pas-de-langage-sms">
+<h3>5 - Pas de langage SMS</h3>
+<p>Ça saoule! Ça n'aide pas à vous faire comprendre et on vous répondra
+d'autant moins.</p>
+</div>
+<div class="section" id="ne-perdez-pas-une-opportunite-d-apprendre">
+<h3>6 - Ne perdez pas une opportunité d'apprendre</h3>
+<p>Ne suivez pas les conseils aveuglément. Vous êtes ici pour apprendre
+quelque chose. Si on vous demande d'utiliser un outil en ligne de
+commande, utilisez les pages man pour savoir à quoi sert cet outil. Vous
+pourrez ensuite réutiliser cet outil si vous rencontrez un problème
+similaire. Si on vous demande de poster un fichier pour plus
+d'informations, recherchez l'utilité de ce fichier. Les fichiers
+systèmes importants possèdent souvent une page man dédiée.</p>
+</div>
+<div class="section" id="dites-merci">
+<h3>7 - Dites merci</h3>
+<p>Les logiciels libres reposent sur la communauté. Personne n'est payé
+pour vous aider. Les personnes qui vous aident le font car elles ont
+elles-mêmes reçu de l'aide dans le passé et veulent rendre la pareille.
+En plus de dire merci, vous pouvez également aider les autres qui ne
+savent peut-être pas quelque chose que vous savez. Vous ressentirez
+alors une certaine satisfaction que les logiciels propriétaires ne
+peuvent vous apporter.</p>
+</div>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

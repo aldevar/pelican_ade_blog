@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Pydio : migration, upgrade, package [FR] | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2016/05/pydio-migration-upgrade-package-fr.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="The article is also available in english. Sous ce titre peu clair se cache une opération de que je viens de mener afin d'opérer 3 opérations sur une instance pydio. Pour mettre les choses dans leur contexte, Pydio était installé via l'archive tar.gz, sur un serveur CentOS 6 et …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Pydio : migration, upgrade, package [FR]
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2016-05-27T23:02:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Fri 27 May 2016
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/centos.html">#centos</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/pydio.html">#pydio</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>The article is also available <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en/">in
+english</a>.</p>
+<p>Sous ce titre peu clair se cache une opération de que je viens de mener
+afin d'opérer 3 opérations sur une instance pydio. Pour mettre les
+choses dans leur contexte, Pydio était installé via l'archive tar.gz,
+sur un serveur CentOS 6 et la version utilisée était la 6.0.7.</p>
+<p>L'objectif initial est de mettre à jour Pydio en version 6.4.
+Malheureusement, la version de php nécessaire n'est pas présente dans
+Centos 6 (sauf via des dépôts externe que je ne souhaitais pas
+utiliser). La première étape est donc de monter une nouvelle VM Centos7
+puis d'installer Pydio avec yum via le dépôt Pydio et d'importer
+l'ancienne configuration dans cette nouvelle instance.</p>
+<p>Installer Pydio via le gestionnaire de paquet permet de plus facilement
+le mettre à jour et facilite également l'automation &nbsp;pour un déploiement
+automatique de Pydio ainsi que la gestion des plugins.</p>
+<p>Ce sont ces étapes que je vais détailler ici.</p>
+<p>Installation de mariadb et httpd</p>
+<pre class="code sh literal-block">
+yum install -y mariadb mariadb-server
+systemctl start mariadb.service
+systemctl <span class="nb">enable</span> mariadb.service
+mysql_secure_installation
+yum install httpd
+systemctl <span class="nb">enable</span> httpd.service
+systemctl start httpd.service
+</pre>
+<p>Installation des dépendances pour Pydio :</p>
+<pre class="code literal-block">
+yum -y install php php-gd php-ldap php-pear php-xml php-xmlrpc php-mbstring curl php-mcrypt* php-mysql
+</pre>
+<p>Installation des dépots Pydio</p>
+<pre class="code literal-block">
+wget https://download.pydio.com/pub/linux/centos/7/pydio-release-1-1.el7.centos.noarch.rpm
+</pre>
+<p>Si vous avez une licence pydio (gratuit jusqu'à 10 utilisateurs), vous
+devez aussi récupérer le dépot enterprise</p>
+<pre class="code literal-block">
+wget https://API_KEY:API_SECRET&#64;download.pydio.com/auth/linux/centos/7/x86_64/pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+</pre>
+<p>Avec API_KEY et API_SECRET &nbsp;dans votre dashboard sur pydio.com, onglet
+licence</p>
+<pre class="code literal-block">
+rpm -ivh pydio-release-1-1.el7.centos.noarch.rpm
+rpm -ivh pydio-enterprise-release-1-1.el7.centos.noarch.rpm
+</pre>
+<p>Edition du dépot pour ajouter API_KEY et API_SECRET</p>
+<pre class="code literal-block">
+vim /etc/yum.repos.d/pydio-enterprise.repo
+</pre>
+<p>Installation de pydio</p>
+<pre class="code literal-block">
+yum update
+yum install pydio-enterprise
+</pre>
+<p>Modification du vhost par defaut :</p>
+<pre class="code apache literal-block">
+<span class="nt">&lt;VirtualHost</span> <span class="s">nom.du.vhost:80</span><span class="nt">&gt;</span>
+<span class="nb">Alias</span> / <span class="sx">/usr/share/pydio/</span>
+<span class="nb">Alias</span> <span class="sx">/pydio_public</span> <span class="sx">/var/lib/pydio/public/</span>
+
+<span class="nt">&lt;Directory</span> <span class="s">/usr/share/pydio/</span><span class="nt">&gt;</span>
+<span class="nb">Options</span> FollowSymLinks
+<span class="nb">AllowOverride</span> Limit FileInfo
+<span class="nb">Require</span> <span class="k">all</span> granted
+<span class="nb">php_value</span> error_reporting <span class="m">2</span>
+<span class="nb">php_value</span> upload_max_filesize <span class="m">100</span>M
+<span class="nb">php_value</span> post_max_size <span class="m">100</span>M
+<span class="nb">php_value</span> output_buffering <span class="k">Off</span>
+
+<span class="nt">&lt;/Directory&gt;</span>
+
+<span class="nt">&lt;Directory</span> <span class="s">/var/lib/pydio/public/</span><span class="nt">&gt;</span>
+<span class="nb">AllowOverride</span> Limit FileInfo
+<span class="nb">Require</span> <span class="k">all</span> granted
+<span class="nb">php_value</span> error_reporting <span class="m">2</span>
+<span class="nt">&lt;/Directory&gt;</span>
+<span class="nt">&lt;/VirtualHost&gt;</span>
+</pre>
+<p>Modification du charset dans /etc/pydio/bootstrap_conf.php</p>
+<pre class="code literal-block">
+define(&quot;AJXP_LOCALE&quot;, &quot;fr_FR.UTF-8&quot;);
+</pre>
+<p>Création de la base de données:</p>
+<pre class="code literal-block">
+mysql -u root -p
+create database pydio;
+create user pydio&#64;localhost identified by 'mypassword';
+grant all privileges on pydio.* to pydio&#64;localhost identified by 'mypassword';
+update mysql.users set Super_Priv='Y' where user like pydio;
+</pre>
+<p>La dernière commande sert à donner les super privilège à l'utilisateur
+pydio afin qu'il puisse créer des triggers.</p>
+<p>Vient ensuite l'installation des plugins pydio:</p>
+<pre class="code literal-block">
+yum install pydio-plugin*
+</pre>
+<p>On termine par l'import de la base de données</p>
+<pre class="code literal-block">
+mysql -u pydio -p pydio &lt; mondumppydio.sql
+</pre>
+<p>Enfin, on lance l'interface de pydio et on passe via le wizard pour la
+première configuration.&nbsp;Une fois terminé, on doit pouvoir se connecter
+avec son compte habituel et retrouver tous ses fichiers.</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

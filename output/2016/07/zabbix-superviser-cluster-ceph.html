@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Zabbix - Superviser un cluster Ceph | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2016/07/zabbix-superviser-cluster-ceph.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Ceph est une solution open source de stockage distribué avec réplication des données et une forte tolérance aux pannes. Différentes commandes existent pour vérifier l'état du cluster et nous allons voir comment les exploiter avec des scripts Python pour que Zabbix puisse récupérer les métriques. Je suis parti d'un template …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Zabbix - Superviser un cluster Ceph
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2016-07-05T21:45:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Tue 05 July 2016
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/supervision.html">Supervision</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/ceph.html">#ceph</a>,               <a href="../../tag/devops.html">#devops</a>,               <a href="../../tag/python.html">#python</a>,               <a href="../../tag/zabbix.html">#zabbix</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Ceph est une solution open source de stockage distribué avec réplication
+des données et une forte tolérance aux pannes. Différentes commandes
+existent pour vérifier l'état du cluster et nous allons voir comment les
+exploiter avec des scripts Python pour que Zabbix puisse récupérer les
+métriques.</p>
+<p><img alt="Ceph_Logo" src="/images/Ceph_Logo.png" /></p>
+<p>Je suis parti d'un <a class="reference external" href="https://github.com/thelan/ceph-zabbix">template déjà
+existant</a>, avec un script bash
+qui exécute les commandes, parse la sortie et retourne la métrique
+attendue. Ce script, à mon avis, a cependant un problème. A chaque
+exécution,&nbsp;il exécute toutes les commandes, parse toutes les réponses et
+retourne enfin la métrique attendue suivant l'argument passé en entrée.
+Ce comportement peu optimisé induit que parfois, suivant la charge du
+serveur, l’exécution du script peut prendre trop de temps et l'item
+Zabbix tombe en timeout. Ce n'est évidemment pas un comportement que
+nous souhaitons avoir.</p>
+<p>Puisqu'il fallait reprendre le script, je me suis lancé dans sa complète
+réécriture en Python. J'ai pu ainsi profiter du format json proposé par
+les outils Ceph pour l'output des données et également du module json
+inclus dans Python. Cela m'a permis de gagner du temps (pour moi et le
+processeur) car je peux parser les données plus facilement. Le script
+bash utilise beaucoup d'expressions régulières via sed. Dorénavant, je
+n'ai qu'à appeler le bon objet json et l'afficher.</p>
+<p>La version actuel du template comporte 3 scripts. Je peux encore
+optimisé tout cela en 1 seul fichier, ce sera pour la prochaine version.
+Le premier script nommé cephpools.py permet la découverte automatique
+des pools rados Ceph. Le second, cephimages.py, permet quant à lui la
+découverte automatique des images rbd de chaque pool. C'est également ce
+script qui est appelé pour récupérer la taille des images.</p>
+<p>Enfin, le script principal ceph-status.py s'occupe de retourner les
+valeurs des métriques à &nbsp;Zabbix : état des pg, santé du cluster, IOPS,
+état des mon etc.</p>
+<p>Vous pouvez retrouver ces scripts et template zabbix <a class="reference external" href="https://github.com/aldevar/ceph-zabbix">sur la page github
+dédiée</a></p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

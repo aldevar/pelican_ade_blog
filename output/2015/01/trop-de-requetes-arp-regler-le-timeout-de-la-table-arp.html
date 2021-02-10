@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Trop de requêtes ARP - Régler le timeout de la table ARP | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="/feeds/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="/feeds/{slug}.atom.xml">  
+  <meta name="description" content="Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur chez SoYouStart. Le serveur étant assez puissant, nous avons décidé d'y installer un hyperviseur Proxmox qui hébergera des VM CentOS Avant de mettre en place les applications dont j'ai besoin sur ce serveur, je l'ai installé et laissé tourner quelques …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feeds/all.atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Trop de requêtes ARP - Régler le timeout de la table ARP
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2015-01-21T20:18:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 21 January 2015
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/arp.html">#arp</a>,               <a href="../../tag/kernel.html">#kernel</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/osi.html">#osi</a>,               <a href="../../tag/requete.html">#requête</a>,               <a href="../../tag/table.html">#table</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
+chez SoYouStart.</p>
+<p>Le serveur étant assez puissant, nous avons décidé d'y installer un
+hyperviseur Proxmox qui hébergera des VM CentOS</p>
+<p>Avant de mettre en place les applications dont j'ai besoin sur ce
+serveur, je l'ai installé et laissé tourner quelques temps pour
+m'assurer de sa stabilité. Et le premier dimanche suivant l'installe,
+voici le mail que je reçois, venant d'un bot de chez OVH et concernant
+une des VM :</p>
+<pre class="literal-block">
+Bonjour,
+
+Nous avons constaté que votre serveur diffuse inutilement un nombre important de requêtes sur le
+réseau via son IP failover XX.XX.XX.XX, ceci est dû à une mauvaise configuration de celle-ci.
+Nous vous avons demandé dans un mail précédant de bien vouloir reconfigurer votre IP failover,
+constatant que le problème persiste, nous nous permettons de réitérer cette demande.
+Si le problème n'est pas résolu dans un délais de 24 heures, nous nous verrons dans l'obligation de
+bloquer votre IP.
+
+Dans ce cas, il vous sera possible de la débloquer dans votre manager une fois la reconfiguration
+faite.
+
+Ceci est le dernier avertissement avant le blocage de votre IP !
+-------  EXTRAIT DES REQUETES  -------
+
+Thu Jan 8 06:47:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:47:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:50:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+
+-------   FIN DE L'EXTRAIT   -------
+</pre>
+<p>Une requête toutes les 30 secondes, c'est en effet beaucoup.</p>
+<p>J'ai longtemps cherché d'où pouvait venir le problème. J'ai commencer
+par changer de modèle de carte réseau dans Proxmox (E1000, VirtIO,
+Vmxnet3) sans succès. J'ai reconfiguré et rereconfiguré le réseau en
+ajoutant ou retirant des options dans le fichier ifcfg-eth0, rien à
+faire, toujours autant de requêtes ARP.</p>
+<p>En faisant tout ça, je me rendais bien compte d'une aberration dans&nbsp;les
+opérations que je mettais en œuvre : je travaillais sur du niveau 3 (IP)
+alors que j'avais un problème qui se situait entre la couche 2 et la
+couche 3 (ARP).</p>
+<p>Après moult recherches, j'ai fini par trouver où étaient les fichiers
+qui pourraient m'aider.</p>
+<p>Voici les fichiers concernés, avec leurs valeurs par défaut.</p>
+<pre class="literal-block">
+/proc/sys/net/ipv4/neigh/default/anycast_delay:100
+/proc/sys/net/ipv4/neigh/default/app_solicit:0
+/proc/sys/net/ipv4/neigh/default/base_reachable_time:30
+/proc/sys/net/ipv4/neigh/default/base_reachable_time_ms:1200
+/proc/sys/net/ipv4/neigh/default/delay_first_probe_time:5
+/proc/sys/net/ipv4/neigh/default/gc_interval:30
+/proc/sys/net/ipv4/neigh/default/gc_stale_time:60
+/proc/sys/net/ipv4/neigh/default/gc_thresh1:128
+/proc/sys/net/ipv4/neigh/default/gc_thresh2:512
+/proc/sys/net/ipv4/neigh/default/gc_thresh3:1024
+/proc/sys/net/ipv4/neigh/default/locktime:100
+/proc/sys/net/ipv4/neigh/default/mcast_solicit:3
+/proc/sys/net/ipv4/neigh/default/proxy_delay:80
+/proc/sys/net/ipv4/neigh/default/proxy_qlen:64
+/proc/sys/net/ipv4/neigh/default/retrans_time:100
+/proc/sys/net/ipv4/neigh/default/ucast_solicit:3
+/proc/sys/net/ipv4/neigh/default/unres_qlen:3
+</pre>
+<p>Ici, les fichiers qui nous intéressent sont base_reachable_time (ou
+base_reachable_time_ms) et gc_stale_time.</p>
+<p>Le fichier gc_stale_time définit la&nbsp;fréquence à laquelle l'état
+'stale' (obsolète) des entrées de la table ARP sera vérifié. Le défaut
+est à 60 secondes. Le fichier base_reachable_time quant à lui définit
+la durée durant laquelle une entrée de la table ARP est considérée
+valide. La durée de validité de cette entrée sera un chiffre choisi au
+hasard entre (base_reachable_time/2) et (3*base_reachable_time/2).
+La valeur par défaut est de 30 secondes.</p>
+<p>Un simple echo du chiffre souhaité dans le fichier suffit. CentOS permet
+d'avoir ces valeurs en dure et persistante après un redémarrage (les
+autres distributions aussi sans doute, mais je ne sais par quel moyen).</p>
+<p>Pour CentOS donc, dans le fichier /etc/sysctl.conf, ajouter ces lignes :</p>
+<pre class="literal-block">
+##### Pour limiter le nombre de requête ARP ##########
+##### Equivalent a 30 minutes ###########
+net.ipv4.neigh.default.base_reachable_time_ms = 1200000
+net.ipv4.neigh.default.gc_stale_time = 3600
+</pre>
+<p>Ces valeurs vont donner une durée de validité des entrées de la table
+ARP entre 15 et 45 minutes.</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
