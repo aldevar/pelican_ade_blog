@@ -9,9 +9,8 @@ Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la c
 Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.&lt;/p&gt;
 &lt;img alt="Windows 10 - VPN Properties" src="/images/Meraki_VPN_Win10_Properties01.png" /&gt;
 &lt;p&gt;Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
-On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :
-.. code-block:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
+On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
 Nom : AssumeUDPEncapsulationContextOnSendRule
 Type: DWORD
