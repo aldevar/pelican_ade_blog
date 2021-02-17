@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  VPN Meraki et Windows 10 | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2021/02/vpn-meraki-win10.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://blog.devarieux.net/feed/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
+  <meta name="description" content="Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  VPN Meraki et Windows 10
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2021-02-17T21:47:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 17 February 2021
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/tech.html">Tech</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/cisco.html">#cisco</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/vpn.html">#vpn</a>,               <a href="../../tag/reseau.html">#reseau</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code erreur 628, ou encore le message &quot;The connection was terminated by the remote computer before it could be completed.&quot;.
+Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la configuration de la base de registre en cas d'erreur 809 qui apparait lorsque le client VPN se trouve derrière du NAT.</p>
+<div class="section" id="configuration-du-client-vpn-l2tp">
+<h2>Configuration du client VPN L2TP</h2>
+<p>Dans les paramètres VPN de Windows 10, ajouter un nouveau VPN et y entrer les informations de connexion. Jusque là, rien de bien compliqué.</p>
+<img alt="Windows 10 - Add VPN" src="/images/Meraki_VPN_WIN10_Settings.png" />
+<p>Ensuite, il faut se rendre dans les options d'adaptateurs (Change adapter options). Cela ouvre le Control Panel. Clique droit sur la connexion VPN concernée puis Propriété. Ici, dans l'onglet Securité, dans le second menu déroulant, il faut sélectionner &quot;Require Encryption (Disconnect if server decline)&quot;.
+Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.</p>
+<img alt="Windows 10 - VPN Properties" src="/images/Meraki_VPN_Win10_Properties01.png" />
+<p>Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
+On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :
+.. code-block:</p>
+<pre class="literal-block">
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
+Nom : AssumeUDPEncapsulationContextOnSendRule
+Type: DWORD
+Valeur: 2
+Base: Decimal
+</pre>
+<p>Après un reboot, la connexion devrait fonctionner.</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
