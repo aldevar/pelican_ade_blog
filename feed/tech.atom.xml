@@ -33,8 +33,7 @@ log {
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Là encore, c'est assez simple. On traite d'abord les requêtes vers &lt;code&gt;/api/v1&lt;/code&gt; qui sont envoyées vers un premier backend et le reste des requêtes est envoyée vers &lt;code&gt;10.0.0.1&lt;/code&gt;. J'en ai profité pour ajouter une rotation des logs.&lt;/p&gt;
 &lt;p&gt;Tout cela fonctionne bien qd on un site disponible publiquement et pour lequel Caddy peut générer un certificat Let's Encrypt. Voyons maintenant comment intégrer son porpre certificat (autosigné ou non). Pour cet exemple, je m'appuie sur une configuration de Caddy pour servir un serveur Graylog&lt;/p&gt;
-&lt;pre class="code text literal-block"&gt;
-logs.domain.com {
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;logs.domain.com {
         reverse_proxy 127.0.0.1:9000
         header X-Graylog-Server-URL https://logs.domain.com/
         tls /etc/pki/tls/certs/companycert.crt /etc/pki/tls/private/companycert.key
@@ -45,17 +44,16 @@ log {
                 }
         }
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;L'option &lt;code&gt;tls&lt;/code&gt; permet de passer directement le certificat puis la clé privée du certificat. L'ajout un header se fait de façon assez simple ici aussi.&lt;/p&gt;
 &lt;p&gt;Enfin, comment faire lorsqu'on souhaite servir son site en plain HTTP, sans TLS. L'option est assez simple et plutot ingénieuse. Il suffit de forcer le site en HTTP dans l'URL.&lt;/p&gt;
-&lt;pre class="code text literal-block"&gt;
-http://sub.domain.com {
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://sub.domain.com {
     reverse_proxy 10.0.0.1:8000
     log {
         output file /var/log/caddy/sub.domain.com_access.log
     }
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Avec cette configuration, Caddy ne va pas tenter de générer le certificat Let's Encrypt ni proposer de redirection HTTP vers HTTPS.&lt;/p&gt;
 &lt;p&gt;Dans le prochain article nous verrons comment utiliser l'API de Caddy en lecture et en écriture totale ou partielle de configuration.&lt;/p&gt;
 &lt;/div&gt;
