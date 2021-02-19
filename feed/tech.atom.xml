@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Tech</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/tech.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-02-17T21:47:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>VPN Meraki et Windows 10</title><link href="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" rel="alternate"></link><published>2021-02-17T21:47:00+01:00</published><updated>2021-02-17T21:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-17:/2021/02/vpn-meraki-win10.html</id><summary type="html">&lt;p&gt;Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code erreur 628, ou encore le message &amp;quot;The connection was terminated by the remote computer before it could be completed.&amp;quot;.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Tech</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/tech.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-02-19T06:55:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Présentation de Caddy</title><link href="https://blog.devarieux.net/2021/02/caddy-presentation.html" rel="alternate"></link><published>2021-02-19T06:55:00+01:00</published><updated>2021-02-19T06:55:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-19:/2021/02/caddy-presentation.html</id><summary type="html">&lt;p&gt;Dans un tweet récent, j'expliquais voir trop peu de publication d'articles sur le server web / reverse proxy &lt;a class="reference external" href="https://caddyserver.com/"&gt;Caddy&lt;/a&gt;. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation.&lt;/p&gt;
+&lt;blockquote class="twitter-tweet" data-partner="tweetdeck"&gt;&lt;p lang="fr" dir="ltr"&gt;Je vois pas mal de partage d&amp;#39;articles sur Traefik dans mon fil Twitter. J&amp;#39;aime beaucoup …&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;p&gt;Dans un tweet récent, j'expliquais voir trop peu de publication d'articles sur le server web / reverse proxy &lt;a class="reference external" href="https://caddyserver.com/"&gt;Caddy&lt;/a&gt;. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation.&lt;/p&gt;
+&lt;blockquote class="twitter-tweet" data-partner="tweetdeck"&gt;&lt;p lang="fr" dir="ltr"&gt;Je vois pas mal de partage d&amp;#39;articles sur Traefik dans mon fil Twitter. J&amp;#39;aime beaucoup Traefik mais je lui préfère &lt;a href="https://twitter.com/caddyserver?ref_src=twsrc%5Etfw"&gt;@caddyserver&lt;/a&gt;.&lt;br&gt;Je profite donc de la reprise des activités sur mon blog pour vous préparer quelques articles sur Caddy et l&amp;#39;utilisation de son API.&lt;/p&gt;&amp;mdash; Alain Devarieux (@landvarx) &lt;a href="https://twitter.com/landvarx/status/1362078709436592130?ref_src=twsrc%5Etfw"&gt;February 17, 2021&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;Caddy est un serveur web, de même que Apache ou Nginx. Il dispose également d'une fonctionnalité de reverse proxy et utilise des options de sécurités avancées par défaut (HTTPS par défaut avec Let's Encrypt ou ZeroSSL, TLS 1.3, OCSP Stapling, Cipher Suite modernes). Le logiciel est écrit en Go.
+En plus de ces fonctionnalités de sécurités, Caddy est multiplateforme, il fonctionne avec un seul binaire, supporte les plugins et supporte plusieurs types de challenges ACME.
+Je ne vais revenir sur son installation, parfaitement décrite dans &lt;a class="reference external" href="https://caddyserver.com/docs/install"&gt;la documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="configuration"&gt;
+&lt;h2&gt;Configuration&lt;/h2&gt;
+&lt;p&gt;Caddy peut se configurer de deux manières. Via le fichier de configuration, appelé Caddyfile ou via son API avec un payload JSON. L'utilisation de l'API sera décrite dans un prochain article.
+J'utilise Caddy principalement pour ses fonctionnalités de reverse proxy. Voyons donc quelques exemples de configuration de Caddy via le Caddyfile.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sub.domain.com {
+    reverse_proxy 10.0.0.1:8000
+    log {
+        output file /var/log/caddy/sub.domain.com_access.log
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Bien, avec ça, nous avons un reverse proxy qui écoute sur le port 80 et 443, avec redirection automatique HTTP vers HTTPS. Les logs seront renvoyés vers un fichier. Avec cette configuration, le certificat Let's Encrypt est généré (si le DNS est bien configuré et que Caddy est accessible depuis l'exterieur) et seul les protocoles TLS 1.2 et 1.3 sont supportés. Niveau sécurité, on est pas mal.
+De la même façon, le header &lt;code&gt;X-Forwarded-For&lt;/code&gt; est automatiquement intégré dans l'entête HTTP envoyé au serveur de backend. Cette intégration permet de gagner quelques lignes de configurations.
+Voyons maintenant comment gérer l'utilisation de deux backend différents pour des URI différentes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sub.domain.com {
+reverse_proxy /api/v1/* 10.0.0.2:4000
+reverse_proxy / 10.0.0.1:3000
+
+log {
+        output file /var/log/caddy/sub.domain.com_access.log {
+                roll_size 10MiB
+                roll_keep 10
+                }
+        }
+}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Là encore, c'est assez simple. On traite d'abord les requêtes vers &lt;code&gt;/api/v1&lt;/code&gt; qui sont envoyées vers un premier backend et le reste des requêtes est envoyée vers &lt;code&gt;10.0.0.1&lt;/code&gt;. J'en ai profité pour ajouter une rotation des logs.&lt;/p&gt;
+&lt;p&gt;Tout cela fonctionne bien qd on un site disponible publiquement et pour lequel Caddy peut générer un certificat Let's Encrypt. Voyons maintenant comment intégrer son porpre certificat (autosigné ou non). Pour cet exemple, je m'appuie sur une configuration de Caddy pour servir un serveur Graylog&lt;/p&gt;
+&lt;pre class="code text literal-block"&gt;
+logs.domain.com {
+        reverse_proxy 127.0.0.1:9000
+        header X-Graylog-Server-URL https://logs.domain.com/
+        tls /etc/pki/tls/certs/companycert.crt /etc/pki/tls/private/companycert.key
+log {
+        output file /var/log/caddy/graylog.log {
+                roll_size 10MiB
+                roll_keep 10
+                }
+        }
+}
+&lt;/pre&gt;
+&lt;p&gt;L'option &lt;code&gt;tls&lt;/code&gt; permet de passer directement le certificat puis la clé privée du certificat. L'ajout un header se fait de façon assez simple ici aussi.&lt;/p&gt;
+&lt;p&gt;Enfin, comment faire lorsqu'on souhaite servir son site en plain HTTP, sans TLS. L'option est assez simple et plutot ingénieuse. Il suffit de forcer le site en HTTP dans l'URL.&lt;/p&gt;
+&lt;pre class="code text literal-block"&gt;
+http://sub.domain.com {
+    reverse_proxy 10.0.0.1:8000
+    log {
+        output file /var/log/caddy/sub.domain.com_access.log
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Avec cette configuration, Caddy ne va pas tenter de générer le certificat Let's Encrypt ni proposer de redirection HTTP vers HTTPS.&lt;/p&gt;
+&lt;p&gt;Dans le prochain article nous verrons comment utiliser l'API de Caddy en lecture et en écriture totale ou partielle de configuration.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="caddy"></category><category term="web"></category></entry><entry><title>VPN Meraki et Windows 10</title><link href="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" rel="alternate"></link><published>2021-02-17T21:47:00+01:00</published><updated>2021-02-17T21:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-17:/2021/02/vpn-meraki-win10.html</id><summary type="html">&lt;p&gt;Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code erreur 628, ou encore le message &amp;quot;The connection was terminated by the remote computer before it could be completed.&amp;quot;.
 Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la configuration de la base de registre en cas d'erreur 809 qui apparait lorsque le client VPN se trouve derrière du NAT.&lt;/p&gt;
 &lt;div class="section" id="configuration-du-client-vpn-l2tp"&gt;
 &lt;h2&gt;Configuration du client VPN L2TP&lt;/h2&gt;
