@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Zabbix - Superviser un cluster Ceph | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2021/02/zabbix-timescaledb2.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://blog.devarieux.net/feed/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
+  <meta name="description" content="Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer. TimescaleDB est une time serie database et est donc particulièrement adapatée pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Zabbix - Superviser un cluster Ceph
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2021-02-23T21:45:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Tue 23 February 2021
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/supervision.html">Supervision</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/timescaledb.html">#timescaledb</a>,               <a href="../../tag/zabbix.html">#zabbix</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer.</p>
+<p>TimescaleDB est une time serie database et est donc particulièrement adapatée pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL et permet de transformer certaines tables d'une base en mode time series. Le gros avantage est que cela permet de stocker l'ensemble des informations dans un endroit unique, que ce soit la confiuration du logiciel (utilisateurs, droits d'accès, paramètres...) et aussi les métriques récupérées par le système de supervision. En plus de cela, timescaleDB propose le partitionnemet automatique des tables ainsi que la compression des données ayant plus de 7 jours.</p>
+<p>On a donc d'un coté un gain opérationnel car on n'a plus q'une base de données à gérer et de l'autre un gain en ressources car les tables sont adaptées à ce qu'elles stockent et peuvent être compréssées pour des économies de stockage sustantielles.</p>
+<p>Lors de ma dernière installation, j'ai pu voir que le plugin TimescaleDB était sorti en version 2. La documentation de Zabbix ne spécifiant pas la version de TimescaleDB à installer, j'ai naturellement installé cette dernière version.</p>
+<p>Mal m'en a pris! Cette version 2 n'est pas compatible avec Zabbix 5.2! J'ai pu le voir rapidement lors du démarrage du service <code>zabbix-server</code> avec ces logs que vous n'êtes pas obligé lire en entier. C'est un gros vomi d'erreurs comme on n'aime pas en voir (TL;DR - Plusieurs erreurs Z3005 - query failed - clairement en rapport avec TimescaleDB)</p>
+<div class="highlight"><pre><span></span>[Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: relation &quot;_timescaledb_config.bgw_policy_compress_chunk s&quot; does not exist
+LINE 1: select (p.older_than).integer_interval from _timescaledb_con...
+^
+[select (p.older_than).integer_interval from _timescaledb_config.bgw_policy_compress_chunks p inner join _timescaledb_catalog.hypertable h on (h.id = p.hypertable_id) where h.table_name=&#39;history&#39;]
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: function add_compress_chunks_policy(unknown, integer) does not exist
+LINE 1: select add_compress_chunks_policy(&#39;history&#39;, integer &#39;612000...
+^
+HINT: No function matches the given name and argument types. You might need to add explicit type casts.
+[select add_compress_chunks_policy(&#39;history&#39;, integer &#39;612000&#39;)]
+0000000000000 failed to add compression policy to table &#39;history&#39;
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: relation &quot;_timescaledb_config.bgw_policy_compress_chunk s&quot; does not exist
+LINE 1: select (p.older_than).integer_interval from _timescaledb_con...
+^
+[select (p.older_than).integer_interval from _timescaledb_config.bgw_policy_compress_chunks p inner join _timescaledb_catalog.hypertable h on (h.id = p.hypertable_id) where h.table_name=&#39;history_uint&#39;]
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: function add_compress_chunks_policy(unknown, integer) does not exist
+LINE 1: select add_compress_chunks_policy(&#39;history_uint&#39;, integer &#39;6...
+^
+HINT: No function matches the given name and argument types. You might need to add explicit type casts.
+[select add_compress_chunks_policy(&#39;history_uint&#39;, integer &#39;612000&#39;)]
+0000000000000 failed to add compression policy to table &#39;history_uint&#39;
+</pre></div>
+<dl class="docutils">
+<dt>Cette erreur provient d'une incompatibilité entre Zabbix 5.2 et TimescaleDB 2. Cette incompatibilité est causée par des modifications de certaines fonctions de l'API de TimescaleDB, entre autre la fonction <a class="reference external" href="https://docs.timescale.com/latest/api#add_compression_policy">add_compression_policy</a>. A partir de là, on a deux solutions.</dt>
+<dd><ul class="first last simple">
+<li>Soit on refait l'installation de TimescaleDB avec la dernière version 1.X.</li>
+<li>Soit on tente de corriger ces erreurs.</li>
+</ul>
+</dd>
+</dl>
+<p>J'ai opté pour la seconde option. En fouillant, j'ai trouvé un <a class="reference external" href="https://support.zabbix.com/projects/ZBX/issues/ZBX-18854">ticket sur le Jira</a> de Zabbix qui aborde ce problème. Dans les échanges, un utilisateur propose une solution avec quelques lignes à envoyer vers la db pour corriger tout ça. Voici comment la mettre en oeuvre.</p>
+<p>On commence par se préparer à mettre à jour la base de données</p>
+<div class="highlight"><pre><span></span># systemctl stop zabbix-server
+# sudo -u postgres psql zabbix
+</pre></div>
+<p>On peut maintenant envoyer le code SQL suivant :</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TYPE</span> <span class="n">_timescaledb_catalog</span><span class="p">.</span><span class="n">ts_interval</span> <span class="k">AS</span>
+<span class="p">(</span><span class="n">is_time_interval</span> <span class="nb">BOOLEAN</span><span class="p">,</span> <span class="n">time_interval</span> <span class="nb">INTERVAL</span><span class="p">,</span> <span class="n">integer_interval</span> <span class="nb">BIGINT</span><span class="p">);</span>
+<span class="k">ALTER</span> <span class="k">TYPE</span> <span class="n">_timescaledb_catalog</span><span class="p">.</span><span class="n">ts_interval</span> <span class="k">OWNER</span> <span class="k">TO</span> <span class="n">zabbix</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">VIEW</span> <span class="n">_timescaledb_config</span><span class="p">.</span><span class="n">bgw_policy_compress_chunks</span> <span class="k">AS</span>
+<span class="k">SELECT</span> <span class="n">job_id</span><span class="p">,(</span><span class="n">config</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;hypertable_id&#39;</span><span class="p">)::</span><span class="nb">INTEGER</span> <span class="k">AS</span> <span class="n">hypertable_id</span><span class="p">,</span>
+<span class="p">(</span><span class="k">FALSE</span><span class="p">,</span><span class="k">NULL</span><span class="p">,</span><span class="n">config</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;compress_after&#39;</span><span class="p">)::</span><span class="n">_timescaledb_catalog</span><span class="p">.</span><span class="n">ts_interval</span> <span class="k">AS</span> <span class="n">older_than</span>
+<span class="k">FROM</span> <span class="n">timescaledb_information</span><span class="p">.</span><span class="n">jobs</span> <span class="k">WHERE</span> <span class="n">proc_name</span><span class="o">=</span><span class="s1">&#39;policy_compression&#39;</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">_timescaledb_config</span><span class="p">.</span><span class="n">bgw_policy_compress_chunks</span> <span class="k">OWNER</span> <span class="k">TO</span> <span class="n">zabbix</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">add_compress_chunks_policy</span>
+<span class="p">(</span><span class="n">hypertable</span> <span class="n">regclass</span><span class="p">,</span><span class="n">older_than</span> <span class="n">anyelement</span><span class="p">,</span><span class="n">if_not_exists</span> <span class="nb">BOOLEAN</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">)</span>
+<span class="k">RETURNS</span> <span class="nb">INTEGER</span> <span class="k">LANGUAGE</span> <span class="k">sql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">SELECT</span> <span class="n">add_compression_policy</span><span class="p">(</span><span class="n">hypertable</span><span class="p">,</span><span class="n">older_than</span><span class="p">,</span><span class="n">if_not_exists</span><span class="p">)</span>
+<span class="err">$$</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">FUNCTION</span> <span class="n">add_compress_chunks_policy</span> <span class="k">OWNER</span> <span class="k">TO</span> <span class="n">zabbix</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">drop_chunks</span>
+<span class="p">(</span><span class="n">older_than</span> <span class="n">anyelement</span> <span class="k">DEFAULT</span> <span class="k">NULL</span><span class="p">::</span><span class="k">UNKNOWN</span><span class="p">,</span><span class="k">table_name</span> <span class="n">NAME</span> <span class="k">DEFAULT</span> <span class="k">NULL</span><span class="p">::</span><span class="n">NAME</span><span class="p">)</span>
+<span class="k">RETURNS</span> <span class="k">SETOF</span> <span class="nb">TEXT</span> <span class="k">LANGUAGE</span> <span class="k">sql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">SELECT</span> <span class="n">drop_chunks</span><span class="p">(</span><span class="k">table_name</span><span class="p">::</span><span class="n">regclass</span><span class="p">,</span><span class="n">older_than</span><span class="p">,</span><span class="k">NULL</span><span class="p">,</span><span class="k">FALSE</span><span class="p">)</span>
+<span class="err">$$</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">FUNCTION</span> <span class="n">drop_chunks</span><span class="p">(</span><span class="n">anyelement</span><span class="p">,</span><span class="n">NAME</span><span class="p">)</span> <span class="k">OWNER</span> <span class="k">TO</span> <span class="n">zabbix</span><span class="p">;</span>
+</pre></div>
+<p>On peut maintenant redémarrer le service zabbix-server (<code>systemctl start zabbix-server</code>) et on voit dans les logs que les erreurs ont disparu.
+Zabix devrait rapidement corriger cela, dans un premier temps en mettant à jour la documentation et dans un second temps en adaptant l'application.</p>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>
