@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - News</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/news.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-10-20T21:56:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Debian abandonne la Linux Standard Base</title><link href="https://blog.devarieux.net/2015/10/debian-abandonne-la-linux-standard-base.html" rel="alternate"></link><published>2015-10-20T21:56:00+02:00</published><updated>2015-10-20T21:56:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-10-20:/2015/10/debian-abandonne-la-linux-standard-base.html</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://lwn.net/Articles/658809/"&gt;LWN a annoncé&lt;/a&gt; il y a déjà
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - news</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/news.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-10-20T21:56:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Debian abandonne la Linux Standard Base</title><link href="https://blog.devarieux.net/2015/10/debian-abandonne-la-linux-standard-base.html" rel="alternate"></link><published>2015-10-20T21:56:00+02:00</published><updated>2015-10-20T21:56:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-10-20:/2015/10/debian-abandonne-la-linux-standard-base.html</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://lwn.net/Articles/658809/"&gt;LWN a annoncé&lt;/a&gt; il y a déjà
 quelques jours que la communauté Debian abandonnait le support de la
 &lt;a class="reference external" href="http://refspecs.linuxfoundation.org/lsb.shtml"&gt;Linux Standard Base&lt;/a&gt;
 (LSB). La LSB tente de se définir comme un standard de compatibilité des
@@ -37,4 +37,4 @@ ce processus de coordination. Les normes sont importantes, mais
 seulement dans la mesure où elles sont respectées. Jusqu'ici GNU/Linux a
 évité le problème &lt;a class="reference external" href="https://xkcd.com/927/"&gt;des normes concurrentes&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Cela va-t-il rester le cas?&lt;/p&gt;
-</content><category term="News"></category></entry></feed>
+</content><category term="news"></category></entry></feed>
