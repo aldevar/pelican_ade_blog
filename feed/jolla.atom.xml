@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - jolla</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/jolla.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-08-24T09:17:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Firefox comme navigateur par défaut de SailfishOS</title><link href="https://blog.devarieux.net/2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html" rel="alternate"></link><published>2015-08-24T09:17:00+02:00</published><updated>2015-08-24T09:17:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-08-24:/2015/08/firefox-comme-navigateur-par-defaut-de-sailfishos.html</id><summary type="html">&lt;p&gt;Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
+avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
+des navigateurs intégrés et surtout du navigateur par défaut.&lt;/p&gt;
+&lt;p&gt;Malheureusement, l'interface ne propose actuellement aucune option pour
+modifier ce comportement. Ainsi, lorsqu'on clique sur un lien …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Jolla et son SailfishOS sont vraiment de beaux outils mais il faut
+avouer qu'ils ont quand même un problème majeur, c'est la piètre qualité
+des navigateurs intégrés et surtout du navigateur par défaut.&lt;/p&gt;
+&lt;p&gt;Malheureusement, l'interface ne propose actuellement aucune option pour
+modifier ce comportement. Ainsi, lorsqu'on clique sur un lien dans une
+autre application c'est forcement ce navigateur tout moisi qui s'ouvre
+et qui met 3 heures à charger la page. Heureusement, avec quelques
+bidouille, il est possible de paramétrer Firefox comme navigateur par
+défaut, c'est d'ailleurs ce que je viens de faire :)&lt;/p&gt;
+&lt;p&gt;Si vous avez déjà Firefox d'installé, vous pouvez directement vous
+rendre au paragraphe 'Paramétrage d'ADB'.&lt;/p&gt;
+&lt;div class="section" id="installation-d-aptoide"&gt;
+&lt;h2&gt;Installation d'Aptoide&lt;/h2&gt;
+&lt;p&gt;La première étape est d'installer le market Aptoide si ce n'est pas déjà
+fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
+'Place de marché' tout en bas et installer le market Aptoide Appstore&lt;/p&gt;
+&lt;p&gt;[gallery size=&amp;quot;medium&amp;quot; columns=&amp;quot;2&amp;quot; link=&amp;quot;file&amp;quot; ids=&amp;quot;571,572&amp;quot;]&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installation-de-firefox"&gt;
+&lt;h2&gt;Installation de Firefox&lt;/h2&gt;
+&lt;p&gt;L'installation de Firefox se fait via Aptoide, il faut donc ouvrir
+l'application nouvellement installée et dans la zone de recherche, taper
+Firefox. Il faut ensuite trouver l'application &lt;strong&gt;Firefox Browser for
+Android&lt;/strong&gt; et l'installer.&lt;/p&gt;
+&lt;p&gt;[gallery link=&amp;quot;file&amp;quot; columns=&amp;quot;2&amp;quot; size=&amp;quot;medium&amp;quot; ids=&amp;quot;575,576,577,578&amp;quot;]&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="parametrage-d-adb"&gt;
+&lt;h2&gt;Paramétrage d'ADB&lt;/h2&gt;
+&lt;p&gt;C'est partie pour le bricolage. Il faut d'abord &lt;a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/"&gt;se connecter en
+SSH&lt;/a&gt;
+à l'appareil afin d'y modifier le comportement d'Alien. Pour cela, il
+faut éditer le fichier /opt/alien/system/build.prop et ajouter à la fin
+:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+persist.service.adb.enable=1
+service.adb.tcp.port=5555
+&lt;/pre&gt;
+&lt;p&gt;Une fois cette modification faite, on relance Alien Dalvik&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# systemctl restart aliendalvik.service
+&lt;/pre&gt;
+&lt;p&gt;Maintenant, un process adb doit apparaitre&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# ps aux | grep adb
+ shell&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5162&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 6532&amp;nbsp;&amp;nbsp;&amp;nbsp; 92 ?&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; Ssl&amp;nbsp; 23:04&amp;nbsp;&amp;nbsp; 0:00 /system/root/sbin/adbd
+ root&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5592&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 3984&amp;nbsp;&amp;nbsp; 288 pts/0&amp;nbsp;&amp;nbsp;&amp;nbsp; Sl&amp;nbsp;&amp;nbsp; 23:06&amp;nbsp;&amp;nbsp; 0:00 adb fork-server server
+ root&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 7330&amp;nbsp; 0.0&amp;nbsp; 0.0&amp;nbsp;&amp;nbsp; 2256&amp;nbsp;&amp;nbsp; 544 pts/0&amp;nbsp;&amp;nbsp;&amp;nbsp; S+&amp;nbsp;&amp;nbsp; 23:57&amp;nbsp;&amp;nbsp; 0:00 grep adb
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla ~]# lsof -p 5162 | grep android_adb
+ adbd&amp;nbsp;&amp;nbsp;&amp;nbsp; 5162 shell&amp;nbsp;&amp;nbsp; 10u&amp;nbsp;&amp;nbsp; CHR&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 10,25&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 0t0&amp;nbsp; 1437 /opt/alien/dev/android_adb
+&lt;/pre&gt;
+&lt;p&gt;Une fois que tout ça est ok, on lance en root :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;localhost bin]# /opt/alien/system/bin/adb kill-server
+[root&amp;#64;localhost bin]# /opt/alien/system/bin/adb devices
+* daemon not running. starting it now on port 5038 *
+* daemon started successfully *
+List of devices attached
+emulator-5554   device
+
+[root&amp;#64;localhost bin]#
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="parametrage-de-sailfishos"&gt;
+&lt;h2&gt;Paramétrage de SailfishOS&lt;/h2&gt;
+&lt;p&gt;La système est maintenant prêt à accueillir nos modifications. Toujours
+dans la connexion SSH, se rendre dans /usr/share/applications, faire une
+copie de sauvegarde du fichier open-url.desktop et le modifier pour
+qu'il ne prenne plus en charge les types MIME http et https&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd /usr/share/applications
+cp -a open-url.desktop open-url.desktop.ori
+vi open-url.desktop
+&lt;/pre&gt;
+&lt;p&gt;Une fois dans le fichier, on supprime la ligne&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+&lt;/pre&gt;
+&lt;p&gt;Le fichier doit maintenant ressembler à cela&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla applications]# cat open-url.desktop
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+&lt;/pre&gt;
+&lt;p&gt;Créer ensuite le fichier firefox-as-default.desktop et y mettre ce
+contenu&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[Desktop Entry]
+Type=Application
+Name=Browser
+NotShowIn=X-MeeGo;
+X-MeeGo-Logical-Id=sailfish-browser-ap-name
+X-MeeGo-Translation-Catalog=sailfish-browser
+X-Maemo-Service=org.sailfishos.browser
+X-Maemo-Method=org.sailfishos.browser.openUrl
+[root&amp;#64;Jolla applications]# cat firefox-as-default.desktop
+[Desktop Entry]
+Exec=/opt/alien/system/bin/adb -e shell am start -a android.intent.action.VIEW -n org.mozilla.firefox/.App -d ' %U'
+Name=Firefox HTTP handler (opener)
+Type=Application
+MimeType=text/html;x-maemo-urischeme/http;x-maemo-urischeme/https;
+X-Nemo-Application-Type=no-invoker
+X-Nemo-Single-Instance=no
+X-apkd-apkfile=/data/app/org.mozilla.firefox.apk
+NoDisplay=true
+&lt;/pre&gt;
+&lt;p&gt;Afin de prendre ces modifications en compte, on met à jour le cache des
+types MIME&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla applications]# update-desktop-database
+&lt;/pre&gt;
+&lt;p&gt;Le fichier mimeinfo.cache devrait maintenant contenir 2 lignes de ce
+type&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+x-maemo-urischeme/http=firefox-as-default.desktop;
+x-maemo-urischeme/https=firefox-as-default.desktop;
+&lt;/pre&gt;
+&lt;p&gt;Dorénavant, lorsqu'un lien sera cliqué dans une application (message,
+twitter...) celui s'ouvrir avec Firefox.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="jolla"></category></entry><entry><title>Ajouter Duckduckgo comme moteur de recherche dans SailfishOS</title><link href="https://blog.devarieux.net/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html" rel="alternate"></link><published>2015-08-20T22:10:00+02:00</published><updated>2015-08-20T22:10:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-08-20:/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html</id><summary type="html">&lt;p&gt;Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+comme moteur de recherche et il n'y a pas d'interface pour ajouter de
+nouveaux moteurs de recherche.&lt;/p&gt;
+&lt;p&gt;Je vous propose ici une méthode pour ajouter un nouveau moteur de
+recherche dans cette liste. Ici ce sera
+&lt;a class="reference external" href="https://duckduckgo.com/"&gt;Duckduckgo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;La manipulation …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+comme moteur de recherche et il n'y a pas d'interface pour ajouter de
+nouveaux moteurs de recherche.&lt;/p&gt;
+&lt;p&gt;Je vous propose ici une méthode pour ajouter un nouveau moteur de
+recherche dans cette liste. Ici ce sera
+&lt;a class="reference external" href="https://duckduckgo.com/"&gt;Duckduckgo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;La manipulation consiste à ajouter un fichier de description du moteur
+de recherche dans le répertoire adéquat.&lt;/p&gt;
+&lt;p&gt;La première étape est d'activer le mode développeur et de se connecter
+en SSH à son Jolla. Si vous ne savez pas comment vous y prendre, vous
+pouvez &lt;a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/"&gt;suivre ce
+tuto&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Une fois connecté en SSH, se connecter en root :&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[nemo&amp;#64;Jolla ~]$ devel-su
+&lt;/pre&gt;
+&lt;p&gt;Se rendre dans /usr/lib/mozembedlite/chrome/embedlite/content/&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla nemo]# cd /usr/lib/mozembedlite/chrome/embedlite/content/
+&lt;/pre&gt;
+&lt;p&gt;Créer un fichier duckduckgo.xml&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla nemo]# vi duckduckgo.xml
+&lt;/pre&gt;
+&lt;p&gt;Coller le contenu de ce fichier :
+&lt;a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml"&gt;duckduckgo.xml&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Ou plus simplement&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[root&amp;#64;Jolla content]# curl &amp;nbsp;http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml -o duckduckgo.xml
+&lt;/pre&gt;
+&lt;p&gt;Il ne reste plus qu'à fermer se rendre sur le téléphone, fermer
+l'application 'Réglages', la relancer, se rendre dans 'Application' &amp;gt;
+'Navigateur' et choisir le moteur de recherche Duckduckgo.&lt;/p&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content><category term="jolla"></category></entry><entry><title>Se connecter en SSH à son Jolla</title><link href="https://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla.html" rel="alternate"></link><published>2015-03-03T23:19:00+01:00</published><updated>2015-03-03T23:19:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-03-03:/2015/03/se-connecter-en-ssh-a-son-jolla.html</id><summary type="html">&lt;p&gt;Même s'il est possible d'utiliser directement une console sur l'appareil
+grâce à FingerPrint quand on est en mode developpeur, il est quand même
+plus simple d'utiliser son PC pour entrer quelques commandes où même
+pour écrire des scripts. Voici donc comment activer la connexion SSH sur
+son Jolla.&lt;/p&gt;
+&lt;p&gt;1- Activer …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Même s'il est possible d'utiliser directement une console sur l'appareil
+grâce à FingerPrint quand on est en mode developpeur, il est quand même
+plus simple d'utiliser son PC pour entrer quelques commandes où même
+pour écrire des scripts. Voici donc comment activer la connexion SSH sur
+son Jolla.&lt;/p&gt;
+&lt;p&gt;1- Activer le mode developpeur&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2- Activer la connexion distante et définir un mot de passe&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;3- Se connecter depuis son PC avec l'utilisateur nemo. Pour passer en
+root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+</content><category term="jolla"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a class="reference external" href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+Jolla&lt;/a&gt;,
+je devais recevoir avec mon colis 2 coques supplémentaires mais celles
+ci étaient absentes.&lt;/p&gt;
+&lt;p&gt;J'ai donc envoyé un mail au support Jolla pour savoir ce qu'il en était.
+Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a class="reference external" href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+Jolla&lt;/a&gt;,
+je devais recevoir avec mon colis 2 coques supplémentaires mais celles
+ci étaient absentes.&lt;/p&gt;
+&lt;p&gt;J'ai donc envoyé un mail au support Jolla pour savoir ce qu'il en était.
+Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici
+leur réponse :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hi,&lt;/p&gt;
+&lt;p&gt;thank you for your message and for your recent order at the Jolla
+Online Shop.&lt;/p&gt;
+&lt;p&gt;However, the bad news is that we were not able to dispatch the Lime
+and Nadeshiko Pink The Other Half that your order contained. We were
+unprepared for the level of interest that the Jolla Bundle received
+and unfortunately we were not able to meet the demand in full.
+Currently we can't estimate when the Lime and Nadeshiko Pink The
+Other Half will be available again, and we don't want to keep you
+waiting for your order any longer.&lt;/p&gt;
+&lt;p&gt;We are really sorry for letting you down. To make up for the absence
+of Lime and Nadeshiko Pink The Other Half, we’re putting together an
+exclusive Jolla branded merchandise pack for you. It will be shipped
+to you in the coming days.&lt;/p&gt;
+&lt;p&gt;Even without the extra accessories, we sincerely hope that you will
+love your new Jolla smartphone!&lt;/p&gt;
+&lt;p&gt;Have a great day!&lt;/p&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;Sincerely,&lt;/div&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;Jolla Customer Care&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Pour moi, la phrase clé est &amp;quot;&lt;em&gt;We were unprepared for the level of
+interest that the Jolla Bundle received and unfortunately we were not
+able to meet the demand in full&amp;quot;.&lt;/em&gt;C'est en fait une bonne nouvelle.
+L'augmentation du parc de smartphone Jolla est une condition&lt;em&gt;sine qua
+non&lt;/em&gt; pour que le nombre d'application du store augmente ,ce qui décidera
+plus de personne à l'acheter, ce qui augmentera le nombre d'application
+etc.&lt;/p&gt;
+&lt;p&gt;Pour s'excuser de cette impossibilité d'honorer la commande, ils
+m'annoncent également qu'ils sont en train de me préparer un &lt;em&gt;Jolla
+branded merchandise pack&lt;/em&gt;. En gros, des goodies. Pourquoi pas, y'a peut
+être des trucs sympa et ça m'aidera à faire leur promo. Ceci me laisse
+un tout petit peu sur ma faim tout de même. Je leur ai donc demandé s'il
+leur était possible de me donner un code promo pour l'achat d'une &lt;a class="reference external" href="/http://shop.jolla.com/eu_en/cat-the-other-half/the-other-half-aloe.html"&gt;coque
+Aloe&lt;/a&gt;.
+Et voici leur réponse :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hi,&lt;/p&gt;
+&lt;p&gt;thank you for your message.&lt;/p&gt;
+&lt;p&gt;We will make sure to send you an Aloe Other Half.&lt;/p&gt;
+&lt;p&gt;Have a great day!&lt;/p&gt;
+&lt;p&gt;Sincerely,
+Jolla Customer Care&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Je devrais donc recevoir une coque Aloe à la place.&lt;/p&gt;
+&lt;p&gt;La dessus, on peut dire que service consommateur de Jolla fait bien son
+taf. C'est pas pour rien que l'adresse email du support est
+&lt;a class="reference external" href="mailto:'care&amp;#64;jolla"&gt;'care&amp;#64;jolla&lt;/a&gt;....'&lt;/p&gt;
+</content><category term="jolla"></category></entry><entry><title>Prise en main du smartphone de Jolla</title><link href="https://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla.html" rel="alternate"></link><published>2015-02-21T00:29:00+01:00</published><updated>2015-02-21T00:29:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-02-21:/2015/02/prise-en-main-du-smartphone-de-jolla.html</id><summary type="html">&lt;p&gt;Il est enfin arrivé, après plus de 2 semaines d'attente pour cause de
+rupture de stock. Malheureusement le colis est incomplet puisqu'il
+manque 2 des 3 'Other Half' (les coques arrières). J'ai envoyé un mail à
+Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
+&lt;p&gt;Une fois cette légère déception …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il est enfin arrivé, après plus de 2 semaines d'attente pour cause de
+rupture de stock. Malheureusement le colis est incomplet puisqu'il
+manque 2 des 3 'Other Half' (les coques arrières). J'ai envoyé un mail à
+Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
+&lt;p&gt;Une fois cette légère déception passée, j'ai observé l'emballage d'un
+peu plus prêt. La boite est sympa, sobre. Le logo Jolla est écrit en
+argenté et entouré de lignes de code&lt;/p&gt;
+&lt;p&gt;[gallery columns=&amp;quot;2&amp;quot; ids=&amp;quot;417,418,422,424&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Le contenu est très basique : le smartphone, la batterie, un câble
+USB/micro USB et un bloc alim secteur sur lequel on peut branche le
+câble USB. Pas de pair d'écouteur, on a juste le strict minimum. Notons
+tout de même la présence de 2 stickers au nom de la firme.&lt;/p&gt;
+&lt;p&gt;Au premier démarrage, un tuto vous explique comment utiliser cet OS basé
+sur la gestuelle. En effet, que ce soit pour fermer une appli, valider
+ou annuler une action, retourner sur l'écran principal ou lire un SMS,
+toutes ces actions se feront par un mouvement de haut en bas, ou de
+gauche à droite ou inversement, sans oublier que si le geste commence en
+dehors de la surface de l'écran, cela n'aura pas le même effet que s'il
+prend son départ sur la surface d'affichage. C'est donc une nouvelle
+façon d’appréhender son smartphone et je doit avouer que j'étais assez
+enthousiaste en testant ces nouvelles fonctions. Cette façon de faire,
+très différente d'Androïd, iOS ou Windows Phone est vraiment
+rafraichissante, surtout après 5 années chez Androïd.&lt;/p&gt;
+&lt;p&gt;Lorsqu'un menu est disponible, une lumière vous indique que vous pouvez
+tirer l'écran pour faire apparaitre ce menu. La sélection d'une entrée
+du menu se fait en tirant plus ou moins.&lt;/p&gt;
+&lt;p&gt;[gallery ids=&amp;quot;431,427,426&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Lorsqu'on ferme une application en swipant de droite à gauche (pour la
+fermer réellement, c'est de haut en bas), celle ci se 'range' sur la
+page principale et reste tourner en tache de fond. SailfishOS est
+multitâche. Les applications qui ne sont pas fermées continues de se
+mettre à jour et ne sont pas gelées comme cela peut être le cas sur les
+autres plateforme. Vous pouvez avoir jusqu'à 9 applications en parallèle&lt;/p&gt;
+&lt;p&gt;[gallery ids=&amp;quot;428,429,430&amp;quot;]&lt;/p&gt;
+&lt;p&gt;Au premier démarrage, SailfishOS vous propose de connecter vos comptes
+Google, Facebook et Twitter. Il regroupera ensuite toutes les
+notifications au même endroit, que vous pourrez retrouver en swipant du
+bas vers le haut. On peut ensuite facilement ajouter un compte email, un
+compte xmpp (intégré sans appli à installer) et sont même présent les
+connecteurs CalDAV et CardDAV que j'ai pu brancher sur mon instance
+zimbra.&lt;/p&gt;
+&lt;p&gt;Mais que manque-t-il à ce smartphone en fait? Premièrement, le store
+n'est pas très fourni. Il est cependant possible d'installer des
+applications Android en installant quelques market. Je n'ai pas encore
+testé cette fonctionnalité.&lt;/p&gt;
+&lt;p&gt;L'écran n'offre pas une très bonne définition, ainsi que la camera 8Mp.
+Les photos sont de piètre qualité par rapport à ce dont on est habitué.
+L'appareil photo à même tendance à prendre les photos après vous avoir
+annoncé que la photo à été prise, ce qui peut avoir tendance à faire des
+photos floues.&lt;/p&gt;
+&lt;p&gt;Ce n'est pas un foudre de guerre, si vous voulez jouer, passez votre
+chemin. Par contre, l'OS est très fluide dans son utilisation.&lt;/p&gt;
+&lt;p&gt;Je suis sûr qu'il a plein d'autres défauts que je trouverai lors de son
+utilisation quotidienne. Ceci dit, l'OS me semble simple à appréhender.
+Le système lumineux indiquant les actions possibles est très bien pensé
+et fait bien son boulot de guide.&lt;/p&gt;
+</content><category term="jolla"></category><category term="jolla"></category><category term="sailfishos"></category></entry><entry><title>Jolla - Le Smartphone Linux</title><link href="https://blog.devarieux.net/2015/02/jolla-le-smartphone-linux.html" rel="alternate"></link><published>2015-02-07T18:01:00+01:00</published><updated>2015-02-07T18:01:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-02-07:/2015/02/jolla-le-smartphone-linux.html</id><summary type="html">&lt;div class="section" id="flash-back"&gt;
+&lt;h2&gt;Flash Back&lt;/h2&gt;
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a class="reference external" href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+de
+Google&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
+stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
+&lt;a class="reference external" href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
+pour des …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;div class="section" id="flash-back"&gt;
+&lt;h2&gt;Flash Back&lt;/h2&gt;
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a class="reference external" href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+de
+Google&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
+stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
+&lt;a class="reference external" href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
+pour des raisons historique, même si de moins en moins de personnes de
+mon entourage l'utilise. Ce compte Google est également celui que
+j'utilise sur mon smartphone Android.&lt;/p&gt;
+&lt;p&gt;En gros, Android est le dernier lien solide qui m'attache à Google. Ce
+lien va bientôt sauter. Je viens en effet de commander le smartphone de
+Jolla sous Sailfish OS. En gros, du full Linux, sans la sous couche Java
+incluse dans Android.&lt;/p&gt;
+&lt;p&gt;L'entreprise Jolla qui fabrique les smartphones du même nom a été créée
+par des anciens cadres et ingénieurs de chez Nokia et Sailfish OS
+reprend les bases de MeeGo, l'OS du Nokia N9, basé sur Qt. Une couche de
+compatibilité est ajoutée pour pouvoir faire fonctionner plus ou moins
+bien les applis Android.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="comment-est-ce-que-je-me-suis-decide-a-faire-cet-achat"&gt;
+&lt;h2&gt;Comment est ce que je me suis décidé à faire cet achat?&lt;/h2&gt;
+&lt;p&gt;Cela faisait un moment que je souhaitais changer mon Nexus 4. Il
+fonctionne encore très bien, Madame en héritera. J'attendais avec
+impatience la sortie du Nexus 6 mais la politique tarifaire sur ce
+modèle m'a fait renoncer à cet achat. Il est hors de question que je
+mette plus de 300/350€ dans un smartphone.&lt;/p&gt;
+&lt;p&gt;Et puis il y a 10 jours un amis m'a montré son Jolla, m'a expliqué le
+fonctionnement, la gestion du multi tâches, comment on passe d'une appli
+à l'autre etc.. Et enfin le prix : 250€. Alléchant... Le lendemain, je
+me baladais sur le site de Jolla et étais à 2 doigts de faire chauffer
+la CB quand je me suis dit que ce n'était peut être pas le moment de
+faire ce genre de dépense. Le jeudi suivant, je tombe sur une nouvelle
+offre : &lt;a class="reference external" href="http://jollafr.org/code-promo-le-jolla-pour-200e-fosdem2015/"&gt;Code promo, le Jolla pour 200€ !
+#FOSDEM2015&lt;/a&gt;.
+Et voilà comment je me suis retrouvé à commander la bête sur le &lt;a class="reference external" href="http://shop.jolla.com/eu_en/"&gt;shop de
+Jolla.&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="et-maintenant"&gt;
+&lt;h2&gt;Et Maintenant&lt;/h2&gt;
+&lt;p&gt;Alors évidemment, ne rêvons pas trop, tout ne sera pas rose. Je suppose
+qu'il va y avoir des bugs, que je vais perdre en confort mais comme le
+dit si bien l'ami qui m'a montré son Jolla la première fois, c'est aussi
+un achat engagé.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;J'attends maintenant impatiemment de recevoir mon colis.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="jolla"></category><category term="google"></category><category term="jolla"></category><category term="Linux"></category></entry></feed>

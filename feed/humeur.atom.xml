@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Humeur</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/humeur.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-09-25T07:14:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Scripter, programmer</title><link href="https://blog.devarieux.net/2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-09-25:/2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - humeur</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/humeur.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-09-25T07:14:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Scripter, programmer</title><link href="https://blog.devarieux.net/2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-09-25:/2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
 ingénieur réseau chez Brocade, a présenté un discours très intéressant
 au &lt;a class="reference external" href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
 sujet de la programmabilité en réseau.&lt;/p&gt;
@@ -67,7 +67,95 @@ religion de l'IT. Si vous avez besoin d'une scie, utilisez une scie. Si
 vous avez besoin d'une scie sauteuse pour mieux scier, construisez votre
 scie sauteuse mais faite attention de ne pas devenir un constructeur de
 scie sauteuse qui a oublié comment scier.&lt;/p&gt;
-</content><category term="Humeur"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-06-26:/2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
+</content><category term="humeur"></category></entry><entry><title>Playskool présente: Numéricable concurrence Netflix</title><link href="https://blog.devarieux.net/2014/09/numericable-concurrence-netflix.html" rel="alternate"></link><published>2014-09-16T11:02:00+02:00</published><updated>2014-09-16T11:02:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2014-09-16:/2014/09/numericable-concurrence-netflix.html</id><summary type="html">&lt;p&gt;Sous ce titre un peu taquin se cache une grande frustration. Nous avons
+tous plus ou moins l'habitude que nos différents fournisseurs tentent de
+nous la mettre bien profond avec différents services inutiles et mal
+conçus.&lt;/p&gt;
+&lt;p&gt;Hier, Lundi 15 Septembre, nous avons atteint, je crois, le zenith du
+foutage de …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Sous ce titre un peu taquin se cache une grande frustration. Nous avons
+tous plus ou moins l'habitude que nos différents fournisseurs tentent de
+nous la mettre bien profond avec différents services inutiles et mal
+conçus.&lt;/p&gt;
+&lt;p&gt;Hier, Lundi 15 Septembre, nous avons atteint, je crois, le zenith du
+foutage de gueule, le paroxysme de la sodomie, les&lt;a class="reference external" href="http://lesabyssales.fr/"&gt;profondeurs
+abyssales&lt;/a&gt; de mon trou du cul. Et j'ai beau
+ajouté du beurre, ça passe toujours pas. Vous l'avez compris, je suis
+colère, &lt;a class="reference external" href="https://www.youtube.com/watch?v=n4IEaJo43tc"&gt;je suis violence parce que je suis
+trahison&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Bien... Maintenant que vous avez compris comment je me sens je vais vous
+dire ce qui me met dans cet état. Hier donc, Numéricable a lancé son
+service pour concurrencer Netflix : LaBox Series. &lt;a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2014/09/CP_Numericable_LaBox-Series.pdf"&gt;Le communiqué de
+presse&lt;/a&gt;&amp;nbsp;est
+limpide : &amp;quot;Un accès SIMPLE et GRATUIT à 3000 épisodes de séries par mois
+pour les abonnés LaBox Fibre&amp;quot;. Parfait me dis-je, je suis abonné à LaBox
+Fibre avec une offre Power, même si le catalogue n'est sans doute pas
+encore énorme, ça semble être un bon début, surtout si &lt;a class="reference external" href="http://www.zdnet.fr/actualites/netflix-en-france-ce-sera-sans-numericable-qui-riposte-avec-labox-series-39806307.htm"&gt;Numéricable
+refuse de
+développer&lt;/a&gt;
+une interface Netflix pour LaBox. Tout guilleret, je rentre donc chez
+moi hier soir et je me lance dans l'exploration du service en question.&lt;/p&gt;
+&lt;p&gt;Je commence par regarder le catalogue. Mouais, beaucoup de manga assez
+ancien, des séries moyennement intéressantes et surtout peu d'épisodes
+par série. Vous ne trouverez pas de saison 1, sauf s'il n'y qu'une seule
+saison et certaines saisons sont incomplètes. Je commence à ronger mon
+frein mais je suis bonne pâte et je leur trouve quelques excuses : c'est
+le premier jour de lancement, ça a été fait dans la précipitation pour
+contrer Netflix, ça va s'étoffer.&lt;/p&gt;
+&lt;p&gt;Une fois que j'ai fait le tour du pauvre catalogue (Ha si, y'a chapi
+chapo quand même), je lance l'épisode 1 de la saison 1 de&amp;nbsp;&lt;em&gt;Äkta
+människor&lt;/em&gt;(la série suédoise sur la banalisation des androïdes (les
+robots, pas les smartphones)) et là... STUPEUR ET TREMBLEMENT :&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ON ME DEMANDE DE PAYER!!!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Ho, pas grand chose, 1,40€ je crois de mémoire, pour pouvoir voir
+l'épisode pendant 48h, en passant par ArteVOD. WHAT THE FUCK? C'est
+marqué que c'est &lt;strong&gt;GRATUIT&lt;/strong&gt; putain! Depuis quand payer à l'acte c'est
+gratuit? Vous la sentez bien la sodomie là? Parce que moi j'ai encore
+mal ce matin.&lt;/p&gt;
+&lt;p&gt;Si j'étais un peu mesquin, je dirais que ce service est une incitation
+pour que les abonnés fibre migrent vers Bouygues qui s'appuie sur le
+réseau numéricable et proposera Netflix sur sa box au mois de novembre.&lt;/p&gt;
+</content><category term="humeur"></category><category term="fibre"></category><category term="nc"></category><category term="netflix"></category><category term="numericable"></category><category term="SVOD"></category><category term="VOD"></category></entry><entry><title>Résolutions de début d'année</title><link href="https://blog.devarieux.net/2013/12/resolution-de-debut-dannee.html" rel="alternate"></link><published>2013-12-28T18:22:00+01:00</published><updated>2013-12-28T18:22:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-12-28:/2013/12/resolution-de-debut-dannee.html</id><summary type="html">&lt;p&gt;En ce début d'année 2014, voici mes projets informatiques personnels
+dont j'aimerai terminer la mise en œuvre rapidement.
+Le problème n'est pas de réunir les compétences mais tout simplement
+de prendre le temps de m'y mettre sérieusement pour enfin les terminer
+proprement.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1 - Terminer ma migration des services Google&lt;/strong&gt;
+J'ai …&lt;/p&gt;</summary><content type="html">&lt;p&gt;En ce début d'année 2014, voici mes projets informatiques personnels
+dont j'aimerai terminer la mise en œuvre rapidement.
+Le problème n'est pas de réunir les compétences mais tout simplement
+de prendre le temps de m'y mettre sérieusement pour enfin les terminer
+proprement.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1 - Terminer ma migration des services Google&lt;/strong&gt;
+J'ai déjà avec succès migré mes contacts, mon agenda et le stockage
+cloud avec une instance OwnCloud. Le problème majeur reste la migration
+des emails.
+En effet, malgré les efforts fournis par les différents hébergeurs de
+solutions mutualisées, je n'arrive toujours pas à avoir des emails qui
+ne partent pas dans les boites spams de mes contacts qui utilisent des
+webmails gmail, outlook ou yahoo.
+Sans solutions pérennes rapidement, je me verrai peu être dans
+l'obligation d'investir dans un serveur dédié. Bien plus cher, mais au
+moins je maîtriserai le serveur SMTP.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2 - Mettre en place un serveur de musique à la maison&lt;/strong&gt;
+L'ampli, les enceintes, la platine vinyle sont en place. Il me reste
+à ajouter une solution simple pour lire de la musique numérique.
+Pour l'instant, lorsque je veux écouter des fichiers FLAC ou
+découvrir de nouveaux morceaux sur soundcloud, je débranche les RCA sur
+la box et les branche sur un câble Jack/RCA. Ça fonctionne bien, mais ça
+fait trainer un câble dans le salon. J'aimerai donc, avec les 3 ou 4 PC
+portables qui ne fonctionnent plus et qui sont stockés à l'arrache dans
+le bureau, monter un vrai PC portable, le plus silencieux possible, avec
+un petit serveur MPD.
+Avec ça et un client Android MPD, je pourrais gérer mes playlists
+directement depuis mon canapé.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3 - Changer de distribution&lt;/strong&gt;
+Cela devrait être fait rapidement. Pour l'instant, c'est Ubuntu qui
+tourne sur le laptop. Cela fait environ 4 mois et pour être honnête, je
+n'aime pas du tout (remarquez l'effort surhumain que je fais pour ne pas
+dire &amp;quot;&lt;strong&gt;*C'est vraiment de la merde cette grosse bouse!!!!!*&lt;/strong&gt;&amp;quot;). Je
+pense revenir rapidement sous Mageia qui est ma distribution &lt;em&gt;out of the
+box&lt;/em&gt; favorite. Surtout depuis qu'elle supporte la technologie Optimus.&lt;/p&gt;
+</content><category term="humeur"></category><category term="laptop"></category><category term="mylife"></category><category term="owncloud"></category><category term="pc"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-06-26:/2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
 confirmé. Tous les plus grands services en ligne américains mettent
 quasi à disposition les données qu'ils possèdent sur leurs utilisateurs
 aux services gouvernementaux des USA. Cela pose plusieurs problèmes.
@@ -124,7 +212,78 @@ données perso des serveurs de Google, le géant du web aura toujours mes
 données&amp;nbsp;grâce&amp;nbsp;à mes amis qui synchronisent leurs contacts
 et&amp;nbsp;reçoivent&amp;nbsp;mes emails.&lt;/p&gt;
 &lt;p&gt;Ouais, je sais, c'est&amp;nbsp;ballot...&lt;/p&gt;
-</content><category term="Humeur"></category><category term="google"></category><category term="owncloud"></category><category term="prism"></category><category term="snowden"></category></entry><entry><title>To bulle or not to bulle</title><link href="https://blog.devarieux.net/2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-05-22:/2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
+</content><category term="humeur"></category><category term="google"></category><category term="owncloud"></category><category term="prism"></category><category term="snowden"></category></entry><entry><title>Good Bye Bouygues Telecom</title><link href="https://blog.devarieux.net/2012/11/good-bye-bouygues-telecom.html" rel="alternate"></link><published>2012-11-02T16:00:00+01:00</published><updated>2012-11-02T16:00:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-11-02:/2012/11/good-bye-bouygues-telecom.html</id><summary type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
+ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
+il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
+&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
+&lt;p&gt;J'avais en …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
+ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
+il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
+&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
+&lt;p&gt;J'avais en plus groupé mon forfait téléphone et Internet chez eux, avec
+une offre BBox Fibre. Donc, lors de mon déménagement en Septembre 2012
+et puisque leur offre Fibre fonctionnait plutôt bien dans l'ensemble,
+j'ai procédé au déménagement de ma ligne Fibre à ma nouvelle adresse,
+non sans les avoir appelés 3 fois avant afin de m'assurer que mon
+nouveau logement était bien relié à la fibre. &amp;quot;Oui oui&amp;quot; m'a t'on dit à
+plusieurs reprises.&lt;/p&gt;
+&lt;p&gt;Ainsi, le 24 Septembre, un technicien devait se présenter pour nous
+raccorder. Le technicien n'est pas venu (classique). J'ai pris ma plus
+grosse voix pour appeler le service client et demander des explications
+: &amp;quot;Ha mais vous n'êtes pas relié à la fibre monsieur, le rendez-vous à
+été annulé le 16 Septembre&amp;quot;.&lt;/p&gt;
+&lt;p&gt;Ok, donc merci de m'avoir prévenu pour le rendez-vous annulé, ça fait
+plaisir...! À la place de l'offre fibre, j'ai donc droit à une offre
+imbattable de 4Mb/s à la place des 100Mb/s que j'avais avant. Et
+attention, je ne paierais même pas plus cher, ils me le font
+gracieusement au même prix... Ahem... Comment vous dire...? Je pense
+plutôt que je vais résilier mon offre Internet Fibre et aller chez
+Numéricable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="choisir-un-nouveau-forfait-telephone"&gt;
+&lt;h2&gt;Choisir un nouveau forfait téléphone&lt;/h2&gt;
+&lt;p&gt;Puisque je quittais l'offre Bbox, il me fallait choisir un forfait de
+téléphonie. Je pensais pouvoir simplement revenir vers l'offre que j'ai
+toujours eu, soit 2h d'appel + appels illimités le soir + sms illimité +
+3G avec 2Go de fair use. Pour environ 35€ par mois avec smartphone
+subventionné.&lt;/p&gt;
+&lt;p&gt;Malheureusement, ce type de forfait n'existe plus et j'avais le choix
+entre une offre 'Tout illimité + 3Go de fair use à 42Mbps' à 60€ ou une
+offre avec 'Tout illimité + 500Mo de fair use à 7.2Mbps'. Je consomme un
+peu plus de 1.5Go de data par mois sur mon Nexus S, donc il me fallait
+une offre avec au moins 3Go de data. Cela signifiait payer 60€ par mois,
+juste pour le téléphone alors que c'est ce que je payais avant pour
+Téléphone + Internet Fibre.&lt;/p&gt;
+&lt;p&gt;Il me restait un peu moins d'un an d'engagement. Je me suis donc dit que
+c'était le bon moment pour partir à moindre frais.&lt;/p&gt;
+&lt;p&gt;J'ai choisi l'offre Eden 1h. Pas de data, pas de SMS, rien. Juste 1h
+d'appel. De suite après avoir souscris à ce mini forfait, je me suis
+rendu sur le site de B&amp;amp;You pour faire l'acquisition d'une nouvelle carte
+SIM avec un forfait tout illimité à 20€. La somme que je dois à Bouygues
+pour pouvoir partir est donc de (14€ x 10 mois)/3 = 35€. Somme remboursé
+en 1 mois.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="et-maintenant"&gt;
+&lt;h2&gt;Et maintenant?&lt;/h2&gt;
+&lt;p&gt;Bon, oui, je vais maintenant devoir acheter moi même mes smartphones.&lt;/p&gt;
+&lt;p&gt;Ici aussi, faisons un rapide calcul.&lt;/p&gt;
+&lt;p&gt;Avec le forfait à 60€ de chez Bouygues et smartphone subventionné,
+j'aurais payé à l'année, smartphone non compris : &lt;strong&gt;60*12 = 720€&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Avec le forfait à 20€ de chez B&amp;amp;You et un smartphone à 349€ (par
+exemple, le LG Nexus 4 16G), cela me fera à l'année : &lt;strong&gt;20*12 + 349 =
+589€&lt;/strong&gt; (En considérant que je change de smartphone une fois par an, ce
+qui n'est pas le cas. (bon ok, je change tous les 18 mois...)).&lt;/p&gt;
+&lt;p&gt;J'économise donc environ &lt;strong&gt;130€&lt;/strong&gt;, sans compter que chez Bouygues et son
+forfait à 60€, il faut au minimum débourser 50 ou 80€ pour un smartphone
+dernier cri subventionné.&lt;/p&gt;
+&lt;p&gt;Quand je pense qu'on s'est fait pigeonner (pour le dire poliment)
+pendant toutes ses années...&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="humeur"></category><category term="B&amp;amp"></category><category term="You, Bouygues, fibre, forfait, Free, internet"></category></entry><entry><title>To bulle or not to bulle</title><link href="https://blog.devarieux.net/2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-05-22:/2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
 confiance, pour l'instant en tout cas, en Facebook et sa capacité à
 générer des revenus. Le titre FB a eu du mal à se maintenir pour son
 premier jour de cotation Vendredi 18 Mai puis a dévissé complètement le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
@@ -212,7 +371,7 @@ startups de se développer sur les idées novatrices. Ceci risque de
 nécroser le developpement du net et ralentir son developpement. Cette
 problématique mériterait un article dédié, nous en reparlerons donc dans
 un prochain billet.&lt;/p&gt;
-</content><category term="Humeur"></category><category term="bulle"></category><category term="économie"></category><category term="facebook"></category><category term="finance"></category></entry><entry><title>Lettre ouverte à Google</title><link href="https://blog.devarieux.net/2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-08-11:/2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
+</content><category term="humeur"></category><category term="bulle"></category><category term="économie"></category><category term="facebook"></category><category term="finance"></category></entry><entry><title>Lettre ouverte à Google</title><link href="https://blog.devarieux.net/2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-08-11:/2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
 &lt;p&gt;Je me souviens encore de notre première rencontre il y a une douzaine
 d’années.&lt;/p&gt;
 &lt;p&gt;Douze ans, dans l’informatique, c’est long. Sur Internet c’est même une
@@ -284,7 +443,7 @@ moins glorieuses. Je te fais confiance pour&amp;nbsp;reconnaître&amp;nbsp;tes e
 quand tu en commettras, comme tu l’as déjà fait par le passé. Pour tout
 cela, moi et tous les autres utilisateurs seront vigilant afin que le
 pire ne se produise pas.&lt;/p&gt;
-</content><category term="Humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="https://blog.devarieux.net/2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-07-24:/2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
+</content><category term="humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="https://blog.devarieux.net/2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-07-24:/2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
 avant le boom des réseaux sociaux. Internet était alors une chambre
 secrète que peu de personnes avaient visité. Nous trollions avant que ce
 soit appelé 'troller' et nous le faisions plus pour l'exercice
@@ -328,4 +487,4 @@ une idiocratie comme cela semble être le cas avec Facebook. En tant que
 personnes ayant utilisé Internet dans ses premiers jours, nous avons
 grandi, mûri, et nous devons utiliser nos connaissances numériques pour
 accompagner une nouvelle génération.&lt;/p&gt;
-</content><category term="Humeur"></category><category term="google"></category><category term="idiot"></category><category term="myspace"></category><category term="soundcloud"></category><category term="web"></category></entry></feed>
+</content><category term="humeur"></category><category term="google"></category><category term="idiot"></category><category term="myspace"></category><category term="soundcloud"></category><category term="web"></category></entry></feed>
