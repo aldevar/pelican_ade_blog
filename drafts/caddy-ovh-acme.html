@@ -20,7 +20,7 @@
         href="https://blog.devarieux.net/feed/atom.xml">
   <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
         href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="">
+  <meta name="description" content="Après avoir présenté dans un premier article ce qu'est Caddy et son utilisation de façon basique, puis dans un second le pilotage de Caddy par API ainsi qu'une configuration un peu plus avançée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …">
 
 
 </head>
@@ -71,7 +71,156 @@
       </ul>
     </header>
     <div class="content">
-      
+      <p>Après avoir présenté dans un <a class="reference external" href="/2021/02/caddy-presentation.html">premier article</a> ce qu'est Caddy et son utilisation de façon basique, puis dans <a class="reference external" href="/2021/02/caddy-api.html">un second</a> le pilotage de Caddy par API ainsi qu'une configuration un peu plus avançée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge <a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01">DNS-01</a>.</p>
+<p>Le challenge DNS à l'avantage de pouvoir être utilisé pour générer un certificat DV wildcard. Une fois passé un certains nombre de sous domaines servis par un reverse proxy, il devient intéressant d'utiliser ce type de certificat afin d'éviter de générer trop de requêtes vers les serveurs de Let's Encrypt. De plus, avec un seul certificat à gérer pour l'ensemble des sous domaines, la gestion devient simplifiée, et notamment la supervision ou même le renouvellement.</p>
+<p>Caddy intègre de base la gestion de Let's Encrypt pour les challenges HTTP-01 car celui ci est universel et ne dépend d'aucun autre services. C'est un échange réalisé directement entre le serveur Caddy et les serveurs de Let's Encrypt. Pour le challenge DNS-01, il y a un intermediaire. Cet intermediaire est le serveur DNS du domaine pour lequel on souhaite générer un certificat wildcard. De part la multitude de serveurs disponible et de prestataires fournissant ces services, il est difficile d'avoir un protocole unifié de modifications distante des entrées DNS. A ma connaissance, le seul standard qui existe pour cela est la <a class="reference external" href="https://tools.ietf.org/html/rfc2136">RFC2136</a> qui ne semble pas être implémenté chez la plupart des fournisseurs de services DNS.</p>
+<p>Nous allons donc voir comment, avec Caddy, générer un (des) certificat wildcard avec OVH en fournisseur de service DNS. La procédure est assez similaire avec les autres fournisseurs qui ont, je l'espère, pris plus de soin dans la documentation de cette fonctionnalité.</p>
+<p>Caddy n'intègre pas, de base, l'ensemble des plugins permettant de résoudre les challenges DNS de tous les fournisseurs. Pour intégrer le bon plugins, il est nécessaire de compiler Caddy. L'opération est particulièrement simple à réaliser et à l'avantage de produire en sortie un binaire unique qu'il est ensuite facile de déployer sur ses serveurs. La compilation de Caddy est assez bien expliquée dans <a class="reference external" href="https://caddyserver.com/docs/build#xcaddy">la documentation</a> et voici la liste des <a class="reference external" href="https://caddyserver.com/docs/modules/">plugins disponible</a>. A ce jour, aucun plugin spécifique n'a été écrit pour OVH, il faut donc se rabbatre sur le module <a class="reference external" href="https://github.com/caddy-dns/lego-deprecated">Lego Deprecated</a>. Ce module utilise une ancienne API mais est actuellement le seule qui permet de gérer un grand nombre de fournisseurs de DNS, dont OVH.</p>
+<div class="section" id="compilation-de-caddy">
+<h2>Compilation de Caddy</h2>
+<p>Pour compiler Caddy, nous avons besoin de 2 choses. Golang et le binaire xcaddy qui permet de facilement compiler caddy avec les modules spéicifiés. On commence donc par installer Golang et déclarer son binaire dans le PATH.</p>
+<div class="highlight"><pre><span></span># wget https://golang.org/dl/go&lt;version&gt;.linux-amd64.tar.gz
+# tar -C /usr/local -xzf go&lt;version&gt;.linux-amd64.tar.gz
+# rm -f go&lt;version&gt;.linux-amd64.tar.gz
+</pre></div>
+<p>On édite le fichier /etc/profile pour ajouter le binaire go dans le PATH. A la fin du fichier on ajoute :</p>
+<div class="highlight"><pre><span></span>export PATH=$PATH:/usr/local/go/bin
+</pre></div>
+<p>Puis, on source le fichier pour mettre à jour le PATH et on s'assure que go est bien installé en affichant la version (ici 1.16)</p>
+<div class="highlight"><pre><span></span># source /etc/profile
+# go version
+go version go1.16 linux/amd64
+</pre></div>
+<p>Puis on récupère le binaire xcaddy et on le rend executable. Lors de la redaction cet article, la dernière version disponible est la 0.1.8.</p>
+<div class="highlight"><pre><span></span># wget https://github.com/caddyserver/xcaddy/releases/download/v0.1.8/xcaddy_0.1.8_linux_amd64.tar.gz
+# tar xvzf xcaddy_0.1.8_linux_amd64.tar.gz
+# ls
+LICENSE  README.md  xcaddy  xcaddy_0.1.8_linux_amd64.tar.gz
+# chmod o+x xcaddy
+</pre></div>
+<p>Enfin, avec l'aide de xcaddy, on compile caddy avec le plugin lego-deprecated. On se retrouve avec le binaire caddy dans le répertoire.</p>
+<div class="highlight"><pre><span></span>./xcaddy build --with github.com/caddy-dns/lego-deprecated
+# ls
+LICENSE  README.md  caddy  xcaddy  xcaddy_0.1.8_linux_amd64.tar.gz
+</pre></div>
+</div>
+<div class="section" id="configuration-d-ovh">
+<h2>Configuration d'OVH</h2>
+<p>Il faut autoriser Caddy à créer et supprimer des entrées DNS sur les serveurs d’OVH. Pour cela, il faut créer une application chez OVH, via ce lien : <a class="reference external" href="https://eu.api.ovh.com/createApp/">https://eu.api.ovh.com/createApp/</a></p>
+<p>On rentre sont account ID aa012345-ovh et mot de passe. On choisi un nom d’application ici <cite>xcaddy-dns-challenge</cite> ainsi qu’une description. OVH affiche alors l’Application Key et l’Application Secret. On les conserve bien au chaud pour la suite.</p>
+<p>Ensuite, il faut donner des droits à cette application. On réalise cela par un call API directement sur la console OVH.</p>
+<div class="highlight"><pre><span></span>curl -XPOST -H &quot;X-Ovh-Application: &lt;Application Key&gt;&quot; -H &quot;Content-type: application/json&quot; https://eu.api.ovh.com/1.0/auth/credential -d &#39;{&quot;accessRules&quot;:[{&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/record&quot;},{&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/refresh&quot;},{&quot;method&quot;:&quot;DELETE&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/record/*&quot;}],&quot;redirection&quot;: &quot;https://www.foo.com&quot;}&#39;
+</pre></div>
+<p>La partie redirection a la fin ne nous intéresse pas mais est obligatoire. Elle indique vers quelle page l’application doit être redirigée une fois connectée.</p>
+<p>En retour, on obtient un JSON avec la consumer Key. C’est cette info qu’il faut conserver.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;validationUrl&quot;</span><span class="p">:</span><span class="s2">&quot;https://eu.api.ovh.com/auth/?credentialToken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span><span class="p">,</span><span class="nt">&quot;consumerKey&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;The Consumer Key&gt;&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;pendingValidation&quot;</span><span class="p">}</span>
+</pre></div>
+<p>On voit que l'état est “Pending Validation”. Afin de valider, il faut se rendre sur le lien validationUrl.</p>
+<p>Sur ce lien, on entre de nouveau ses codes d'accès OVH puis on choisi la durée de validité de l’accès.
+On a maintenant toutes les infos dont nous avons besoin :
+* Application Key
+* Application Secret
+* Consumer Key</p>
+</div>
+<div class="section" id="configuration-de-caddy">
+<h2>Configuration de Caddy</h2>
+<p>Voyons maintenant comment générer un certificat wildcard pour un domaine puis servir plusieurs sous domaine en dessous. J'ai mis un peu de temps à trouver la bonne façon faire, la voici servie pour vous sur un plateau :)
+Voici un extrait de mon fichier de configuration, je vais décrire en dessous les différentes sections.</p>
+<div class="highlight"><pre><span></span>*.domain.com {
+    tls {
+            dns lego_deprecated ovh
+    }
+
+    @backend host backend.domain.com
+    reverse_proxy @backend 10.0.0.2:3001
+
+    @prodapi {
+            host prod.domain.com
+            path /api/v1/*
+    }
+
+    @prod {
+            host prod.domain.com
+            not path /api/v1/
+    }
+
+    reverse_proxy @prodapi 10.0.0.1:3001
+    reverse_proxy @prod 10.0.0.1:3000
+
+
+    }
+</pre></div>
+<p>On déclare d'abord <cite>*.domain.com</cite> qui est le domain pour lequel on souhaite que Caddy génère un certificat wildcard. Pour cela, une première section tls avec l'entrée <cite>dns lego_deprecated ovh</cite> signifie :
+* dns: Résolution du challenge DNS-01
+* lego_deprecated: Utilisation du module lego_deprecated
+* ovh: Parmi les providers proposés par lego_deprecated, utiliser OVH.</p>
+<p>L'entrée <cite>&#64;backend host backend.domain.com</cite> est un matcher. C'est à dire qu'on place sous le nom <cite>backend</cite> l'ensemble des requêtes dont le SNI est <cite>backend.domain.com</cite>. Puis, juste en dessous, l'ensemble des requêtes qui matchent <cite>&#64;backend</cite> sont reverse proxyfiées (oui, je sais...) vers 10.0.0.2:3001.</p>
+<p>Les 2 entrées suivantes sont un peu similaires au matcher <cite>&#64;backend</cite> mais comme je devais spécifié plusieurs filtres (1 sur le SNI et 1 sur le path), les filtres sont placés dans un bloc d'accolades. Ensuite, les matchers <cite>&#64;prodapi</cite> et <cite>&#64;prod</cite> sont également reverse proxyfiés (oui, bon, ça va...) vers leurs serveurs respectifs.</p>
+<p>On est prêt à lancer Caddy. Il faut cependant trouver un moyen de lui spécifier les clés et secret OVH pour que le module lego_deprecated puisse se connecter et générer les entrées DNS. Pour cela, plusieurs solutions. La plus simple est d'executer Caddy depuis le terminal avec les variables d'environnement, ce cette façon :</p>
+<div class="highlight"><pre><span></span>OVH_APPLICATION_KEY=&lt;Application Key&gt; OVH_APPLICATION_SECRET=&lt;Application Secret&gt; OVH_CONSUMER_KEY=&lt;Consumer Key&gt; OVH_ENDPOINT=ovh-eu ./caddy run --config Caddyfile
+</pre></div>
+<p>C'est bien, ça fonctionne mais c'est pas vraiment production ready. L'autre solution est de placer ces variables d'environnement directement dans le fichier systemd de Caddy. Dans la section <cite>[Service]</cite> on peut ajouter des variables d'environnement de cette façon :</p>
+<div class="highlight"><pre><span></span>[Service]
+User=caddy
+Group=caddy
+ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
+ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Environment=&#39;OVH_APPLICATION_KEY=&lt;Application Key&gt;&#39;
+Environment=&#39;OVH_APPLICATION_SECRET=&lt;Application Secret&gt;&#39;
+Environment=&#39;OVH_CONSUMER_KEY=&lt;Consumer Key&gt;&#39;
+Environment=&#39;OVH_ENDPOINT=ovh-eu&#39;
+</pre></div>
+<p>Normalement, dans les logs, on devrait voir quelque chose comme ça. En tout cas, c'est ce qu'on vise :)</p>
+<div class="highlight"><pre><span></span>systemd[1]: Started Caddy.
+caddy[575954]: caddy.HomeDir=/var/lib/caddy
+caddy[575954]: caddy.AppDataDir=/var/lib/caddy/.local/share/caddy
+caddy[575954]: caddy.AppConfigDir=/var/lib/caddy/.config/caddy
+caddy[575954]: caddy.ConfigAutosavePath=/var/lib/caddy/.config/caddy/autosave.json
+caddy[575954]: caddy.Version=v2.3.0
+caddy[575954]: runtime.GOOS=linux
+caddy[575954]: runtime.GOARCH=amd64
+caddy[575954]: runtime.Compiler=gc
+caddy[575954]: runtime.NumCPU=1
+caddy[575954]: runtime.GOMAXPROCS=1
+caddy[575954]: runtime.Version=go1.16
+caddy[575954]: os.Getwd=/
+caddy[575954]: LANG=C.UTF-8
+caddy[575954]: PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+caddy[575954]: HOME=/var/lib/caddy
+caddy[575954]: LOGNAME=caddy
+caddy[575954]: USER=caddy
+caddy[575954]: OVH_APPLICATION_KEY=&lt;Application Key&gt;
+caddy[575954]: OVH_APPLICATION_SECRET=&lt;Application Secret&gt;
+caddy[575954]: OVH_CONSUMER_KEY=&lt;Consumer Key&gt;
+caddy[575954]: OVH_ENDPOINT=ovh-eu
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.2837744,&quot;msg&quot;:&quot;using provided configuration&quot;,&quot;config_file&quot;:&quot;/etc/caddy/Caddyfile&quot;,&quot;config_adapter&quot;:&quot;&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.294112,&quot;logger&quot;:&quot;admin&quot;,&quot;msg&quot;:&quot;admin endpoint started&quot;,&quot;address&quot;:&quot;tcp/localhost:2019&quot;,enforce_origin&quot;:false,&quot;origins&quot;:[&quot;localhost:2019&quot;,&quot;[::1]:2019&quot;,&quot;127.0.0.1:2019&quot;]}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.2947812,&quot;logger&quot;:&quot;http&quot;,&quot;msg&quot;:&quot;server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS&quot;,&quot;server_name&quot;:&quot;srv0&quot;,&quot;https_port&quot;:443}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.2949548,&quot;logger&quot;:&quot;http&quot;,&quot;msg&quot;:&quot;enabling automatic HTTP-&gt;HTTPS redirects&quot;,&quot;server_name&quot;:&quot;srv0&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.2992623,&quot;logger&quot;:&quot;http&quot;,&quot;msg&quot;:&quot;enabling automatic TLS certificate management&quot;,&quot;domains&quot;:[&quot;*.domain.com&quot;]}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3005319,&quot;msg&quot;:&quot;autosaved config&quot;,&quot;file&quot;:&quot;/var/lib/caddy/.config/caddy/autosave.json&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3007138,&quot;msg&quot;:&quot;serving initial configuration&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3020074,&quot;logger&quot;:&quot;tls.obtain&quot;,&quot;msg&quot;:&quot;acquiring lock&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3032272,&quot;logger&quot;:&quot;tls.obtain&quot;,&quot;msg&quot;:&quot;lock acquired&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3185842,&quot;logger&quot;:&quot;tls.cache.maintenance&quot;,&quot;msg&quot;:&quot;started background certificate maintenance&quot;,&quot;cache&quot;:&quot;0xc0009a20e0&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295347.3187766,&quot;logger&quot;:&quot;tls&quot;,&quot;msg&quot;:&quot;cleaned up storage units&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295348.2573807,&quot;logger&quot;:&quot;tls.issuance.acme&quot;,&quot;msg&quot;:&quot;waiting on internal rate limiter&quot;,&quot;identifiers&quot;:[&quot;*.domain.com&quot;]}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295348.2576807,&quot;logger&quot;:&quot;tls.issuance.acme&quot;,&quot;msg&quot;:&quot;done waiting on internal rate limiter&quot;,&quot;identifiers&quot;:[&quot;*.domain.com&quot;]}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295348.582178,&quot;logger&quot;:&quot;tls.issuance.acme.acme_client&quot;,&quot;msg&quot;:&quot;trying to solve challenge&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;,&quot;challenge_type&quot;:&quot;dns-01&quot;,&quot;ca&quot;:&quot;https://acme-v02.api.letsencrypt.org/directory&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295360.2630491,&quot;logger&quot;:&quot;tls.issuance.acme.acme_client&quot;,&quot;msg&quot;:&quot;validations succeeded; finalizing order&quot;,&quot;order&quot;:&quot;https://acme-v02.api.letsencrypt.org/acme/order/11111/2222222&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295361.126138,&quot;logger&quot;:&quot;tls.issuance.acme.acme_client&quot;,&quot;msg&quot;:&quot;successfully downloaded available certificate chains&quot;,&quot;count&quot;:2,&quot;first_url&quot;:&quot;https://acme-v02.api.letsencrypt.org/acme/cert/aaaaaaaabbbbbbb&quot;}
+caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295361.1281288,&quot;logger&quot;:&quot;tls.obtain&quot;,&quot;msg&quot;:&quot;certificate obtained successfully&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;}
+Mcaddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295361.1286106,&quot;logger&quot;:&quot;tls.obtain&quot;,&quot;msg&quot;:&quot;releasing lock&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;}
+</pre></div>
+<p>Cet article ne fait qu'effleurer les possiblités offerte par Caddy. Comme toujours, je vous invite à vous plonger dans la documentation du logiciel et à parcourir la liste des plugins disponible.</p>
+</div>
+
     </div>
   </article>
     </div>
