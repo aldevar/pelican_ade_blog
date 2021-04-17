@@ -76,14 +76,14 @@ avons étudié la dernière fois. Les données (couche application) sont
 encapsulées dans un message (couche 4, transport) qui est lui même
 encapsulé dans un paquet (couche 3, réseau), lui même encapsulé dans une
 trame (couche 2, liaison). Rien ne vaut un bon dessin pour
-comprendre.<a class="reference external" href="/images/encaps.png"><img alt="encaps" src="/images/encaps.png" /></a></p>
+comprendre.<a class="reference external image-reference" href="/images/encaps.png"><img alt="encaps" src="/images/encaps.png" /></a></p>
 <p>Aujourd’hui, on va donc s’intéresser à ce que contient le petit carré
 vert lorsque le paquet est un paquet IP.</p>
 <p>Cet en-tête est codé par défaut sur 20 octets. Nous allons donc nous
 appliquer à décrypter le contenu de chacun de ses octets. J’ai fait pour
 cela un schéma pas terrible mais qui me servira de support pour les
 explications :p.</p>
-<p><a class="reference external" href="/images/entete1.png"><img alt="entete1" src="/images/entete1.png" /></a></p>
+<p><a class="reference external image-reference" href="/images/entete1.png"><img alt="entete1" src="/images/entete1.png" /></a></p>
 <ul>
 <li><p class="first"><strong>Le premier octet contient 2 informations.</strong></p>
 <ul class="simple">
@@ -194,12 +194,12 @@ graphique ou <strong>tcpdump</strong> en mode commande. Je vous laisse vous mêm
 découvrir ces applications. Je vais me contenter ici de montrer un
 screenshot d’une capture faite avec wireshark qui montre ce que ce
 logiciel peut nous dire sur le contenu de nos paquets.</p>
-<p><a class="reference external" href="/images/trame01.png"><img alt="trame01" src="/images/trame01.png" /></a></p>
+<p><a class="reference external image-reference" href="/images/trame01.png"><img alt="trame01" src="/images/trame01.png" /></a></p>
 <p>Voici le type de paquet que nous avons capturé. C’est un
 simple ping entre 2 machines se situant sur des réseaux différents.
 Wireshark nous dit déjà que c’est un paquet ICMP. Voyons le détail de ce
 datagramme :</p>
-<p><a class="reference external" href="/images/trame02.png"><img alt="trame02" src="/images/trame02.png" /></a></p>
+<p><a class="reference external image-reference" href="/images/trame02.png"><img alt="trame02" src="/images/trame02.png" /></a></p>
 <p>En dépliant le contenu de l’en-tête IP, voici ce que wireshark peut nous
 dire :</p>
 <ul class="simple">

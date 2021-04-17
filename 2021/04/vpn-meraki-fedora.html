@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  VPN Meraki et Fedora | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2021/04/vpn-meraki-fedora.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://blog.devarieux.net/feed/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
+  <meta name="description" content="Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  VPN Meraki et Fedora
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2021-04-12T18:32:00+02:00">
+          <i class="fa fa-clock-o"></i>
+          Mon 12 April 2021
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/sysadmin.html">sysadmin</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/cisco.html">#cisco</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/vpn.html">#vpn</a>,               <a href="../../tag/reseau.html">#reseau</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.</p>
+<p>De même que sous Windows, je dois utiliser des VPN Meraki dans le cadre de mon activité professionnelle. Il parait que sous Ubuntu, les VPN Clients Meraki fonctionnent directement, ce qui n'est pas le cas sous Fedora. Nous allons voir pourquoi et comment y remédier.</p>
+<p>Les VPN Clients Meraki utilisent le protocole L2TP/IPSec qui n'est pas installé par defaut sur la distribution. La premièr étape est d'installer le plugin L2TP pour NetworkManager</p>
+<div class="highlight"><pre><span></span># dnf install network-manager-l2tp-gnome
+</pre></div>
+<p>L'installation de ce paquet devrait aussi installer la dépendance network-manager-l2tp.</p>
+<p>Avant de procéder à la configuration du VPN, il faut désinstaller le paquet libreswan et installer à la place le paquet strongswan. Libreswan ne supporte pas modp1024 (Diffie Hellman Group 2) pour IPSec car ce groupe DH est déprécié pour des raisons de sécurité. Cependant, les VPN Clients Meraki ne supportent que ce groupe DH pour l'établissement de la phase 1 et de la phase 2 d'IPSec. C'est clairement décevant de la part d'une appliance de sécurité mais pour le moment nous n'avons que ça... Strongswan quant à lui supporte toujours le groupe DH2.</p>
+<p>Dans Ubuntu, c'est strongswan qui est installé par défaut, alors que Fedora utilise libreswan. C'est ce qui explique que les VPN Client Meraki fonctionnent directement sous Ubuntu, sans manipulations supplémentaires.</p>
+<div class="highlight"><pre><span></span># dnf remove libreswan
+# dnf install strongswan
+</pre></div>
+<p>Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.</p>
+<img alt="Configuration réseau" src="/images/F33-MerakiVPN01.png" />
+<p>En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.</p>
+<img alt="Choix du type de VPN" src="/images/F33-MerakiVPN02.png" />
+<p>On choisi le VPN L2TP puis on arrive sur la configuration du VPN</p>
+<img alt="Configuration du VPN L2TP" src="/images/F33-MerakiVPN03.png" />
+<p>Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur <code>IPsec Settings</code>.</p>
+<img alt="Configuration IPsec" src="/images/F33-MerakiVPN04.png" />
+<p>On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :</p>
+<div class="highlight"><pre><span></span>aes128-sha1-modp1024,3des-sha1-modp1024!
+</pre></div>
+<p>C'est ce pramètre qui n'est pas accepté par libreswan. Si vous utilisez libreswan avec ces paramètres IPsec, voici le messages d'erreurs qui va apparaitre dans les logs :</p>
+<div class="highlight"><pre><span></span>ike string error: IKE DH algorithm &#39;modp1024&#39; is not supported
+</pre></div>
+<p>On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur <code>PPP Settings</code>. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.</p>
+<img alt="Configuration PPP" src="/images/F33-MerakiVPN05.png" />
+<p>Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :</p>
+<ul class="simple">
+<li><code>journalctl -f</code> dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.</li>
+<li>Sur le dashboard Meraki, se rendre dans Network Wide &gt; Event Log pour visualiser ce que voit le MX.</li>
+</ul>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

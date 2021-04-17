@@ -29,26 +29,26 @@ pour ce modèle.&lt;/p&gt;
 &lt;p&gt;Au premier lancement de GNS3, il vous est proposé de créer un projet, ce
 que nous allons faire tout de suite en enregistrant ce projet sous le
 nom FirstLab.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img alt="2015-08-25-21_47_47-Prise_en_main_de_GNS3_pour_la_simulation_réseau" src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img alt="2015-08-25-21_48_59-New-project" src="images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;Une fois le
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img alt="2015-08-25-21_47_47-Prise_en_main_de_GNS3_pour_la_simulation_réseau" src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img alt="2015-08-25-21_48_59-New-project" src="images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;Une fois le
 projet créé, on va ajouter un routeur dans la configuration de GNS3.
 Pour cela, on se rend dans Edit &amp;gt; Preferences.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img alt="2015-08-25-21_51_11-Preferences" src="images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;Je vous laisse parcourir les
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img alt="2015-08-25-21_51_11-Preferences" src="images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;Je vous laisse parcourir les
 options afin que vous puissiez comprendre un peu mieux le logiciel. Si
 vous avez des VM VirtualBox, GNS3 les trouvera et vous les listera dans
 le menu VirtualBox&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img alt="2015-08-25-22_00_01-Preferences" src="images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img alt="2015-08-25-22_00_01-Preferences" src="images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="ajout-d-un-routeur"&gt;
 &lt;h2&gt;Ajout d'un routeur&lt;/h2&gt;
 &lt;p&gt;Pour ajouter un routeur Cisco, on se rend dans Dynamips &amp;gt; IOS Router et
 on clique sur New. Il suffit ensuite de suivre les indications et de
 fournir l'image IOS du routeur qu'on souhaite voir apparaître.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img alt="2015-08-25-21_55_51-Preferences" src="images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img alt="2015-08-25-21_56_47-New IOS router template" src="images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_08-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_22-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_58_01-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_59_26-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img alt="2015-08-25-21_55_51-Preferences" src="images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img alt="2015-08-25-21_56_47-New IOS router template" src="images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_08-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_22-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_58_01-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_59_26-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Pour la valeur de Idle-PC, ne recopiez pas bêtement ce qui est écrit dans cette fenêtre. Ce chiffre correspond
 seulement à ma machine. Cliquez sur le bouton Idle-Pc finder et GNS3
 trouvera la valeur de lui même. Cela peut prendre un peu de temps à
 calculer.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img alt="2015-08-25-21_59_40-Preferences" src="images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img alt="2015-08-25-21_59_40-Preferences" src="images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Voilà, nous avons notrevrouteur c2691. On peut maintenant fermer la fenêtre de configuration et
 commencer notre projet.&lt;/p&gt;
 &lt;/div&gt;
@@ -81,26 +81,26 @@ place des routes statiques.&lt;/p&gt;
 &lt;p&gt;Cliquez sur &lt;em&gt;Browse Routers&lt;/em&gt; dans la colonne de gauche puis glissez 2
 fois le routeur c2691 dans le projet. Sur le routeur R1, faites un
 clique droit : &lt;em&gt;Configure&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_02_55-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_02_55-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 Renommez le en &lt;strong&gt;Rennes&lt;/strong&gt; et dans l'onglet &lt;em&gt;slot&lt;/em&gt;, ajoutez lui une carte NM-4T dans le
 Slot 1. Faites de même pour le routeur R2 en le renommant &lt;strong&gt;Paris&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img alt="2015-08-25-22_05_43-Node configurator" src="images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img alt="2015-08-25-22_05_43-Node configurator" src="images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
 Une fois de retour sur le
 projet, cliquez sur '&lt;em&gt;Add a Link'&lt;/em&gt; dans la colonne de gauche et créer 2
 liens séries en cliquant dans un premier temps sur &lt;em&gt;Rennes &amp;gt; Serial 1/0&lt;/em&gt;
 puis &lt;em&gt;Paris &amp;gt; Serial 1/0&lt;/em&gt; pour le premier lien et &lt;em&gt;Rennes &amp;gt; Serial 1/1&lt;/em&gt;
 puis &lt;em&gt;Paris &amp;gt; Serial 1/1&lt;/em&gt; pour le second lien.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_07_19-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_07_19-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 Vous devriez avoir
 quelque chose qui ressemble à ça :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_11_04-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_11_04-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 J'ai moi même ajouté les
 notes sur les réseaux grâce aux notes que l'on peut insérer dans le
 projet.&lt;/p&gt;
 &lt;p&gt;Une fois que c'est terminé, cliquez sur le Play vert qui se trouve en
 haut de l'interface afin de démarrer les routeurs.&lt;/p&gt;
 &lt;p&gt;Nous allons enfin pouvoir ouvrir notre première console Cisco. Pour
-cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;a class="reference external" href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_19_50-FirstLab.gns3 — GNS3" src="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;Pour préparer le lab, voici les
+cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_19_50-FirstLab.gns3 — GNS3" src="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;Pour préparer le lab, voici les
 commandes à taper dans la console de Rennes :&lt;/p&gt;
 &lt;p&gt;IOS supporte la tabulation et les raccourcis. Par exemple, pour taper
 &lt;tt class="docutils literal"&gt;configure terminal&lt;/tt&gt;, je peux taper &lt;tt class="docutils literal"&gt;conf&amp;lt;tab&amp;gt; t&amp;lt;tab&amp;gt;&lt;/tt&gt; ou tout
@@ -245,33 +245,33 @@ télécharger le paquet qu'il vous faut. L'appli est multiplateforme,
 compatible Windows, Linux et Mac. L'installeur va installer pour vous
 tous les outils nécessaire pour la virtualisation et la capture de
 paquets.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_30_55-GNS3 1.3.9 Setup" src="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_30_55-GNS3 1.3.9 Setup" src="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Sous Windows, l'installation
 est assez classique. Après avoir lancé l'installeur, la fenêtre de setup
 apparaît, il suffit alors de suivre les indications jusqu'à arriver à
 cette fenêtre :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_08-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_08-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Il est préférable de laisser
 tout cocher, ainsi si des logiciels ont besoin de mise à jour, elles
 seront faites. En cliquant sur Next, l'installeur va lancer
 l'installation de winPcap&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_29-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_42-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_29-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_42-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;On laisse cocher le lancement automatique du driver au démarrage.&lt;/p&gt;
 &lt;p&gt;Ensuite, l'installeur télécharge et installe Wireshark&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_59-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_14-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_39-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_59-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_14-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_39-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;WinPcap est déjà installé donc on décoche l'option
-&lt;a class="reference external" href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-1723_34_56-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_35_47-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a class="reference external image-reference" href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-1723_34_56-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_35_47-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;On décoche 'Run Wireshark',
 on ne va pas en avoir besoin tout de suite.&lt;/p&gt;
 &lt;p&gt;L'installation se poursuit avec cette fois SolarWinds Response Time
 Viewer qui est une application d'analyse de capture Wireshark&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img alt="2015-08-17 23_37_13-SolarWinds Registration" src="images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img alt="2015-08-17 23_37_13-SolarWinds Registration" src="images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Ici, vous pouvez mettre ce que vous voulez, l'adresse n'est pas vérifiée&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img alt="2015-08-17 23_38_54-SolarWinds Response Time Viewer for Windows" src="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img alt="2015-08-17 23_38_54-SolarWinds Response Time Viewer for Windows" src="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;L'application se lance automatiquement. Je vous invite à en
 faire un tour rapide avant de la fermer&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_09-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_30-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_09-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_30-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;SolarWinds vous propose une licence gratuite pour son
 software. Je n'ai pas testé comment acquérir cette licence et je ne sais
 pas sous quelle condition elle s'acquière.&lt;/p&gt;
@@ -329,7 +329,7 @@ peut s’effectuer indépendamment de celle qui consiste à en écrire.&lt;/li&g
 &lt;/div&gt;
 &lt;div class="section" id="entete-tcp"&gt;
 &lt;h2&gt;Entête TCP&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/enteteTCP1.png"&gt;&lt;img alt="enteteTCP1" src="/images/enteteTCP1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/enteteTCP1.png"&gt;&lt;img alt="enteteTCP1" src="/images/enteteTCP1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;L’entête TCP est codé sur 20 octets hors options.&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Port Source (16 bits): Port utilisé par l’application sur la machine
@@ -371,7 +371,7 @@ duquel l’information devient urgente.&lt;/li&gt;
 &lt;/div&gt;
 &lt;div class="section" id="etablissement-dune-connexion"&gt;
 &lt;h2&gt;Établissement d’une connexion&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/ConnectionTCP.png"&gt;&lt;img alt="ConnectionTCP" src="/images/ConnectionTCP.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/ConnectionTCP.png"&gt;&lt;img alt="ConnectionTCP" src="/images/ConnectionTCP.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Une ouverture de connexion TCP s’effectue en 3 temps.&lt;/p&gt;
 &lt;p&gt;L’émetteur du premier paquet doit avoir connaissance du couple
 &lt;strong&gt;`IP &amp;lt;https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=293&amp;gt;`__
@@ -416,7 +416,7 @@ d’associer la destination du paquet à une fonction. L’identification de
 cette fonction ce fait à l’aide d’un chiffre nommé &lt;strong&gt;Port&lt;/strong&gt;.&lt;/p&gt;
 &lt;div class="section" id="en-tete-udp"&gt;
 &lt;h2&gt;En tête UDP&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Lors de l’étude des &lt;a class="reference external" href="qrqvb-datagramme-ip.html"&gt;datagramme
 IP&lt;/a&gt;, nous
 avions vu le contenu de l’entête du paquet (partie verte). Ici, nous
@@ -424,7 +424,7 @@ allons observer le contenu de l’entête du message (partie jaune) lorsque
 l’on traite un p&amp;gt;aquet UDP.&lt;/p&gt;
 &lt;p&gt;Le paquet UDP est composé de 8 octets.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;a class="reference external" href="/images/entete.png"&gt;&lt;img alt="entete" src="/images/entete.png" /&gt;&lt;/a&gt;&lt;/blockquote&gt;
+&lt;a class="reference external image-reference" href="/images/entete.png"&gt;&lt;img alt="entete" src="/images/entete.png" /&gt;&lt;/a&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Les 2 premiers octets contiennent le port source&lt;/strong&gt;. Codé sur 16 bits
 donc. C’est le numéro de port de l’émetteur du paquet. C’est aussi le
 numéro de port sur lequel le destinataire doit envoyer sa réponse.&lt;/p&gt;
@@ -540,7 +540,7 @@ masque de réseau. Alors puisque je ne suis pas fort en blablatage, je
 vais plutôt vous montrer un exemple.
 |  Voici une adresse IP : 192.168.1.15
 |  Voici un masque de réseau : 255.255.255.0&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/netmask1.png"&gt;&lt;img alt="netmask1" src="/images/netmask1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/netmask1.png"&gt;&lt;img alt="netmask1" src="/images/netmask1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;En fait, pour être plus précis, les bits se situant dans la partie de
 l’identificateur réseau sont tous positionnés sur 1 et les bits de la
 partie hôte sur 0. En procédant à une opération de ET logique entre
@@ -556,7 +556,7 @@ opérations de ET logique suivent cette règle :&lt;/p&gt;
 doivent emprunter nos paquets IP. Pour bien comprendre ce système, nous
 allons jouer un peu avec le binaire, même si je sais que ça va en
 rebuter plus d’un :p&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/binaire.png"&gt;&lt;img alt="binaire" src="/images/binaire.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/binaire.png"&gt;&lt;img alt="binaire" src="/images/binaire.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Ceci est important puisque c’est de cette manière qu’on va pouvoir
 déterminer le nombre maximal de machines qui peuvent appartenir à un
 réseau. Il faut également savoir que sur 1 réseau, 2 adresses sont
@@ -568,7 +568,7 @@ diffuser un message sur tout le réseau. Le message de ce genre le plus
 classique est la requête&amp;nbsp;ARP. Celle ci permet à une machine de trouver
 une autre machine sur le réseau en l’appelant.&lt;/p&gt;
 &lt;p&gt;Voici un exemple de capture de trame avec wireshark :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/arp2.png"&gt;&lt;img alt="arp2" src="/images/arp2.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/arp2.png"&gt;&lt;img alt="arp2" src="/images/arp2.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Le premier paquet est donc une requête ARP. La machine source envoie ce
 message sur tout le réseau : ‘who has 192.168.1.51? &amp;nbsp;Tell 192.168.1.25′.
 La machine qui a pour IP 192.168.1.51 envoie donc sa réponse directement
@@ -643,14 +643,14 @@ avons étudié la dernière fois. Les données (couche application) sont
 encapsulées dans un message (couche 4, transport) qui est lui même
 encapsulé dans un paquet (couche 3, réseau), lui même encapsulé dans une
 trame (couche 2, liaison). Rien ne vaut un bon dessin pour
-comprendre.&lt;a class="reference external" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+comprendre.&lt;a class="reference external image-reference" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Aujourd’hui, on va donc s’intéresser à ce que contient le petit carré
 vert lorsque le paquet est un paquet IP.&lt;/p&gt;
 &lt;p&gt;Cet en-tête est codé par défaut sur 20 octets. Nous allons donc nous
 appliquer à décrypter le contenu de chacun de ses octets. J’ai fait pour
 cela un schéma pas terrible mais qui me servira de support pour les
 explications :p.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/entete1.png"&gt;&lt;img alt="entete1" src="/images/entete1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/entete1.png"&gt;&lt;img alt="entete1" src="/images/entete1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Le premier octet contient 2 informations.&lt;/strong&gt;&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -761,12 +761,12 @@ graphique ou &lt;strong&gt;tcpdump&lt;/strong&gt; en mode commande. Je vous lais
 découvrir ces applications. Je vais me contenter ici de montrer un
 screenshot d’une capture faite avec wireshark qui montre ce que ce
 logiciel peut nous dire sur le contenu de nos paquets.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/trame01.png"&gt;&lt;img alt="trame01" src="/images/trame01.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/trame01.png"&gt;&lt;img alt="trame01" src="/images/trame01.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Voici le type de paquet que nous avons capturé. C’est un
 simple ping entre 2 machines se situant sur des réseaux différents.
 Wireshark nous dit déjà que c’est un paquet ICMP. Voyons le détail de ce
 datagramme :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/trame02.png"&gt;&lt;img alt="trame02" src="/images/trame02.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/trame02.png"&gt;&lt;img alt="trame02" src="/images/trame02.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;En dépliant le contenu de l’en-tête IP, voici ce que wireshark peut nous
 dire :&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -817,7 +817,7 @@ pas très clair pour le moment, mais ça va le devenir.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="schema-du-modele"&gt;
 &lt;h2&gt;Schéma du modèle&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/modele_OSI.gif"&gt;&lt;img alt="modele_OSI" src="images/modele_OSI.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/modele_OSI.gif"&gt;&lt;img alt="modele_OSI" src="images/modele_OSI.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Le modèle OSI est donc représenté en 7 couches distinctes. J'ai ici
 représenté 2 machines (Système A et Système B) pour bien montrer que
 lors de la communication de 2 hôtes, chaque couche 'discute' directement

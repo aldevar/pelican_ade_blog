@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-04-05T08:55:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Caddy, OVH et les certificats wildcard</title><link href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" rel="alternate"></link><published>2021-04-05T08:55:00+02:00</published><updated>2021-04-05T08:55:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-05:/2021/04/caddy-ovh-acme.html</id><summary type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge &lt;a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01"&gt;DNS-01&lt;/a&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-04-12T18:32:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>VPN Meraki et Fedora</title><link href="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" rel="alternate"></link><published>2021-04-12T18:32:00+02:00</published><updated>2021-04-12T18:32:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-12:/2021/04/vpn-meraki-fedora.html</id><summary type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.&lt;/p&gt;
+&lt;p&gt;De même que sous Windows, je dois utiliser des VPN Meraki dans le cadre de mon activité professionnelle. Il parait que sous Ubuntu, les VPN Clients Meraki fonctionnent directement, ce qui n'est pas le cas sous Fedora. Nous allons voir pourquoi et comment y remédier.&lt;/p&gt;
+&lt;p&gt;Les VPN Clients Meraki utilisent le protocole L2TP/IPSec qui n'est pas installé par defaut sur la distribution. La premièr étape est d'installer le plugin L2TP pour NetworkManager&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# dnf install network-manager-l2tp-gnome
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;L'installation de ce paquet devrait aussi installer la dépendance network-manager-l2tp.&lt;/p&gt;
+&lt;p&gt;Avant de procéder à la configuration du VPN, il faut désinstaller le paquet libreswan et installer à la place le paquet strongswan. Libreswan ne supporte pas modp1024 (Diffie Hellman Group 2) pour IPSec car ce groupe DH est déprécié pour des raisons de sécurité. Cependant, les VPN Clients Meraki ne supportent que ce groupe DH pour l'établissement de la phase 1 et de la phase 2 d'IPSec. C'est clairement décevant de la part d'une appliance de sécurité mais pour le moment nous n'avons que ça... Strongswan quant à lui supporte toujours le groupe DH2.&lt;/p&gt;
+&lt;p&gt;Dans Ubuntu, c'est strongswan qui est installé par défaut, alors que Fedora utilise libreswan. C'est ce qui explique que les VPN Client Meraki fonctionnent directement sous Ubuntu, sans manipulations supplémentaires.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# dnf remove libreswan
+# dnf install strongswan
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.&lt;/p&gt;
+&lt;img alt="Configuration réseau" src="/images/F33-MerakiVPN01.png" /&gt;
+&lt;p&gt;En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.&lt;/p&gt;
+&lt;img alt="Choix du type de VPN" src="/images/F33-MerakiVPN02.png" /&gt;
+&lt;p&gt;On choisi le VPN L2TP puis on arrive sur la configuration du VPN&lt;/p&gt;
+&lt;img alt="Configuration du VPN L2TP" src="/images/F33-MerakiVPN03.png" /&gt;
+&lt;p&gt;Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur &lt;code&gt;IPsec Settings&lt;/code&gt;.&lt;/p&gt;
+&lt;img alt="Configuration IPsec" src="/images/F33-MerakiVPN04.png" /&gt;
+&lt;p&gt;On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aes128-sha1-modp1024,3des-sha1-modp1024!
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;C'est ce pramètre qui n'est pas accepté par libreswan. Si vous utilisez libreswan avec ces paramètres IPsec, voici le messages d'erreurs qui va apparaitre dans les logs :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ike string error: IKE DH algorithm &amp;#39;modp1024&amp;#39; is not supported
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur &lt;code&gt;PPP Settings&lt;/code&gt;. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.&lt;/p&gt;
+&lt;img alt="Configuration PPP" src="/images/F33-MerakiVPN05.png" /&gt;
+&lt;p&gt;Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;journalctl -f&lt;/code&gt; dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.&lt;/li&gt;
+&lt;li&gt;Sur le dashboard Meraki, se rendre dans Network Wide &amp;gt; Event Log pour visualiser ce que voit le MX.&lt;/li&gt;
+&lt;/ul&gt;
+</content><category term="sysadmin"></category><category term="cisco"></category><category term="meraki"></category><category term="vpn"></category><category term="reseau"></category></entry><entry><title>Caddy, OVH et les certificats wildcard</title><link href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" rel="alternate"></link><published>2021-04-05T08:55:00+02:00</published><updated>2021-04-05T08:55:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-05:/2021/04/caddy-ovh-acme.html</id><summary type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge &lt;a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01"&gt;DNS-01&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Le challenge DNS à l'avantage de pouvoir être utilisé pour générer un certificat DV wildcard. Une fois passé un certain nombre de sous domaines servis par un reverse proxy, il devient intéressant d'utiliser ce type de certificat afin d'éviter de générer trop de requêtes vers les serveurs de Let's Encrypt. De plus, avec un seul certificat à gérer pour l'ensemble des sous domaines, la gestion devient simplifiée, et notamment la supervision ou même le renouvellement.&lt;/p&gt;
 &lt;p&gt;Caddy intègre de base la gestion de Let's Encrypt pour les challenges HTTP-01 car celui-ci est universel et ne dépend d'aucun autre services. C'est un échange réalisé directement entre le serveur Caddy et les serveurs de Let's Encrypt. Pour le challenge DNS-01, il y a un intermédiaire. Cet intermédiaire est le serveur DNS du domaine pour lequel on souhaite générer un certificat wildcard. De part la multitude de serveurs disponibles et de prestataires fournissant ces services, il est difficile d'avoir un protocole unifié de modification distante des entrées DNS. A ma connaissance, le seul standard qui existe pour cela est la &lt;a class="reference external" href="https://tools.ietf.org/html/rfc2136"&gt;RFC 2136&lt;/a&gt; qui ne semble pas être implémentée chez la plupart des fournisseurs de services DNS.&lt;/p&gt;
 &lt;p&gt;Nous allons donc voir comment, avec Caddy, générer un certificat wildcard avec OVH en fournisseur de service DNS. La procédure est assez similaire avec les autres fournisseurs qui ont, je l'espère, pris plus de soin dans la documentation de cette fonctionnalité.&lt;/p&gt;
@@ -461,199 +493,199 @@ Il y avait environ 400 règles de NAT à transposer …&lt;/p&gt;</summary><cont
 Il y avait environ 400 règles de NAT à transposer. Ceux qui ont déjà fait du NAT sur NSX savent que réaliser ce genre de manipulation manuellement n'est pas une sinécure. L'interface n'est clairement pas adaptée pour ce genre de tâche. Par contre, NSX dispose d'une API plutot bien documentée.
 De l'autre coté, VyOS. VyOS est un système d'exploitation réseau, basé sur Debian avec des commandes similaires à ce qu'on peut trouver sur un routeur.&lt;/p&gt;
 &lt;p&gt;En discutant avec &lt;a class="reference external" href="https://baturin.org/"&gt;Daniil Baturin&lt;/a&gt;, principal mainteneur de VyOS, sur la meilleur façon de procéder, celui ci m'a indiqué la &lt;a class="reference external" href="https://github.com/vyos/vyos-1x/blob/current/python/vyos/configtree.py"&gt;lib configtree&lt;/a&gt; qui permet de manipuler un fichier de configuration VyOS. Avec l'aide de cette lib, j'ai pu écrire ce script Python qui lit le fichier vyos.conf préalablement récupéré par mes soins et génére puis pousse les règles de NAT vers NSX-V.&lt;/p&gt;
-&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;  1
-  2
-  3
-  4
-  5
-  6
-  7
-  8
-  9
- 10
- 11
- 12
- 13
- 14
- 15
- 16
- 17
- 18
- 19
- 20
- 21
- 22
- 23
- 24
- 25
- 26
- 27
- 28
- 29
- 30
- 31
- 32
- 33
- 34
- 35
- 36
- 37
- 38
- 39
- 40
- 41
- 42
- 43
- 44
- 45
- 46
- 47
- 48
- 49
- 50
- 51
- 52
- 53
- 54
- 55
- 56
- 57
- 58
- 59
- 60
- 61
- 62
- 63
- 64
- 65
- 66
- 67
- 68
- 69
- 70
- 71
- 72
- 73
- 74
- 75
- 76
- 77
- 78
- 79
- 80
- 81
- 82
- 83
- 84
- 85
- 86
- 87
- 88
- 89
- 90
- 91
- 92
- 93
- 94
- 95
- 96
- 97
- 98
- 99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;vyos.configtree&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;span class="normal"&gt;  1&lt;/span&gt;
+&lt;span class="normal"&gt;  2&lt;/span&gt;
+&lt;span class="normal"&gt;  3&lt;/span&gt;
+&lt;span class="normal"&gt;  4&lt;/span&gt;
+&lt;span class="normal"&gt;  5&lt;/span&gt;
+&lt;span class="normal"&gt;  6&lt;/span&gt;
+&lt;span class="normal"&gt;  7&lt;/span&gt;
+&lt;span class="normal"&gt;  8&lt;/span&gt;
+&lt;span class="normal"&gt;  9&lt;/span&gt;
+&lt;span class="normal"&gt; 10&lt;/span&gt;
+&lt;span class="normal"&gt; 11&lt;/span&gt;
+&lt;span class="normal"&gt; 12&lt;/span&gt;
+&lt;span class="normal"&gt; 13&lt;/span&gt;
+&lt;span class="normal"&gt; 14&lt;/span&gt;
+&lt;span class="normal"&gt; 15&lt;/span&gt;
+&lt;span class="normal"&gt; 16&lt;/span&gt;
+&lt;span class="normal"&gt; 17&lt;/span&gt;
+&lt;span class="normal"&gt; 18&lt;/span&gt;
+&lt;span class="normal"&gt; 19&lt;/span&gt;
+&lt;span class="normal"&gt; 20&lt;/span&gt;
+&lt;span class="normal"&gt; 21&lt;/span&gt;
+&lt;span class="normal"&gt; 22&lt;/span&gt;
+&lt;span class="normal"&gt; 23&lt;/span&gt;
+&lt;span class="normal"&gt; 24&lt;/span&gt;
+&lt;span class="normal"&gt; 25&lt;/span&gt;
+&lt;span class="normal"&gt; 26&lt;/span&gt;
+&lt;span class="normal"&gt; 27&lt;/span&gt;
+&lt;span class="normal"&gt; 28&lt;/span&gt;
+&lt;span class="normal"&gt; 29&lt;/span&gt;
+&lt;span class="normal"&gt; 30&lt;/span&gt;
+&lt;span class="normal"&gt; 31&lt;/span&gt;
+&lt;span class="normal"&gt; 32&lt;/span&gt;
+&lt;span class="normal"&gt; 33&lt;/span&gt;
+&lt;span class="normal"&gt; 34&lt;/span&gt;
+&lt;span class="normal"&gt; 35&lt;/span&gt;
+&lt;span class="normal"&gt; 36&lt;/span&gt;
+&lt;span class="normal"&gt; 37&lt;/span&gt;
+&lt;span class="normal"&gt; 38&lt;/span&gt;
+&lt;span class="normal"&gt; 39&lt;/span&gt;
+&lt;span class="normal"&gt; 40&lt;/span&gt;
+&lt;span class="normal"&gt; 41&lt;/span&gt;
+&lt;span class="normal"&gt; 42&lt;/span&gt;
+&lt;span class="normal"&gt; 43&lt;/span&gt;
+&lt;span class="normal"&gt; 44&lt;/span&gt;
+&lt;span class="normal"&gt; 45&lt;/span&gt;
+&lt;span class="normal"&gt; 46&lt;/span&gt;
+&lt;span class="normal"&gt; 47&lt;/span&gt;
+&lt;span class="normal"&gt; 48&lt;/span&gt;
+&lt;span class="normal"&gt; 49&lt;/span&gt;
+&lt;span class="normal"&gt; 50&lt;/span&gt;
+&lt;span class="normal"&gt; 51&lt;/span&gt;
+&lt;span class="normal"&gt; 52&lt;/span&gt;
+&lt;span class="normal"&gt; 53&lt;/span&gt;
+&lt;span class="normal"&gt; 54&lt;/span&gt;
+&lt;span class="normal"&gt; 55&lt;/span&gt;
+&lt;span class="normal"&gt; 56&lt;/span&gt;
+&lt;span class="normal"&gt; 57&lt;/span&gt;
+&lt;span class="normal"&gt; 58&lt;/span&gt;
+&lt;span class="normal"&gt; 59&lt;/span&gt;
+&lt;span class="normal"&gt; 60&lt;/span&gt;
+&lt;span class="normal"&gt; 61&lt;/span&gt;
+&lt;span class="normal"&gt; 62&lt;/span&gt;
+&lt;span class="normal"&gt; 63&lt;/span&gt;
+&lt;span class="normal"&gt; 64&lt;/span&gt;
+&lt;span class="normal"&gt; 65&lt;/span&gt;
+&lt;span class="normal"&gt; 66&lt;/span&gt;
+&lt;span class="normal"&gt; 67&lt;/span&gt;
+&lt;span class="normal"&gt; 68&lt;/span&gt;
+&lt;span class="normal"&gt; 69&lt;/span&gt;
+&lt;span class="normal"&gt; 70&lt;/span&gt;
+&lt;span class="normal"&gt; 71&lt;/span&gt;
+&lt;span class="normal"&gt; 72&lt;/span&gt;
+&lt;span class="normal"&gt; 73&lt;/span&gt;
+&lt;span class="normal"&gt; 74&lt;/span&gt;
+&lt;span class="normal"&gt; 75&lt;/span&gt;
+&lt;span class="normal"&gt; 76&lt;/span&gt;
+&lt;span class="normal"&gt; 77&lt;/span&gt;
+&lt;span class="normal"&gt; 78&lt;/span&gt;
+&lt;span class="normal"&gt; 79&lt;/span&gt;
+&lt;span class="normal"&gt; 80&lt;/span&gt;
+&lt;span class="normal"&gt; 81&lt;/span&gt;
+&lt;span class="normal"&gt; 82&lt;/span&gt;
+&lt;span class="normal"&gt; 83&lt;/span&gt;
+&lt;span class="normal"&gt; 84&lt;/span&gt;
+&lt;span class="normal"&gt; 85&lt;/span&gt;
+&lt;span class="normal"&gt; 86&lt;/span&gt;
+&lt;span class="normal"&gt; 87&lt;/span&gt;
+&lt;span class="normal"&gt; 88&lt;/span&gt;
+&lt;span class="normal"&gt; 89&lt;/span&gt;
+&lt;span class="normal"&gt; 90&lt;/span&gt;
+&lt;span class="normal"&gt; 91&lt;/span&gt;
+&lt;span class="normal"&gt; 92&lt;/span&gt;
+&lt;span class="normal"&gt; 93&lt;/span&gt;
+&lt;span class="normal"&gt; 94&lt;/span&gt;
+&lt;span class="normal"&gt; 95&lt;/span&gt;
+&lt;span class="normal"&gt; 96&lt;/span&gt;
+&lt;span class="normal"&gt; 97&lt;/span&gt;
+&lt;span class="normal"&gt; 98&lt;/span&gt;
+&lt;span class="normal"&gt; 99&lt;/span&gt;
+&lt;span class="normal"&gt;100&lt;/span&gt;
+&lt;span class="normal"&gt;101&lt;/span&gt;
+&lt;span class="normal"&gt;102&lt;/span&gt;
+&lt;span class="normal"&gt;103&lt;/span&gt;
+&lt;span class="normal"&gt;104&lt;/span&gt;
+&lt;span class="normal"&gt;105&lt;/span&gt;
+&lt;span class="normal"&gt;106&lt;/span&gt;
+&lt;span class="normal"&gt;107&lt;/span&gt;
+&lt;span class="normal"&gt;108&lt;/span&gt;
+&lt;span class="normal"&gt;109&lt;/span&gt;
+&lt;span class="normal"&gt;110&lt;/span&gt;
+&lt;span class="normal"&gt;111&lt;/span&gt;
+&lt;span class="normal"&gt;112&lt;/span&gt;
+&lt;span class="normal"&gt;113&lt;/span&gt;
+&lt;span class="normal"&gt;114&lt;/span&gt;
+&lt;span class="normal"&gt;115&lt;/span&gt;
+&lt;span class="normal"&gt;116&lt;/span&gt;
+&lt;span class="normal"&gt;117&lt;/span&gt;
+&lt;span class="normal"&gt;118&lt;/span&gt;
+&lt;span class="normal"&gt;119&lt;/span&gt;
+&lt;span class="normal"&gt;120&lt;/span&gt;
+&lt;span class="normal"&gt;121&lt;/span&gt;
+&lt;span class="normal"&gt;122&lt;/span&gt;
+&lt;span class="normal"&gt;123&lt;/span&gt;
+&lt;span class="normal"&gt;124&lt;/span&gt;
+&lt;span class="normal"&gt;125&lt;/span&gt;
+&lt;span class="normal"&gt;126&lt;/span&gt;
+&lt;span class="normal"&gt;127&lt;/span&gt;
+&lt;span class="normal"&gt;128&lt;/span&gt;
+&lt;span class="normal"&gt;129&lt;/span&gt;
+&lt;span class="normal"&gt;130&lt;/span&gt;
+&lt;span class="normal"&gt;131&lt;/span&gt;
+&lt;span class="normal"&gt;132&lt;/span&gt;
+&lt;span class="normal"&gt;133&lt;/span&gt;
+&lt;span class="normal"&gt;134&lt;/span&gt;
+&lt;span class="normal"&gt;135&lt;/span&gt;
+&lt;span class="normal"&gt;136&lt;/span&gt;
+&lt;span class="normal"&gt;137&lt;/span&gt;
+&lt;span class="normal"&gt;138&lt;/span&gt;
+&lt;span class="normal"&gt;139&lt;/span&gt;
+&lt;span class="normal"&gt;140&lt;/span&gt;
+&lt;span class="normal"&gt;141&lt;/span&gt;
+&lt;span class="normal"&gt;142&lt;/span&gt;
+&lt;span class="normal"&gt;143&lt;/span&gt;
+&lt;span class="normal"&gt;144&lt;/span&gt;
+&lt;span class="normal"&gt;145&lt;/span&gt;
+&lt;span class="normal"&gt;146&lt;/span&gt;
+&lt;span class="normal"&gt;147&lt;/span&gt;
+&lt;span class="normal"&gt;148&lt;/span&gt;
+&lt;span class="normal"&gt;149&lt;/span&gt;
+&lt;span class="normal"&gt;150&lt;/span&gt;
+&lt;span class="normal"&gt;151&lt;/span&gt;
+&lt;span class="normal"&gt;152&lt;/span&gt;
+&lt;span class="normal"&gt;153&lt;/span&gt;
+&lt;span class="normal"&gt;154&lt;/span&gt;
+&lt;span class="normal"&gt;155&lt;/span&gt;
+&lt;span class="normal"&gt;156&lt;/span&gt;
+&lt;span class="normal"&gt;157&lt;/span&gt;
+&lt;span class="normal"&gt;158&lt;/span&gt;
+&lt;span class="normal"&gt;159&lt;/span&gt;
+&lt;span class="normal"&gt;160&lt;/span&gt;
+&lt;span class="normal"&gt;161&lt;/span&gt;
+&lt;span class="normal"&gt;162&lt;/span&gt;
+&lt;span class="normal"&gt;163&lt;/span&gt;
+&lt;span class="normal"&gt;164&lt;/span&gt;
+&lt;span class="normal"&gt;165&lt;/span&gt;
+&lt;span class="normal"&gt;166&lt;/span&gt;
+&lt;span class="normal"&gt;167&lt;/span&gt;
+&lt;span class="normal"&gt;168&lt;/span&gt;
+&lt;span class="normal"&gt;169&lt;/span&gt;
+&lt;span class="normal"&gt;170&lt;/span&gt;
+&lt;span class="normal"&gt;171&lt;/span&gt;
+&lt;span class="normal"&gt;172&lt;/span&gt;
+&lt;span class="normal"&gt;173&lt;/span&gt;
+&lt;span class="normal"&gt;174&lt;/span&gt;
+&lt;span class="normal"&gt;175&lt;/span&gt;
+&lt;span class="normal"&gt;176&lt;/span&gt;
+&lt;span class="normal"&gt;177&lt;/span&gt;
+&lt;span class="normal"&gt;178&lt;/span&gt;
+&lt;span class="normal"&gt;179&lt;/span&gt;
+&lt;span class="normal"&gt;180&lt;/span&gt;
+&lt;span class="normal"&gt;181&lt;/span&gt;
+&lt;span class="normal"&gt;182&lt;/span&gt;
+&lt;span class="normal"&gt;183&lt;/span&gt;
+&lt;span class="normal"&gt;184&lt;/span&gt;
+&lt;span class="normal"&gt;185&lt;/span&gt;
+&lt;span class="normal"&gt;186&lt;/span&gt;
+&lt;span class="normal"&gt;187&lt;/span&gt;
+&lt;span class="normal"&gt;188&lt;/span&gt;
+&lt;span class="normal"&gt;189&lt;/span&gt;
+&lt;span class="normal"&gt;190&lt;/span&gt;
+&lt;span class="normal"&gt;191&lt;/span&gt;
+&lt;span class="normal"&gt;192&lt;/span&gt;
+&lt;span class="normal"&gt;193&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;vyos.configtree&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;requests&lt;/span&gt;
   &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;requests.auth&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPBasicAuth&lt;/span&gt;
 
@@ -1258,7 +1290,7 @@ le couple frontend/serveur.&lt;/p&gt;
 &lt;p&gt;Une fois toutes ces métriques récupérées, j'ai pu construire un
 dashboard Grafana afin d'avoir rapidement sous les yeux l'état général
 du cluster.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/Grafana-Galera.png"&gt;&lt;img alt="Grafana-GaleraMariaDB et HAproxy" class="image-process-large-photo" src="/images/Grafana-Galera.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/Grafana-Galera.png"&gt;&lt;img alt="Grafana-GaleraMariaDB et HAproxy" class="image-process-large-photo" src="/images/Grafana-Galera.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Le script, le template Zabbix et le fichier de paramétrage de l'agent
 sont disponible &lt;a class="reference external" href="https://github.com/aldevar/Zabbix_HAproxy"&gt;sur
 Github&lt;/a&gt;&lt;/p&gt;
@@ -2334,26 +2366,26 @@ pour ce modèle.&lt;/p&gt;
 &lt;p&gt;Au premier lancement de GNS3, il vous est proposé de créer un projet, ce
 que nous allons faire tout de suite en enregistrant ce projet sous le
 nom FirstLab.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img alt="2015-08-25-21_47_47-Prise_en_main_de_GNS3_pour_la_simulation_réseau" src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img alt="2015-08-25-21_48_59-New-project" src="images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;Une fois le
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img alt="2015-08-25-21_47_47-Prise_en_main_de_GNS3_pour_la_simulation_réseau" src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img alt="2015-08-25-21_48_59-New-project" src="images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;Une fois le
 projet créé, on va ajouter un routeur dans la configuration de GNS3.
 Pour cela, on se rend dans Edit &amp;gt; Preferences.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img alt="2015-08-25-21_51_11-Preferences" src="images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;Je vous laisse parcourir les
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img alt="2015-08-25-21_51_11-Preferences" src="images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;Je vous laisse parcourir les
 options afin que vous puissiez comprendre un peu mieux le logiciel. Si
 vous avez des VM VirtualBox, GNS3 les trouvera et vous les listera dans
 le menu VirtualBox&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img alt="2015-08-25-22_00_01-Preferences" src="images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img alt="2015-08-25-22_00_01-Preferences" src="images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="ajout-d-un-routeur"&gt;
 &lt;h2&gt;Ajout d'un routeur&lt;/h2&gt;
 &lt;p&gt;Pour ajouter un routeur Cisco, on se rend dans Dynamips &amp;gt; IOS Router et
 on clique sur New. Il suffit ensuite de suivre les indications et de
 fournir l'image IOS du routeur qu'on souhaite voir apparaître.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img alt="2015-08-25-21_55_51-Preferences" src="images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img alt="2015-08-25-21_56_47-New IOS router template" src="images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_08-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_22-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_58_01-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_59_26-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img alt="2015-08-25-21_55_51-Preferences" src="images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img alt="2015-08-25-21_56_47-New IOS router template" src="images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_08-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_57_22-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_58_01-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img alt="2015-08-25-21_59_26-New IOS router - c2691-jk9s-mz.123-17.image" src="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Pour la valeur de Idle-PC, ne recopiez pas bêtement ce qui est écrit dans cette fenêtre. Ce chiffre correspond
 seulement à ma machine. Cliquez sur le bouton Idle-Pc finder et GNS3
 trouvera la valeur de lui même. Cela peut prendre un peu de temps à
 calculer.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img alt="2015-08-25-21_59_40-Preferences" src="images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img alt="2015-08-25-21_59_40-Preferences" src="images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Voilà, nous avons notrevrouteur c2691. On peut maintenant fermer la fenêtre de configuration et
 commencer notre projet.&lt;/p&gt;
 &lt;/div&gt;
@@ -2386,26 +2418,26 @@ place des routes statiques.&lt;/p&gt;
 &lt;p&gt;Cliquez sur &lt;em&gt;Browse Routers&lt;/em&gt; dans la colonne de gauche puis glissez 2
 fois le routeur c2691 dans le projet. Sur le routeur R1, faites un
 clique droit : &lt;em&gt;Configure&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_02_55-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_02_55-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 Renommez le en &lt;strong&gt;Rennes&lt;/strong&gt; et dans l'onglet &lt;em&gt;slot&lt;/em&gt;, ajoutez lui une carte NM-4T dans le
 Slot 1. Faites de même pour le routeur R2 en le renommant &lt;strong&gt;Paris&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img alt="2015-08-25-22_05_43-Node configurator" src="images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img alt="2015-08-25-22_05_43-Node configurator" src="images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
 Une fois de retour sur le
 projet, cliquez sur '&lt;em&gt;Add a Link'&lt;/em&gt; dans la colonne de gauche et créer 2
 liens séries en cliquant dans un premier temps sur &lt;em&gt;Rennes &amp;gt; Serial 1/0&lt;/em&gt;
 puis &lt;em&gt;Paris &amp;gt; Serial 1/0&lt;/em&gt; pour le premier lien et &lt;em&gt;Rennes &amp;gt; Serial 1/1&lt;/em&gt;
 puis &lt;em&gt;Paris &amp;gt; Serial 1/1&lt;/em&gt; pour le second lien.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_07_19-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_07_19-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 Vous devriez avoir
 quelque chose qui ressemble à ça :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_11_04-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_11_04-FirstLab.gns3_ — GNS3" src="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 J'ai moi même ajouté les
 notes sur les réseaux grâce aux notes que l'on peut insérer dans le
 projet.&lt;/p&gt;
 &lt;p&gt;Une fois que c'est terminé, cliquez sur le Play vert qui se trouve en
 haut de l'interface afin de démarrer les routeurs.&lt;/p&gt;
 &lt;p&gt;Nous allons enfin pouvoir ouvrir notre première console Cisco. Pour
-cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;a class="reference external" href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_19_50-FirstLab.gns3 — GNS3" src="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;Pour préparer le lab, voici les
+cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;a class="reference external image-reference" href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img alt="2015-08-25-22_19_50-FirstLab.gns3 — GNS3" src="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;Pour préparer le lab, voici les
 commandes à taper dans la console de Rennes :&lt;/p&gt;
 &lt;p&gt;IOS supporte la tabulation et les raccourcis. Par exemple, pour taper
 &lt;tt class="docutils literal"&gt;configure terminal&lt;/tt&gt;, je peux taper &lt;tt class="docutils literal"&gt;conf&amp;lt;tab&amp;gt; t&amp;lt;tab&amp;gt;&lt;/tt&gt; ou tout
@@ -2991,7 +3023,7 @@ tuto&lt;/a&gt;&lt;/p&gt;
 l'application 'Réglages', la relancer, se rendre dans 'Application' &amp;gt;
 'Navigateur' et choisir le moteur de recherche Duckduckgo.&lt;/p&gt;
 &lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content><category term="jolla"></category></entry><entry><title>Prise en main de GNS3 pour la simulation réseau</title><link href="https://blog.devarieux.net/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html" rel="alternate"></link><published>2015-08-19T21:57:00+02:00</published><updated>2015-08-19T21:57:00+02:00</updated><author><name>aldevar</name></author><id>tag:blog.devarieux.net,2015-08-19:/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html</id><summary type="html">&lt;p&gt;Comme moi, vous connaissez peut être l'utilitaire &lt;a class="reference external" href="https://www.netacad.com/about-networking-academy/packet-tracer"&gt;Packet Tracer de
 Cisco&lt;/a&gt;
 qui permet de simuler un réseau Cisco et d'y faire quelques exercices.
@@ -3030,33 +3062,33 @@ télécharger le paquet qu'il vous faut. L'appli est multiplateforme,
 compatible Windows, Linux et Mac. L'installeur va installer pour vous
 tous les outils nécessaire pour la virtualisation et la capture de
 paquets.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_30_55-GNS3 1.3.9 Setup" src="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_30_55-GNS3 1.3.9 Setup" src="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Sous Windows, l'installation
 est assez classique. Après avoir lancé l'installeur, la fenêtre de setup
 apparaît, il suffit alors de suivre les indications jusqu'à arriver à
 cette fenêtre :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_08-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_08-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Il est préférable de laisser
 tout cocher, ainsi si des logiciels ont besoin de mise à jour, elles
 seront faites. En cliquant sur Next, l'installeur va lancer
 l'installation de winPcap&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_29-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_42-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_29-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_42-WinPcap 4.1.3 Setup" src="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;On laisse cocher le lancement automatique du driver au démarrage.&lt;/p&gt;
 &lt;p&gt;Ensuite, l'installeur télécharge et installe Wireshark&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_59-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_14-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_39-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_33_59-GNS3 1.3.9 Setup" src="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_14-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_34_39-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;WinPcap est déjà installé donc on décoche l'option
-&lt;a class="reference external" href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-1723_34_56-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_35_47-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a class="reference external image-reference" href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-1723_34_56-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img alt="2015-08-17 23_35_47-Wireshark 1.12.4 (64-bit) Setup" src="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;On décoche 'Run Wireshark',
 on ne va pas en avoir besoin tout de suite.&lt;/p&gt;
 &lt;p&gt;L'installation se poursuit avec cette fois SolarWinds Response Time
 Viewer qui est une application d'analyse de capture Wireshark&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img alt="2015-08-17 23_37_13-SolarWinds Registration" src="images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img alt="2015-08-17 23_37_13-SolarWinds Registration" src="images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Ici, vous pouvez mettre ce que vous voulez, l'adresse n'est pas vérifiée&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img alt="2015-08-17 23_38_54-SolarWinds Response Time Viewer for Windows" src="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img alt="2015-08-17 23_38_54-SolarWinds Response Time Viewer for Windows" src="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;L'application se lance automatiquement. Je vous invite à en
 faire un tour rapide avant de la fermer&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_09-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external" href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_30-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_09-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt; &lt;a class="reference external image-reference" href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img alt="2015-08-17 23_40_30-GNS3 1.3.9 Setup" src="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;SolarWinds vous propose une licence gratuite pour son
 software. Je n'ai pas testé comment acquérir cette licence et je ne sais
 pas sous quelle condition elle s'acquière.&lt;/p&gt;
@@ -3153,12 +3185,12 @@ plus simple d'utiliser son PC pour entrer quelques commandes où même
 pour écrire des scripts. Voici donc comment activer la connexion SSH sur
 son Jolla.&lt;/p&gt;
 &lt;p&gt;1- Activer le mode developpeur&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;2- Activer la connexion distante et définir un mot de passe&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;3- Se connecter depuis son PC avec l'utilisateur nemo. Pour passer en
 root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content><category term="jolla"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a class="reference external" href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
@@ -3336,7 +3368,7 @@ Jolla.&lt;/a&gt;&lt;/p&gt;
 qu'il va y avoir des bugs, que je vais perdre en confort mais comme le
 dit si bien l'ami qui m'a montré son Jolla la première fois, c'est aussi
 un achat engagé.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;J'attends maintenant impatiemment de recevoir mon colis.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="jolla"></category><category term="google"></category><category term="jolla"></category><category term="Linux"></category></entry><entry><title>Trop de requêtes ARP - Régler le timeout de la table ARP</title><link href="https://blog.devarieux.net/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html" rel="alternate"></link><published>2015-01-21T20:18:00+01:00</published><updated>2015-01-21T20:18:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-01-21:/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html</id><summary type="html">&lt;p&gt;Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
@@ -4784,7 +4816,7 @@ peut s’effectuer indépendamment de celle qui consiste à en écrire.&lt;/li&g
 &lt;/div&gt;
 &lt;div class="section" id="entete-tcp"&gt;
 &lt;h2&gt;Entête TCP&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/enteteTCP1.png"&gt;&lt;img alt="enteteTCP1" src="/images/enteteTCP1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/enteteTCP1.png"&gt;&lt;img alt="enteteTCP1" src="/images/enteteTCP1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;L’entête TCP est codé sur 20 octets hors options.&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Port Source (16 bits): Port utilisé par l’application sur la machine
@@ -4826,7 +4858,7 @@ duquel l’information devient urgente.&lt;/li&gt;
 &lt;/div&gt;
 &lt;div class="section" id="etablissement-dune-connexion"&gt;
 &lt;h2&gt;Établissement d’une connexion&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/ConnectionTCP.png"&gt;&lt;img alt="ConnectionTCP" src="/images/ConnectionTCP.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/ConnectionTCP.png"&gt;&lt;img alt="ConnectionTCP" src="/images/ConnectionTCP.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Une ouverture de connexion TCP s’effectue en 3 temps.&lt;/p&gt;
 &lt;p&gt;L’émetteur du premier paquet doit avoir connaissance du couple
 &lt;strong&gt;`IP &amp;lt;https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=293&amp;gt;`__
@@ -4968,7 +5000,7 @@ d’associer la destination du paquet à une fonction. L’identification de
 cette fonction ce fait à l’aide d’un chiffre nommé &lt;strong&gt;Port&lt;/strong&gt;.&lt;/p&gt;
 &lt;div class="section" id="en-tete-udp"&gt;
 &lt;h2&gt;En tête UDP&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Lors de l’étude des &lt;a class="reference external" href="qrqvb-datagramme-ip.html"&gt;datagramme
 IP&lt;/a&gt;, nous
 avions vu le contenu de l’entête du paquet (partie verte). Ici, nous
@@ -4976,7 +5008,7 @@ allons observer le contenu de l’entête du message (partie jaune) lorsque
 l’on traite un p&amp;gt;aquet UDP.&lt;/p&gt;
 &lt;p&gt;Le paquet UDP est composé de 8 octets.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;a class="reference external" href="/images/entete.png"&gt;&lt;img alt="entete" src="/images/entete.png" /&gt;&lt;/a&gt;&lt;/blockquote&gt;
+&lt;a class="reference external image-reference" href="/images/entete.png"&gt;&lt;img alt="entete" src="/images/entete.png" /&gt;&lt;/a&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Les 2 premiers octets contiennent le port source&lt;/strong&gt;. Codé sur 16 bits
 donc. C’est le numéro de port de l’émetteur du paquet. C’est aussi le
 numéro de port sur lequel le destinataire doit envoyer sa réponse.&lt;/p&gt;
@@ -5253,7 +5285,7 @@ masque de réseau. Alors puisque je ne suis pas fort en blablatage, je
 vais plutôt vous montrer un exemple.
 |  Voici une adresse IP : 192.168.1.15
 |  Voici un masque de réseau : 255.255.255.0&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/netmask1.png"&gt;&lt;img alt="netmask1" src="/images/netmask1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/netmask1.png"&gt;&lt;img alt="netmask1" src="/images/netmask1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;En fait, pour être plus précis, les bits se situant dans la partie de
 l’identificateur réseau sont tous positionnés sur 1 et les bits de la
 partie hôte sur 0. En procédant à une opération de ET logique entre
@@ -5269,7 +5301,7 @@ opérations de ET logique suivent cette règle :&lt;/p&gt;
 doivent emprunter nos paquets IP. Pour bien comprendre ce système, nous
 allons jouer un peu avec le binaire, même si je sais que ça va en
 rebuter plus d’un :p&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/binaire.png"&gt;&lt;img alt="binaire" src="/images/binaire.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/binaire.png"&gt;&lt;img alt="binaire" src="/images/binaire.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Ceci est important puisque c’est de cette manière qu’on va pouvoir
 déterminer le nombre maximal de machines qui peuvent appartenir à un
 réseau. Il faut également savoir que sur 1 réseau, 2 adresses sont
@@ -5281,7 +5313,7 @@ diffuser un message sur tout le réseau. Le message de ce genre le plus
 classique est la requête&amp;nbsp;ARP. Celle ci permet à une machine de trouver
 une autre machine sur le réseau en l’appelant.&lt;/p&gt;
 &lt;p&gt;Voici un exemple de capture de trame avec wireshark :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/arp2.png"&gt;&lt;img alt="arp2" src="/images/arp2.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/arp2.png"&gt;&lt;img alt="arp2" src="/images/arp2.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Le premier paquet est donc une requête ARP. La machine source envoie ce
 message sur tout le réseau : ‘who has 192.168.1.51? &amp;nbsp;Tell 192.168.1.25′.
 La machine qui a pour IP 192.168.1.51 envoie donc sa réponse directement
@@ -5356,14 +5388,14 @@ avons étudié la dernière fois. Les données (couche application) sont
 encapsulées dans un message (couche 4, transport) qui est lui même
 encapsulé dans un paquet (couche 3, réseau), lui même encapsulé dans une
 trame (couche 2, liaison). Rien ne vaut un bon dessin pour
-comprendre.&lt;a class="reference external" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+comprendre.&lt;a class="reference external image-reference" href="/images/encaps.png"&gt;&lt;img alt="encaps" src="/images/encaps.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Aujourd’hui, on va donc s’intéresser à ce que contient le petit carré
 vert lorsque le paquet est un paquet IP.&lt;/p&gt;
 &lt;p&gt;Cet en-tête est codé par défaut sur 20 octets. Nous allons donc nous
 appliquer à décrypter le contenu de chacun de ses octets. J’ai fait pour
 cela un schéma pas terrible mais qui me servira de support pour les
 explications :p.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/entete1.png"&gt;&lt;img alt="entete1" src="/images/entete1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/entete1.png"&gt;&lt;img alt="entete1" src="/images/entete1.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Le premier octet contient 2 informations.&lt;/strong&gt;&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -5474,12 +5506,12 @@ graphique ou &lt;strong&gt;tcpdump&lt;/strong&gt; en mode commande. Je vous lais
 découvrir ces applications. Je vais me contenter ici de montrer un
 screenshot d’une capture faite avec wireshark qui montre ce que ce
 logiciel peut nous dire sur le contenu de nos paquets.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/trame01.png"&gt;&lt;img alt="trame01" src="/images/trame01.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/trame01.png"&gt;&lt;img alt="trame01" src="/images/trame01.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Voici le type de paquet que nous avons capturé. C’est un
 simple ping entre 2 machines se situant sur des réseaux différents.
 Wireshark nous dit déjà que c’est un paquet ICMP. Voyons le détail de ce
 datagramme :&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="/images/trame02.png"&gt;&lt;img alt="trame02" src="/images/trame02.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="/images/trame02.png"&gt;&lt;img alt="trame02" src="/images/trame02.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;En dépliant le contenu de l’en-tête IP, voici ce que wireshark peut nous
 dire :&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -5530,7 +5562,7 @@ pas très clair pour le moment, mais ça va le devenir.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="schema-du-modele"&gt;
 &lt;h2&gt;Schéma du modèle&lt;/h2&gt;
-&lt;p&gt;&lt;a class="reference external" href="images/modele_OSI.gif"&gt;&lt;img alt="modele_OSI" src="images/modele_OSI.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external image-reference" href="images/modele_OSI.gif"&gt;&lt;img alt="modele_OSI" src="images/modele_OSI.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Le modèle OSI est donc représenté en 7 couches distinctes. J'ai ici
 représenté 2 machines (Système A et Système B) pour bien montrer que
 lors de la communication de 2 hôtes, chaque couche 'discute' directement
