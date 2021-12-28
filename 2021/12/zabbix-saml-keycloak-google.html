@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Zabbix - Authentification SAML avec Keycloak et provider Google Auth | Aldevar - Le Blog
+</title>
+  <link rel="canonical" href="../../2021/12/zabbix-saml-keycloak-google.html">
+
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
+  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="../../theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://blog.devarieux.net/feed/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
+  <meta name="description" content="Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta. De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth. Cela fait plusieurs mois …">
+
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="../../">
+        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
+      <p class="text-muted">Yet Another Blog</p>
+      <ul class="list-inline">
+            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
+          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Zabbix - Authentification SAML avec Keycloak et provider Google Auth
+</h1>
+      <hr>
+  <article class="article">
+    <header>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2021-12-29T00:23:00+01:00">
+          <i class="fa fa-clock-o"></i>
+          Wed 29 December 2021
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="../../category/supervision.html">supervision</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-files-o"></i>
+              <a href="../../tag/zabbix.html">#zabbix</a>,               <a href="../../tag/authentification.html">#authentification</a>,               <a href="../../tag/keycloak.html">#keycloak</a>          </li>
+      </ul>
+    </header>
+    <div class="content">
+      <p>Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
+De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.</p>
+<p>Cela fait plusieurs mois que ce chantier est mis de coté et je viens enfin de trouver le temps de finaliser la mise en oeuvre de l'authentification des comptes utilisateurs sur Zabbix en SAML, avec Keycloak et le provider Google Auth. Je vais décrire ici les étapes afin d'avoir ce type d'authentification fonctionnelle.
+Je pars du principe que vous avez déjà un serveur Keycloak installé et que votre provider Google Auth est configuré.</p>
+<p>L'objectif est que, au sein d'une entreprise utilisant Google Workspace, les utilisateurs de Zabbix puissent s'authentifier directement avec leurs comptes Google Workspace. Dans mon cas, Keycloak est le backend d'authentification global de l'entreprise et est utilisé par plusieurs autres applications, qu'elles soient internes ou à destination des clients.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="gestion-des-certificats">
+<h2>Gestion des certificats</h2>
+<p>La première étape est de générer un certificat pour Zabbix. Cela se passe dans <code>/usr/share/zabbix/conf/certs</code>. On utilise openssl pour le générer.</p>
+<div class="highlight"><pre><span></span>cd /usr/share/zabbix/conf/certs
+openssl req -x509 -sha256 -newkey rsa:2048 -keyout sp.key -out sp.crt -days 3650 -nodes -subj &#39;/CN=My Zabbix Server&#39;
+</pre></div>
+<p>Cette commande génère un certificat et une clé privée pour les échanges SAML.</p>
+<p>La seconde étape consiste à récupérer le certificat X509 de l'identity provider (IDP) de Keycloak. Pour moi, le plus rapide a été de me rendre sur cette URL pour y copier la chaine du certificat.</p>
+<div class="highlight"><pre><span></span>https://&lt;keycloakaddress&gt;/auth/realms/&lt;realmname&gt;/protocol/saml/descriptor
+</pre></div>
+<p>Cette page doit afficher un bloc XML avec le nom du certificat et le certificat au format X509 entre les balises <code>&lt;ds:X509Certificate&gt;</code>. Après avoir copié ce certificat, il faut le coller sur le serveur Zabbix dans le fichier <code>/usr/share/zabbix/conf/certs/idp.crt</code>. Le fichier doit ressembler à ça :</p>
+<div class="highlight"><pre><span></span>-----BEGIN CERTIFICATE-----
+MIICmSF...........g20plgaFEwvQERGH=
+-----END CERTIFICATE-----
+</pre></div>
+<p>Puis changer les permissions du fichier.</p>
+<div class="highlight"><pre><span></span>chmod 755 idp.crt
+</pre></div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="configuration-de-keycloak">
+<h2>Configuration de Keycloak</h2>
+<p>Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id <code>zabbix</code> et pour protocol <code>SAML</code>.</p>
+<img alt="Creation du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Une fois le client ajouté, il faut l'éditer pour terminer sa configuration. Voici les paramètres à configurer <em>(note : mon installation de Zabbix est joignable à la racine du serveur web et non via le chemin /zabbix comme dans la configuration par defaut. Prenez soin de bien mettre le chemin complet vers votre serveur Zabbix)</em> :</p>
+<ul class="simple">
+<li>Master SAML Processing URL : <tt class="docutils literal"><span class="pre">https://zabbix.domain.tld/index_sso.php?acs</span></tt></li>
+<li>Valid Redirect URL : <tt class="docutils literal"><span class="pre">https://zabbix.domain.tld/*</span></tt></li>
+<li>Dans la section Fine Grain, Logout Service Redirect Binding URL : <tt class="docutils literal"><span class="pre">https://zabbix.domain.tld/index_sso.php?sls</span></tt></li>
+<li>Les paramètres devant être sur 'ON' sont : <tt class="docutils literal">Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.</tt></li>
+<li>Le Name ID Format est code : <tt class="docutils literal">email</tt></li>
+</ul>
+<img alt="Configuration du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Configuration.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Créer ensuite le Mapper, dans l'onglet Mapper du client Zabbix.</p>
+<ul class="simple">
+<li>Name: <tt class="docutils literal">zabbixuser</tt></li>
+<li>Mapper Type : <tt class="docutils literal">User Attribute</tt></li>
+<li>User Attribute : <tt class="docutils literal">email</tt></li>
+<li>Friendly Name : <tt class="docutils literal">email</tt></li>
+<li>SAML Attribute Name : <tt class="docutils literal">email</tt></li>
+</ul>
+<img alt="Mapper du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Mapper.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Sauvegarder cette configuration.</p>
+<p>Dernière étape de la configuration de Keycloak. Aller dans <code>Client Scopes</code> et sélectionner <code>role_list</code> et dans l'onglet Mapper, editer le mapper <code>role list</code>. Activer <code>Single Role Attribute</code>.</p>
+<img alt="Client Scopes dans Keycloak" src="/images/Keycloak-Client-Scopes.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="configuration-de-zabbix">
+<h2>Configuration de Zabbix</h2>
+<p>Connectez-vous sur Zabbix avec un compte Super Admin. Dans Administration &gt; Authentication selectionner l'onglet SAML, l'activer et le configurer de cette façon :</p>
+<ul class="simple">
+<li>IdP entity ID : <tt class="docutils literal"><span class="pre">https://&lt;keycloakaddress&gt;/auth/realms/&lt;realmname&gt;</span></tt></li>
+<li>SSO service URL :<tt class="docutils literal"><span class="pre">https://&lt;keycloakaddress&gt;/auth/realms/&lt;realmname&gt;/protocol/saml</span></tt></li>
+<li>SLO service URL : <tt class="docutils literal"><span class="pre">https://&lt;keycloakaddress&gt;/auth/realms/&lt;realmname&gt;/protocol/saml</span></tt></li>
+<li>Username attribute : <tt class="docutils literal">email</tt></li>
+<li>SP entity ID : <tt class="docutils literal">zabbix</tt></li>
+<li>SP name ID format : <tt class="docutils literal"><span class="pre">urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</span></tt></li>
+</ul>
+<p>Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.</p>
+<p>Dans Administration &gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.</p>
+<p>Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur <strong>Sign in with Single Sign-On (SAML)</strong> puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.</p>
+<img alt="Page d'Authentification Zabbix avec option SAML" class="align-center" src="/images/Zabbix-Auth-SAML.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<img alt="Page d'Authentification Keycloak avec option Google" class="align-center" src="/images/Keycloak-Auth-Google.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Le bouton Logout de Zabbix doit vous ramener sur la page d'authentification de Zabbix et également vous déconnecter de Keycloak.</p>
+<p>Pour moi, la prochaine étape est de faire la même chose avec Netbox.</p>
+</div>
+
+    </div>
+  </article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
+      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
+
+</body>
+
+</html>

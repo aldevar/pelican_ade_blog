@@ -1,5 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-04-12T18:32:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>VPN Meraki et Fedora</title><link href="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" rel="alternate"></link><published>2021-04-12T18:32:00+02:00</published><updated>2021-04-12T18:32:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-12:/2021/04/vpn-meraki-fedora.html</id><summary type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-12-29T00:23:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Zabbix - Authentification SAML avec Keycloak et provider Google Auth</title><link href="https://blog.devarieux.net/2021/12/zabbix-saml-keycloak-google.html" rel="alternate"></link><published>2021-12-29T00:23:00+01:00</published><updated>2021-12-29T00:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-12-29:/2021/12/zabbix-saml-keycloak-google.html</id><summary type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
+De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
+&lt;p&gt;Cela fait plusieurs mois …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
+De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
+&lt;p&gt;Cela fait plusieurs mois que ce chantier est mis de coté et je viens enfin de trouver le temps de finaliser la mise en oeuvre de l'authentification des comptes utilisateurs sur Zabbix en SAML, avec Keycloak et le provider Google Auth. Je vais décrire ici les étapes afin d'avoir ce type d'authentification fonctionnelle.
+Je pars du principe que vous avez déjà un serveur Keycloak installé et que votre provider Google Auth est configuré.&lt;/p&gt;
+&lt;p&gt;L'objectif est que, au sein d'une entreprise utilisant Google Workspace, les utilisateurs de Zabbix puissent s'authentifier directement avec leurs comptes Google Workspace. Dans mon cas, Keycloak est le backend d'authentification global de l'entreprise et est utilisé par plusieurs autres applications, qu'elles soient internes ou à destination des clients.&lt;/p&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="gestion-des-certificats"&gt;
+&lt;h2&gt;Gestion des certificats&lt;/h2&gt;
+&lt;p&gt;La première étape est de générer un certificat pour Zabbix. Cela se passe dans &lt;code&gt;/usr/share/zabbix/conf/certs&lt;/code&gt;. On utilise openssl pour le générer.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd /usr/share/zabbix/conf/certs
+openssl req -x509 -sha256 -newkey rsa:2048 -keyout sp.key -out sp.crt -days 3650 -nodes -subj &amp;#39;/CN=My Zabbix Server&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Cette commande génère un certificat et une clé privée pour les échanges SAML.&lt;/p&gt;
+&lt;p&gt;La seconde étape consiste à récupérer le certificat X509 de l'identity provider (IDP) de Keycloak. Pour moi, le plus rapide a été de me rendre sur cette URL pour y copier la chaine du certificat.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml/descriptor
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Cette page doit afficher un bloc XML avec le nom du certificat et le certificat au format X509 entre les balises &lt;code&gt;&amp;lt;ds:X509Certificate&amp;gt;&lt;/code&gt;. Après avoir copié ce certificat, il faut le coller sur le serveur Zabbix dans le fichier &lt;code&gt;/usr/share/zabbix/conf/certs/idp.crt&lt;/code&gt;. Le fichier doit ressembler à ça :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-----BEGIN CERTIFICATE-----
+MIICmSF...........g20plgaFEwvQERGH=
+-----END CERTIFICATE-----
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Puis changer les permissions du fichier.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;chmod 755 idp.crt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-keycloak"&gt;
+&lt;h2&gt;Configuration de Keycloak&lt;/h2&gt;
+&lt;p&gt;Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id &lt;code&gt;zabbix&lt;/code&gt; et pour protocol &lt;code&gt;SAML&lt;/code&gt;.&lt;/p&gt;
+&lt;img alt="Creation du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Une fois le client ajouté, il faut l'éditer pour terminer sa configuration. Voici les paramètres à configurer &lt;em&gt;(note : mon installation de Zabbix est joignable à la racine du serveur web et non via le chemin /zabbix comme dans la configuration par defaut. Prenez soin de bien mettre le chemin complet vers votre serveur Zabbix)&lt;/em&gt; :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Master SAML Processing URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/index_sso.php?acs&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Valid Redirect URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/*&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Dans la section Fine Grain, Logout Service Redirect Binding URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/index_sso.php?sls&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Les paramètres devant être sur 'ON' sont : &lt;tt class="docutils literal"&gt;Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Le Name ID Format est code : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;img alt="Configuration du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Configuration.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Créer ensuite le Mapper, dans l'onglet Mapper du client Zabbix.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Name: &lt;tt class="docutils literal"&gt;zabbixuser&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Mapper Type : &lt;tt class="docutils literal"&gt;User Attribute&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;User Attribute : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Friendly Name : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;SAML Attribute Name : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;img alt="Mapper du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Mapper.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Sauvegarder cette configuration.&lt;/p&gt;
+&lt;p&gt;Dernière étape de la configuration de Keycloak. Aller dans &lt;code&gt;Client Scopes&lt;/code&gt; et sélectionner &lt;code&gt;role_list&lt;/code&gt; et dans l'onglet Mapper, editer le mapper &lt;code&gt;role list&lt;/code&gt;. Activer &lt;code&gt;Single Role Attribute&lt;/code&gt;.&lt;/p&gt;
+&lt;img alt="Client Scopes dans Keycloak" src="/images/Keycloak-Client-Scopes.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-de-zabbix"&gt;
+&lt;h2&gt;Configuration de Zabbix&lt;/h2&gt;
+&lt;p&gt;Connectez-vous sur Zabbix avec un compte Super Admin. Dans Administration &amp;gt; Authentication selectionner l'onglet SAML, l'activer et le configurer de cette façon :&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;IdP entity ID : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;SSO service URL :&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;SLO service URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Username attribute : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;SP entity ID : &lt;tt class="docutils literal"&gt;zabbix&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;SP name ID format : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.&lt;/p&gt;
+&lt;p&gt;Dans Administration &amp;gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.&lt;/p&gt;
+&lt;p&gt;Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur &lt;strong&gt;Sign in with Single Sign-On (SAML)&lt;/strong&gt; puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.&lt;/p&gt;
+&lt;img alt="Page d'Authentification Zabbix avec option SAML" class="align-center" src="/images/Zabbix-Auth-SAML.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;img alt="Page d'Authentification Keycloak avec option Google" class="align-center" src="/images/Keycloak-Auth-Google.png" /&gt;
+&lt;div class="line-block"&gt;
+&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Le bouton Logout de Zabbix doit vous ramener sur la page d'authentification de Zabbix et également vous déconnecter de Keycloak.&lt;/p&gt;
+&lt;p&gt;Pour moi, la prochaine étape est de faire la même chose avec Netbox.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="supervision"></category><category term="zabbix"></category><category term="authentification"></category><category term="keycloak"></category></entry><entry><title>VPN Meraki et Fedora</title><link href="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" rel="alternate"></link><published>2021-04-12T18:32:00+02:00</published><updated>2021-04-12T18:32:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-12:/2021/04/vpn-meraki-fedora.html</id><summary type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.&lt;/p&gt;
 &lt;p&gt;De même que sous Windows, je dois utiliser des VPN Meraki dans le cadre de mon activité professionnelle. Il parait que sous Ubuntu, les VPN Clients Meraki fonctionnent directement, ce qui n'est pas le cas sous Fedora. Nous allons voir pourquoi et comment y remédier.&lt;/p&gt;
 &lt;p&gt;Les VPN Clients Meraki utilisent le protocole L2TP/IPSec qui n'est pas installé par defaut sur la distribution. La premièr étape est d'installer le plugin L2TP pour NetworkManager&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# dnf install network-manager-l2tp-gnome
@@ -2711,7 +2808,7 @@ Vous devriez vous retrouver avec 2 entrées :&lt;/p&gt;
 original &amp;lt;https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/&amp;gt;`__
 de Major Hayden, publié `sur son blog &amp;lt;https://major.io/&amp;gt;`__ le 21 Aout
 2015. Article traduit avec son aimable autorisation.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;J'ai un peu parlé des nom des interfaces réseau de systemd dans …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;Cet article est une traduction d'`un article
+&lt;p&gt;J'ai un peu parlé des nom des interfaces réseau de systemd dans un de …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;Cet article est une traduction d'`un article
 original &amp;lt;https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/&amp;gt;`__
 de Major Hayden, publié `sur son blog &amp;lt;https://major.io/&amp;gt;`__ le 21 Aout
 2015. Article traduit avec son aimable autorisation.&lt;/em&gt;&lt;/p&gt;
@@ -2898,35 +2995,35 @@ dans sa base. Cependant, il ne peut y avoir qu'un seul nom dans l'OS.
 &lt;a class="reference external" href="https://github.com/systemd/systemd/blob/master/src/udev/net/link-config.c#L403"&gt;src/udev/net/link-config.c&lt;/a&gt;
 à partir de la ligne 403:&lt;/p&gt;
 &lt;pre class="code c literal-block"&gt;
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;enable_name_policy&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;NamePolicy&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;enable_name_policy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="n"&gt;NamePolicy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
 
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-             &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;_NAMEPOLICY_INVALID&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_KERNEL&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;respect_predictable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_DATABASE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_FROM_DATABASE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_ONBOARD&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_ONBOARD&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_SLOT&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_SLOT&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_PATH&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_PATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nl"&gt;NAMEPOLICY_MAC&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                                &lt;span class="n"&gt;new_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ID_NET_NAME_MAC&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-                                &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;name_policy&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+             &lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;_NAMEPOLICY_INVALID&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+                &lt;/span&gt;&lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;policy&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_KERNEL&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;respect_predictable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_DATABASE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ID_NET_NAME_FROM_DATABASE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_ONBOARD&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ID_NET_NAME_ONBOARD&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_SLOT&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ID_NET_NAME_SLOT&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_PATH&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ID_NET_NAME_PATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;NAMEPOLICY_MAC&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="n"&gt;new_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;udev_device_get_property_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ID_NET_NAME_MAC&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                        &lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+                                &lt;/span&gt;&lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;
+                &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;
 &lt;p&gt;Si on regarde le case dans son ensemble, on voit que la première
 correspondance est conservée et donne le nom à l'interface. En partant

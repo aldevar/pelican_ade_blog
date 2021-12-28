@@ -20,7 +20,7 @@
         href="https://blog.devarieux.net/feed/atom.xml">
   <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
         href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Cet article est une traduction d'`un article original <https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/>`__ de Major Hayden, publié `sur son blog <https://major.io/>`__ le 21 Aout 2015. Article traduit avec son aimable autorisation. J'ai un peu parlé des nom des interfaces réseau de systemd dans …">
+  <meta name="description" content="Cet article est une traduction d'`un article original <https://major.io/2015/08/21/understanding-systemds-predictable-network-device-names/>`__ de Major Hayden, publié `sur son blog <https://major.io/>`__ le 21 Aout 2015. Article traduit avec son aimable autorisation. J'ai un peu parlé des nom des interfaces réseau de systemd dans un de …">
 
 
 </head>
@@ -255,35 +255,35 @@ dans sa base. Cependant, il ne peut y avoir qu'un seul nom dans l'OS.
 <a class="reference external" href="https://github.com/systemd/systemd/blob/master/src/udev/net/link-config.c#L403">src/udev/net/link-config.c</a>
 à partir de la ligne 403:</p>
 <pre class="code c literal-block">
-<span class="k">if</span> <span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">enable_name_policy</span> <span class="o">&amp;&amp;</span> <span class="n">config</span><span class="o">-&gt;</span><span class="n">name_policy</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">NamePolicy</span> <span class="o">*</span><span class="n">policy</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">enable_name_policy</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">config</span><span class="o">-&gt;</span><span class="n">name_policy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">NamePolicy</span><span class="w"> </span><span class="o">*</span><span class="n">policy</span><span class="p">;</span><span class="w">
 
-        <span class="k">for</span> <span class="p">(</span><span class="n">policy</span> <span class="o">=</span> <span class="n">config</span><span class="o">-&gt;</span><span class="n">name_policy</span><span class="p">;</span>
-             <span class="o">!</span><span class="n">new_name</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">policy</span> <span class="o">!=</span> <span class="n">_NAMEPOLICY_INVALID</span><span class="p">;</span> <span class="n">policy</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="o">*</span><span class="n">policy</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_KERNEL</span><span class="p">:</span>
-                                <span class="n">respect_predictable</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_DATABASE</span><span class="p">:</span>
-                                <span class="n">new_name</span> <span class="o">=</span> <span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s">&quot;ID_NET_NAME_FROM_DATABASE&quot;</span><span class="p">);</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_ONBOARD</span><span class="p">:</span>
-                                <span class="n">new_name</span> <span class="o">=</span> <span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s">&quot;ID_NET_NAME_ONBOARD&quot;</span><span class="p">);</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_SLOT</span><span class="p">:</span>
-                                <span class="n">new_name</span> <span class="o">=</span> <span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s">&quot;ID_NET_NAME_SLOT&quot;</span><span class="p">);</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_PATH</span><span class="p">:</span>
-                                <span class="n">new_name</span> <span class="o">=</span> <span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s">&quot;ID_NET_NAME_PATH&quot;</span><span class="p">);</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">case</span> <span class="nl">NAMEPOLICY_MAC</span><span class="p">:</span>
-                                <span class="n">new_name</span> <span class="o">=</span> <span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s">&quot;ID_NET_NAME_MAC&quot;</span><span class="p">);</span>
-                                <span class="k">break</span><span class="p">;</span>
-                        <span class="k">default</span><span class="o">:</span>
-                                <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">}</span>
+        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">-&gt;</span><span class="n">name_policy</span><span class="p">;</span><span class="w">
+             </span><span class="o">!</span><span class="n">new_name</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">*</span><span class="n">policy</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">_NAMEPOLICY_INVALID</span><span class="p">;</span><span class="w"> </span><span class="n">policy</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">policy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_KERNEL</span><span class="p">:</span><span class="w">
+                                </span><span class="n">respect_predictable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_DATABASE</span><span class="p">:</span><span class="w">
+                                </span><span class="n">new_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ID_NET_NAME_FROM_DATABASE&quot;</span><span class="p">);</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_ONBOARD</span><span class="p">:</span><span class="w">
+                                </span><span class="n">new_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ID_NET_NAME_ONBOARD&quot;</span><span class="p">);</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_SLOT</span><span class="p">:</span><span class="w">
+                                </span><span class="n">new_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ID_NET_NAME_SLOT&quot;</span><span class="p">);</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_PATH</span><span class="p">:</span><span class="w">
+                                </span><span class="n">new_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ID_NET_NAME_PATH&quot;</span><span class="p">);</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">case</span><span class="w"> </span><span class="nl">NAMEPOLICY_MAC</span><span class="p">:</span><span class="w">
+                                </span><span class="n">new_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">udev_device_get_property_value</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ID_NET_NAME_MAC&quot;</span><span class="p">);</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                        </span><span class="k">default</span><span class="o">:</span><span class="w">
+                                </span><span class="k">break</span><span class="p">;</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span>
 </pre>
 <p>Si on regarde le case dans son ensemble, on voit que la première
 correspondance est conservée et donne le nom à l'interface. En partant
