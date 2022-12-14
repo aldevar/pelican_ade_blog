@@ -170,7 +170,7 @@ tuto&lt;/a&gt;&lt;/p&gt;
 l'application 'Réglages', la relancer, se rendre dans 'Application' &amp;gt;
 'Navigateur' et choisir le moteur de recherche Duckduckgo.&lt;/p&gt;
 &lt;p&gt;Enjoy!&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150820220621.jpg"&gt;&lt;img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content><category term="jolla"></category></entry><entry><title>Se connecter en SSH à son Jolla</title><link href="https://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla.html" rel="alternate"></link><published>2015-03-03T23:19:00+01:00</published><updated>2015-03-03T23:19:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-03-03:/2015/03/se-connecter-en-ssh-a-son-jolla.html</id><summary type="html">&lt;p&gt;Même s'il est possible d'utiliser directement une console sur l'appareil
 grâce à FingerPrint quand on est en mode developpeur, il est quand même
 plus simple d'utiliser son PC pour entrer quelques commandes où même
@@ -182,12 +182,12 @@ plus simple d'utiliser son PC pour entrer quelques commandes où même
 pour écrire des scripts. Voici donc comment activer la connexion SSH sur
 son Jolla.&lt;/p&gt;
 &lt;p&gt;1- Activer le mode developpeur&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211811.jpg"&gt;&lt;img alt="20150303211811" src="/images/20150303211811-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;2- Activer la connexion distante et définir un mot de passe&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external image-reference" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/20150303211957.jpg"&gt;&lt;img alt="20150303211957" src="/images/20150303211957-169x300.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;3- Se connecter depuis son PC avec l'utilisateur nemo. Pour passer en
 root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external image-reference" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/sshJolla.png"&gt;&lt;img alt="sshJolla" src="/images/sshJolla.png" /&gt;&lt;/a&gt;&lt;/p&gt;
 </content><category term="jolla"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a class="reference external" href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
@@ -365,7 +365,7 @@ Jolla.&lt;/a&gt;&lt;/p&gt;
 qu'il va y avoir des bugs, que je vais perdre en confort mais comme le
 dit si bien l'ami qui m'a montré son Jolla la première fois, c'est aussi
 un achat engagé.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external image-reference" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/images/jolla-launch-2.jpg"&gt;&lt;img alt="jolla-launch-2" src="/images/jolla-launch-2-300x226.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;J'attends maintenant impatiemment de recevoir mon colis.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="jolla"></category><category term="google"></category><category term="jolla"></category><category term="Linux"></category></entry></feed>

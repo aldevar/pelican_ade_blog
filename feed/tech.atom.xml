@@ -1,5 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Tech</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/tech.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-04-05T08:55:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Caddy, OVH et les certificats wildcard</title><link href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" rel="alternate"></link><published>2021-04-05T08:55:00+02:00</published><updated>2021-04-05T08:55:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-05:/2021/04/caddy-ovh-acme.html</id><summary type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge &lt;a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01"&gt;DNS-01&lt;/a&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Tech</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/tech.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2022-12-12T08:55:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Authentification Wifi iPSK avec Cisco ISE</title><link href="https://blog.devarieux.net/2022/12/ise-ipsk.html" rel="alternate"></link><published>2022-12-12T08:55:00+01:00</published><updated>2022-12-12T08:55:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2022-12-12:/2022/12/ise-ipsk.html</id><summary type="html">&lt;p&gt;Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key), justement grace au rôle qu'elles peuvent avoir dans l'attribution de l'identité de l'équipement, permettant de le placer dans le VLAN adequat.&lt;/p&gt;
+&lt;p&gt;Cisco ISE (Identity Service Engine) est une appliance proposant un grand nombre de fonctionnalités de sécurité. Il peut authentifier les utilisateurs sur le réseau (Wifi, câble ou VPN), il gère le contrôle d'accès, les politiques de groupe et peut également faire du device posturing (s'assurer qu'un équipement est à jour et que son anti-virus est activé avant de lui donner accès au réseau). Les fonctionnalités sont assez complètes et son utilisation demande une certaine expertise.&lt;/p&gt;
+&lt;p&gt;Pour cet article, le réseau Wifi sur lequel on s'appuit est un réseau Meraki mais je ne doute pas que le fonctionnement doit être grandement similaire avec d'autres constructeurs.&lt;/p&gt;
+&lt;div class="section" id="configuration-meraki"&gt;
+&lt;h2&gt;Configuration Meraki&lt;/h2&gt;
+&lt;p&gt;La configuration du SSID se fait dans le menu Wireless &amp;gt; Access Control en choisissant le SSID cible dans le menu déroulant en haut de la page.&lt;/p&gt;
+&lt;div class="section" id="network-access"&gt;
+&lt;h3&gt;Network Access&lt;/h3&gt;
+&lt;p&gt;Cette section permet de choisir le mode d'association des équipements. L'option à choisir ici est Identity PSK with Radius. Le chiffrement se fait en WPA2. Si vous avez plusieurs bornes, je vous invite à activer le mode 802.11r (fast-transition) qui améliore les performances lors du roaming.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK01.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="splash-page"&gt;
+&lt;h3&gt;Splash Page&lt;/h3&gt;
+&lt;p&gt;Nous n'utilisons pas de Splash Page sur ce SSID. Une fois associé et authentifié, l'accès au réseau se fait directement.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK02.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-radius"&gt;
+&lt;h3&gt;Configuration Radius&lt;/h3&gt;
+&lt;p&gt;Lors du choix IPSK with Radius dans la section 'Network Access', une nouvelle section dédiée à la configuration Radius apparaît.
+On entre les adresses des serveurs Radius, ports et secrets. RADIUS testing est désactivé et le support de CoA est activé. Les serveurs Radius accounting sont activés et paramétrés.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK03.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="assignement-de-l-ip"&gt;
+&lt;h3&gt;Assignement de l'IP&lt;/h3&gt;
+&lt;p&gt;L'assignement de l'adresse IP de l'équipement se fait en mode Bridge. Les équipements se retrouvent sur le VLAN qui leur est assigné et peuvent recevoir une IP en DHCP via, par exemple, le serveur Cisco ISE.
+Le VLAN tagging est activé avec un VLAN par défaut (ici XXX).&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK04.png" /&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configuration-cisco-ise"&gt;
+&lt;h2&gt;Configuration Cisco ISE&lt;/h2&gt;
+&lt;p&gt;Voici le flux de données lors d'une authentification iPSK sur un serveur Cisco ISE. Cette image est directement extraite de la documentation officielle Meraki.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK05.png" /&gt;
+&lt;div class="section" id="ajout-des-ap-et-assignation-a-un-groupe"&gt;
+&lt;h3&gt;Ajout des AP et assignation à un groupe&lt;/h3&gt;
+&lt;p&gt;Sur ISE, aller dans Administration &amp;gt; Network Ressources &amp;gt; Network Devices et cliquer sur Add&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK06.png" /&gt;
+&lt;p&gt;Remplir les champs pour l'AP à intégrer : Nom de l'AP et adresse IP.&lt;/p&gt;
+&lt;p&gt;Créer une nouvelle &lt;cite&gt;Location&lt;/cite&gt; du nom du lieu où sont placées les AP (par exemple Headquarter ou Agence_Rennes) et un &lt;cite&gt;device type&lt;/cite&gt; MR. Ce device type permettra d'y placer l'ensemble des AP de type Meraki MR.
+La localisation &amp;quot;Headquarters&amp;quot; va permettre de faire correspondre l'authentification des clients avec la bonne Policy Set (jeu de politique), que l'on verra plus tard.&lt;/p&gt;
+&lt;p&gt;Cocher Radius Authentication Settings et paramétrer un secret pour ce serveur Radius. Ce secret est celui utilisé dans la configuration Radius du SSID sur Meraki.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK07.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="creer-une-policy-set"&gt;
+&lt;h3&gt;Créer une Policy Set&lt;/h3&gt;
+&lt;p&gt;Créer une nouvelle Policy Set avec la condition &lt;strong&gt;Device&amp;gt;Location&lt;/strong&gt; et sélectionner la localisation Headquarter créée précédemment. Ajouter une seconde condition &lt;strong&gt;Radius &amp;gt; Called-Station-ID Ends_With &amp;quot;Nom_du_SSID&amp;quot;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;J'insiste sur le fait de bien mettre la condition &amp;quot;Ends_With&amp;quot; et nom &amp;quot;Equals&amp;quot; car lors de l'authentification Radius, le nom du SSID envoyé par MEraki sera précédé d'autres informations. En mettant &amp;quot;Equals&amp;quot; l'authentification ne peut pas fonctionner.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK08.png" /&gt;
+&lt;p&gt;Sauvegarder puis se rendre dans la policy en utilisant la flèche à l'extrémité droite. Aller dans &lt;strong&gt;Authentication Policy&lt;/strong&gt; et paramétrer la règle comme ci-dessous. S'assurer que le menu déroulant est bien positionné sur &lt;strong&gt;Internal Endpoints&lt;/strong&gt; et que l'option &lt;strong&gt;If User not found Continue&lt;/strong&gt; est bien sélectionnée. Cette option permet de continuer à vérifier l'authentification d’un équipement qui ne serait pas valide sur cette policy.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK09.png" /&gt;
+&lt;p&gt;Se rendre ensuite dans &lt;strong&gt;Authorization Policy&lt;/strong&gt;. Sur la règle par défaut, supprimer &lt;em&gt;Deny Access&lt;/em&gt; et cliquer sur l'icône + pour créer un nouveau profil avec les paramètres ci-dessous.
+Dans &lt;strong&gt;Advanced Attributes&lt;/strong&gt;, sélectionner &lt;strong&gt;Radius:Tunnel-Password&lt;/strong&gt;. Entrer la PSK utilisée par défaut sur ce SSID puis sauvegarder.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK10.png" /&gt;
+&lt;p&gt;Sélectionner ce profil dans la règle par défaut puis sauvegarder.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK11.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="creer-un-identity-group"&gt;
+&lt;h3&gt;Créer un Identity Group&lt;/h3&gt;
+&lt;p&gt;Aller dans &lt;strong&gt;Work Center &amp;gt; Guest Access &amp;gt; Id Group&lt;/strong&gt;.
+Cliquer sur &lt;strong&gt;Add&lt;/strong&gt; pour ajouter un nouveau groupe qui contiendra les équipements autorisé à s'authentifier sur le réseau Wifi.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="creer-une-policy-set-pour-chaque-psk"&gt;
+&lt;h3&gt;Créer une Policy Set pour chaque PSK&lt;/h3&gt;
+&lt;p&gt;A partir de maintenant, nous pouvons créer une Policy Set pour chaque groupe d'équipement qui utilisera sa propre iPSK. Chaque iPSK identifiera un type d'équipement et le VLAN sur lequel il sera placé.&lt;/p&gt;
+&lt;p&gt;Ici, nous allons créer la policy set pour le VLAN de bureautique (VLAN 84).
+Aller dans &lt;strong&gt;Policy &amp;gt; Policy Elements &amp;gt; Results &amp;gt; Authorization &amp;gt; Authorization Profiles&lt;/strong&gt;. Cliquer sur &lt;strong&gt;Add&lt;/strong&gt; et créer un nouveau profil. C’est celui-ci qui sera utilisé pour surcharger le VLAN par défaut si besoin.
+Les champs importants sont :
+- Nom du profil
+- Common Tasks &amp;gt; VLAN &amp;gt; 84
+- Advances Attributes Settings &amp;gt; Radius:Tunnel-Password ⇒ Entrer la PSK pour les équipements de bureautique (PC portable en général).&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK12.png" /&gt;
+&lt;p&gt;Aller ensuite dans &lt;strong&gt;Policy &amp;gt; Policy Sets&lt;/strong&gt; et éditer la Policy Set créée précédemment. Dans la section &lt;strong&gt;Authorization Rules&lt;/strong&gt; ajouter une nouvelle règle au-dessus de la règle par défaut.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK13.png" /&gt;
+&lt;p&gt;Nommer cette règle et lui appliquer la condition suivante, en choissant le groupe créé dans la section &lt;strong&gt;Créer un Identity Group&lt;/strong&gt; :&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK14.png" /&gt;
+&lt;p&gt;Appliquer ensuite le profil d'autorisation PSK1 créé en juste au-dessus et sauvegarder.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK15.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ajouter-des-euipements-au-groupe"&gt;
+&lt;h3&gt;Ajouter des éuipements au groupe&lt;/h3&gt;
+&lt;p&gt;Aller dans &lt;strong&gt;Context Visibility &amp;gt; Endpoints&lt;/strong&gt;.
+Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer précédement.&lt;/p&gt;
+&lt;img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK16.png" /&gt;
+&lt;p&gt;Cette technique d'authentification permet donc de placer les équipements/utilisateurs sur des VLANs différents en fonction de la PSK utilisée, sans créer un SSID différent pour chaque VLAN.&lt;/p&gt;
+&lt;p&gt;En effet, il est déconseillé de diffuser plus de 5 SSID par AP ou par zone afin de limiter les interférences et optimiser la qualité du signal, notamment lorsqu'on souhaite y faire transiter de la voix et/ou faire du roaming. Grâce à iPSK, nous pouvons segmenter les utilisateurs dans différents VLAN en limitant le nombre de SSID diffusé.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="Tech"></category><category term="ISE"></category><category term="wifi"></category><category term="meraki"></category><category term="security"></category></entry><entry><title>Caddy, OVH et les certificats wildcard</title><link href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" rel="alternate"></link><published>2021-04-05T08:55:00+02:00</published><updated>2021-04-05T08:55:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-04-05:/2021/04/caddy-ovh-acme.html</id><summary type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir présenté dans un &lt;a class="reference external" href="/2021/02/caddy-presentation.html"&gt;premier article&lt;/a&gt; ce qu'est Caddy et son utilisation de façon basique, puis dans &lt;a class="reference external" href="/2021/02/caddy-api.html"&gt;un second&lt;/a&gt; le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge &lt;a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01"&gt;DNS-01&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Le challenge DNS à l'avantage de pouvoir être utilisé pour générer un certificat DV wildcard. Une fois passé un certain nombre de sous domaines servis par un reverse proxy, il devient intéressant d'utiliser ce type de certificat afin d'éviter de générer trop de requêtes vers les serveurs de Let's Encrypt. De plus, avec un seul certificat à gérer pour l'ensemble des sous domaines, la gestion devient simplifiée, et notamment la supervision ou même le renouvellement.&lt;/p&gt;
 &lt;p&gt;Caddy intègre de base la gestion de Let's Encrypt pour les challenges HTTP-01 car celui-ci est universel et ne dépend d'aucun autre services. C'est un échange réalisé directement entre le serveur Caddy et les serveurs de Let's Encrypt. Pour le challenge DNS-01, il y a un intermédiaire. Cet intermédiaire est le serveur DNS du domaine pour lequel on souhaite générer un certificat wildcard. De part la multitude de serveurs disponibles et de prestataires fournissant ces services, il est difficile d'avoir un protocole unifié de modification distante des entrées DNS. A ma connaissance, le seul standard qui existe pour cela est la &lt;a class="reference external" href="https://tools.ietf.org/html/rfc2136"&gt;RFC 2136&lt;/a&gt; qui ne semble pas être implémentée chez la plupart des fournisseurs de services DNS.&lt;/p&gt;
 &lt;p&gt;Nous allons donc voir comment, avec Caddy, générer un certificat wildcard avec OVH en fournisseur de service DNS. La procédure est assez similaire avec les autres fournisseurs qui ont, je l'espère, pris plus de soin dans la documentation de cette fonctionnalité.&lt;/p&gt;

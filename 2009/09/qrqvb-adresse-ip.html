@@ -94,7 +94,7 @@ masque de réseau. Alors puisque je ne suis pas fort en blablatage, je
 vais plutôt vous montrer un exemple.
 |  Voici une adresse IP : 192.168.1.15
 |  Voici un masque de réseau : 255.255.255.0</p>
-<p><a class="reference external image-reference" href="/images/netmask1.png"><img alt="netmask1" src="/images/netmask1.png" /></a></p>
+<p><a class="reference external" href="/images/netmask1.png"><img alt="netmask1" src="/images/netmask1.png" /></a></p>
 <p>En fait, pour être plus précis, les bits se situant dans la partie de
 l’identificateur réseau sont tous positionnés sur 1 et les bits de la
 partie hôte sur 0. En procédant à une opération de ET logique entre
@@ -110,7 +110,7 @@ opérations de ET logique suivent cette règle :</p>
 doivent emprunter nos paquets IP. Pour bien comprendre ce système, nous
 allons jouer un peu avec le binaire, même si je sais que ça va en
 rebuter plus d’un :p</p>
-<p><a class="reference external image-reference" href="/images/binaire.png"><img alt="binaire" src="/images/binaire.png" /></a></p>
+<p><a class="reference external" href="/images/binaire.png"><img alt="binaire" src="/images/binaire.png" /></a></p>
 <p>Ceci est important puisque c’est de cette manière qu’on va pouvoir
 déterminer le nombre maximal de machines qui peuvent appartenir à un
 réseau. Il faut également savoir que sur 1 réseau, 2 adresses sont
@@ -122,7 +122,7 @@ diffuser un message sur tout le réseau. Le message de ce genre le plus
 classique est la requête&nbsp;ARP. Celle ci permet à une machine de trouver
 une autre machine sur le réseau en l’appelant.</p>
 <p>Voici un exemple de capture de trame avec wireshark :</p>
-<p><a class="reference external image-reference" href="/images/arp2.png"><img alt="arp2" src="/images/arp2.png" /></a></p>
+<p><a class="reference external" href="/images/arp2.png"><img alt="arp2" src="/images/arp2.png" /></a></p>
 <p>Le premier paquet est donc une requête ARP. La machine source envoie ce
 message sur tout le réseau : ‘who has 192.168.1.51? &nbsp;Tell 192.168.1.25′.
 La machine qui a pour IP 192.168.1.51 envoie donc sa réponse directement
