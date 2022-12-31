@@ -1,117 +1,102 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  VPN Meraki et Windows 10 | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2021/02/vpn-meraki-win10.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …">
-
-
+  <meta charset="UTF-8" />
+  <title>VPN Meraki et Windows 10 | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="VPN Meraki et Windows 10" />
+  <meta name="twitter:title" content="VPN Meraki et Windows 10" />
+  <meta property="og:url" content="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" />
+  <meta property="og:description" content="Un des avantages du VPN Meraki est qu&#39;il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s&#39;y connecter et nous remontent régulièrement qu&#39;ils ont des échecs de connexions avec le code …" />
+  <meta name="twitter:description" content="Un des avantages du VPN Meraki est qu&#39;il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s&#39;y connecter et nous remontent régulièrement qu&#39;ils ont des échecs de connexions avec le code …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  VPN Meraki et Windows 10
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2021-02-17T21:47:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Wed 17 February 2021
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/cisco.html">#cisco</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/vpn.html">#vpn</a>,               <a href="../../tag/reseau.html">#reseau</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code erreur 628, ou encore le message &quot;The connection was terminated by the remote computer before it could be completed.&quot;.
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" rel="bookmark" title="Permalink to VPN Meraki et Windows 10">
+          <time class="m-date" datetime="2021-02-17T21:47:00+01:00">
+            Feb <span class="m-date-day">17</span> 2021
+          </time>
+          VPN Meraki et Windows 10
+        </a></h1>
+        <p>Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code erreur 628, ou encore le message &quot;The connection was terminated by the remote computer before it could be completed.&quot;.
 Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la configuration de la base de registre en cas d'erreur 809 qui apparait lorsque le client VPN se trouve derrière du NAT.</p>
-<div class="section" id="configuration-du-client-vpn-l2tp">
+<section id="configuration-du-client-vpn-l2tp">
 <h2>Configuration du client VPN L2TP</h2>
 <p>Dans les paramètres VPN de Windows 10, ajouter un nouveau VPN et y entrer les informations de connexion. Jusque là, rien de bien compliqué.</p>
-<img alt="Windows 10 - Add VPN" src="/images/Meraki_VPN_WIN10_Settings.png" />
+<img alt="Windows 10 - Add VPN" class="m-image" src="/images/Meraki_VPN_WIN10_Settings.png" />
 <p>Ensuite, il faut se rendre dans les options d'adaptateurs (Change adapter options). Cela ouvre le Control Panel. Clique droit sur la connexion VPN concernée puis Propriété. Ici, dans l'onglet Securité, dans le second menu déroulant, il faut sélectionner &quot;Require Encryption (Disconnect if server decline)&quot;.
 Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.</p>
-<img alt="Windows 10 - VPN Properties" src="/images/Meraki_VPN_Win10_Properties01.png" />
+<img alt="Windows 10 - VPN Properties" class="m-image" src="/images/Meraki_VPN_Win10_Properties01.png" />
 <p>Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
 On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :</p>
-<pre class="code literal-block">
-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
+<pre class="code">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
 Nom : AssumeUDPEncapsulationContextOnSendRule
 Type: DWORD
 Valeur: 2
-Base: Decimal
-</pre>
+Base: Decimal</pre>
 <p>Après un reboot, la connexion devrait fonctionner.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-02-17T21:47:00+01:00">Wed 17 February 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

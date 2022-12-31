@@ -1,77 +1,62 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Zimbra : Envoi de mails via un relais SMTP authentifié | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2016/06/relais-smtp-authentifie-zimbra.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Héberger soi même ses données c'est bien, le faire correctement c'est mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails est qu'il est difficile de s'assurer que les mails soient bien reçus par nos correspondants. Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un bloc …">
-
-
+  <meta charset="UTF-8" />
+  <title>Zimbra : Envoi de mails via un relais SMTP authentifié | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2016/06/relais-smtp-authentifie-zimbra.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Zimbra : Envoi de mails via un relais SMTP authentifié" />
+  <meta name="twitter:title" content="Zimbra : Envoi de mails via un relais SMTP authentifié" />
+  <meta property="og:url" content="https://blog.devarieux.net/2016/06/relais-smtp-authentifie-zimbra.html" />
+  <meta property="og:description" content="Héberger soi même ses données c&#39;est bien, le faire correctement c&#39;est mieux. Le problème majeur lorsqu&#39;on souhaite héberger soi même ses mails est qu&#39;il est difficile de s&#39;assurer que les mails soient bien reçus par nos correspondants. Il arrive souvent que l&#39;IP fournie par l’hébergeur fasse partie d&#39;un bloc …" />
+  <meta name="twitter:description" content="Héberger soi même ses données c&#39;est bien, le faire correctement c&#39;est mieux. Le problème majeur lorsqu&#39;on souhaite héberger soi même ses mails est qu&#39;il est difficile de s&#39;assurer que les mails soient bien reçus par nos correspondants. Il arrive souvent que l&#39;IP fournie par l’hébergeur fasse partie d&#39;un bloc …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Zimbra : Envoi de mails via un relais SMTP authentifié
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2016-06-24T08:30:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Fri 24 June 2016
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/email.html">#email</a>,               <a href="../../tag/relais.html">#relais</a>,               <a href="../../tag/smtp.html">#smtp</a>,               <a href="../../tag/spam.html">#spam</a>,               <a href="../../tag/zimbra.html">#zimbra</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Héberger soi même ses données c'est bien, le faire correctement c'est
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2016/06/relais-smtp-authentifie-zimbra.html" rel="bookmark" title="Permalink to Zimbra : Envoi de mails via un relais SMTP authentifié">
+          <time class="m-date" datetime="2016-06-24T08:30:00+02:00">
+            Jun <span class="m-date-day">24</span> 2016
+          </time>
+          Zimbra : Envoi de mails via un relais SMTP authentifié
+        </a></h1>
+        <p>Héberger soi même ses données c'est bien, le faire correctement c'est
+        mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
+        est qu'il est difficile de s'assurer que les mails soient bien reçus par
+        nos correspondants.</p>
+        <p>Il arrive souvent que l'IP fournie par l’hébergeur fasse partie d'un
+        bloc …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Héberger soi même ses données c'est bien, le faire correctement c'est
 mieux. Le problème majeur lorsqu'on souhaite héberger soi même ses mails
 est qu'il est difficile de s'assurer que les mails soient bien reçus par
 nos correspondants.</p>
@@ -82,9 +67,9 @@ services mails possèdent leur propre blacklist (coucou barracuda). Même
 un SPF et un DKIM bien configuré ne suffisent pas à outrepasser ces
 blocages.</p>
 <p>Plusieurs solutions s'offraient à moi pour contourner ce problème.</p>
-<ul class="simple">
+<ul>
 <li>Changer d'adresse IP: ça peut fonctionner mais impossible de savoir
-tant qu'on a pas testé la nouvelle IP. Forte &nbsp;probabilité que cette
+tant qu'on a pas testé la nouvelle IP. Forte  probabilité que cette
 IP fasse également partie d'un bloc blacklisté</li>
 <li>Passer sur un hébergeur Zimbra : Intéressant, mais souvent très cher.
 De l'ordre de 5€/mois et par compte minimum.</li>
@@ -101,10 +86,9 @@ qu'il utilise ce relais. L'interface web d'administration propose bien
 d'ajouter des relais SMTP mais impossible de s'y authentifier. La
 configuration d'un relais STMP authentifié doit être faite en ligne de
 commande.</p>
-<pre class="literal-block">
-[root&#64;monzimbra]# su - zimbra
+<pre>[root&#64;monzimbra]# su - zimbra
 ## On ajoute le relais SMTP
-[root&#64;monzimbra]# zmprov ms monzimbra.mondomaine.com&nbsp;zimbraMtaRelayHost relaissmtp.relaisdomaine.com:port
+[root&#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaRelayHost relaissmtp.relaisdomaine.com:port
 ## On créé un fichier text de mapping login/mdp pour le relais
 [root&#64;monzimbra]# echo relaissmtp.relaisdomaine.com USERNAME:PASSWORD &gt; /opt/zimbra/conf/relay_password
 ## Création de la table postfix
@@ -118,31 +102,37 @@ commande.</p>
 ## Configuration de postfix pour qu'il n'utilise pas le canonical name du relais (problème de login/mdp sinon)
 [root&#64;monzimbra]# zmproc ms monzimbra.mondomaine.com zimbraMtaSmtpCnameOverridesServername no
 ## Configuration de TLS
-[root&#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpTlsSecurityLevel may
-</pre>
+[root&#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpTlsSecurityLevel may</pre>
 <p>C'est terminé, tous les domaines attachés au serveur passeront
 dorénavant vers ce relais SMTP.</p>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2016-06-24T08:30:00+02:00">Fri 24 June 2016</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

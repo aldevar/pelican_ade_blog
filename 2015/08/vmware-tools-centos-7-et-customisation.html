@@ -1,89 +1,76 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Vmware tools, Centos 7 et customisation | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2015/08/vmware-tools-centos-7-et-customisation.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas utiliser le script perl fournit mais de passer plutôt par les open-vm-tools qu'on peut directement trouvé dans le gestionnaire de paquet. yum install open-vm-tools C'est simple, rapide …">
-
-
+  <meta charset="UTF-8" />
+  <title>Vmware tools, Centos 7 et customisation | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2015/08/vmware-tools-centos-7-et-customisation.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Vmware tools, Centos 7 et customisation" />
+  <meta name="twitter:title" content="Vmware tools, Centos 7 et customisation" />
+  <meta property="og:url" content="https://blog.devarieux.net/2015/08/vmware-tools-centos-7-et-customisation.html" />
+  <meta property="og:description" content="Depuis quelques temps, lorsqu&#39;on souhaite déployer les VMware tools dans une VM Centos 7 / RedHat 7, le script d&#39;installation hurle de ne pas utiliser le script perl fournit mais de passer plutôt par les open-vm-tools qu&#39;on peut directement trouvé dans le gestionnaire de paquet. yum install open-vm-tools C&#39;est simple, rapide …" />
+  <meta name="twitter:description" content="Depuis quelques temps, lorsqu&#39;on souhaite déployer les VMware tools dans une VM Centos 7 / RedHat 7, le script d&#39;installation hurle de ne pas utiliser le script perl fournit mais de passer plutôt par les open-vm-tools qu&#39;on peut directement trouvé dans le gestionnaire de paquet. yum install open-vm-tools C&#39;est simple, rapide …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Vmware tools, Centos 7 et customisation
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2015-08-14T22:39:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Fri 14 August 2015
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2015/08/vmware-tools-centos-7-et-customisation.html" rel="bookmark" title="Permalink to Vmware tools, Centos 7 et customisation">
+          <time class="m-date" datetime="2015-08-14T22:39:00+02:00">
+            Aug <span class="m-date-day">14</span> 2015
+          </time>
+          Vmware tools, Centos 7 et customisation
+        </a></h1>
+        <p>Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
+        une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas
+        utiliser le script perl fournit mais de passer plutôt par les
+        open-vm-tools qu'on peut directement trouvé dans le gestionnaire de
+        paquet.</p>
+        <pre>yum install open-vm-tools</pre>
+        <p>C'est simple, rapide …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Depuis quelques temps, lorsqu'on souhaite déployer les VMware tools dans
 une VM Centos 7 / RedHat 7, le script d'installation hurle de ne pas
 utiliser le script perl fournit mais de passer plutôt par les
 open-vm-tools qu'on peut directement trouvé dans le gestionnaire de
 paquet.</p>
-<pre class="literal-block">
-yum install open-vm-tools
-</pre>
+<pre>yum install open-vm-tools</pre>
 <p>C'est simple, rapide, ça facilite les mise à jour des tools et c'est
-conseillé par VMware directement, il y a même <a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2073803">un
+conseillé par VMware directement, il y a même <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2073803">un
 KB</a>
-pour ça et <a class="reference external" href="https://github.com/vmware/open-vm-tools">un projet
+pour ça et <a href="https://github.com/vmware/open-vm-tools">un projet
 GitHub</a>.</p>
 <p>Pour rappel, l'insallation des vm-tools permet d'accéder à ces
 fonctionnalité vSphere :</p>
-<ul class="simple">
+<ul>
 <li>Synchronisation de l'horloge de l'OS invité avec celle de la
 plateforme de virtualisation</li>
 <li>Permet à l'hyperviseur de procéder à des appels système afin par
@@ -99,67 +86,64 @@ open-vm-tools, vous serez dans l'incapacité de customiser la nouvelle VM
 à sa création. Exit donc le changement du mot de passe root et surtout
 la configuration réseau. Cette fonctionnalité est apportée par un plugin
 pour open-vm-tools nommé DeployPkg.</p>
-<p>La page <a class="reference external" href="http://partnerweb.vmware.com/GOSIG/RHEL_7.html">Red Hat Enterprise Linux 7 Guest Operating System Installation
+<p>La page <a href="http://partnerweb.vmware.com/GOSIG/RHEL_7.html">Red Hat Enterprise Linux 7 Guest Operating System Installation
 Guide</a> mentionne bien
 ce plugin mais il y manque certaines informations. La procédure complète
-est mieux décrite dans la <a class="reference external" href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2075048">Knowledge Base de
+est mieux décrite dans la <a href="http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2075048">Knowledge Base de
 VMware.</a>Celle
 ci consiste a récupérer les clés public du dépots VMware, importer les
 clés, créer le fichier de repo pour yum et procéder enfin à
 l'installation.</p>
 <p>Dans un premier temps, on récupère les clés ici
-<a class="reference external" href="http://packages.vmware.com/tools/keys">http://packages.vmware.com/tools/keys</a> et on les place dans le répertoire
+<a class="m-link-wrap" href="http://packages.vmware.com/tools/keys">http://packages.vmware.com/tools/keys</a> et on les place dans le répertoire
 /tmp du serveur</p>
 <p>On importe les clés avec rpm</p>
-<pre class="literal-block">
-rpm --import /tmp/key1
-rpm --import /tmp/key2
-</pre>
+<pre>rpm --import /tmp/key1
+rpm --import /tmp/key2</pre>
 <p>Création du fichier <em>/etc/yum.repos.d/vmware-tools.repo</em> avec ce contenu
 :</p>
-<pre class="literal-block">
-[vmware-tools]
+<pre>[vmware-tools]
 name = VMware Tools
 baseurl = http://packages.vmware.com/packages/rhel7/x86_64/
 enabled = 1
-gpgcheck = 1
-</pre>
+gpgcheck = 1</pre>
 <p>Installation du paquet</p>
-<pre class="literal-block">
-yum install open-vm-tools-deploypkg
-</pre>
+<pre>yum install open-vm-tools-deploypkg</pre>
 <p>Installation de perl, nécessaire pour les scripts de customisation</p>
-<pre class="literal-block">
-yum install perl
-</pre>
+<pre>yum install perl</pre>
 <p>On termine par le rechargement du service pour prendre en compte
 l'installation du plugin</p>
-<pre class="literal-block">
-systemctl restart vmtoolsd
-</pre>
+<pre>systemctl restart vmtoolsd</pre>
 <p>Vous pouvez maintenant transformer votre VM en template en toute
 sérénité.</p>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2015-08-14T22:39:00+02:00">Fri 14 August 2015</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

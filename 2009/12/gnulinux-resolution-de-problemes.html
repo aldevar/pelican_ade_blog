@@ -1,77 +1,61 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  GNU/Linux : Résolution de problèmes | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2009/12/gnulinux-resolution-de-problemes.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Une grande partie du travail sur les forums concernant les logiciels libres est d'obtenir plus d'informations sur les problèmes des novices. Il est très agréable d'aider les autres comme il peut être assez agaçant d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider lui-même. Je ne pense pas que …">
-
-
+  <meta charset="UTF-8" />
+  <title>GNU/Linux : Résolution de problèmes | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2009/12/gnulinux-resolution-de-problemes.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="GNU/Linux : Résolution de problèmes" />
+  <meta name="twitter:title" content="GNU/Linux : Résolution de problèmes" />
+  <meta property="og:url" content="https://blog.devarieux.net/2009/12/gnulinux-resolution-de-problemes.html" />
+  <meta property="og:description" content="Une grande partie du travail sur les forums concernant les logiciels libres est d&#39;obtenir plus d&#39;informations sur les problèmes des novices. Il est très agréable d&#39;aider les autres comme il peut être assez agaçant d&#39;essayer d&#39;aider quelqu&#39;un qui ne montre aucun effort pour s&#39;aider lui-même. Je ne pense pas que …" />
+  <meta name="twitter:description" content="Une grande partie du travail sur les forums concernant les logiciels libres est d&#39;obtenir plus d&#39;informations sur les problèmes des novices. Il est très agréable d&#39;aider les autres comme il peut être assez agaçant d&#39;essayer d&#39;aider quelqu&#39;un qui ne montre aucun effort pour s&#39;aider lui-même. Je ne pense pas que …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  GNU/Linux : Résolution de problèmes
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2009-12-25T19:34:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Fri 25 December 2009
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/aide.html">#aide</a>,               <a href="../../tag/gnu.html">#GNU</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/probleme.html">#probleme</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Une grande partie du travail sur les forums concernant les logiciels
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2009/12/gnulinux-resolution-de-problemes.html" rel="bookmark" title="Permalink to GNU/Linux : Résolution de problèmes">
+          <time class="m-date" datetime="2009-12-25T19:34:00+01:00">
+            Dec <span class="m-date-day">25</span> 2009
+          </time>
+          GNU/Linux : Résolution de problèmes
+        </a></h1>
+        <p>Une grande partie du travail sur les forums concernant les logiciels
+        libres est d'obtenir plus d'informations sur les problèmes des novices.
+        Il est très agréable d'aider les autres comme il peut être assez agaçant
+        d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider
+        lui-même. Je ne pense pas que …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Une grande partie du travail sur les forums concernant les logiciels
 libres est d'obtenir plus d'informations sur les problèmes des novices.
 Il est très agréable d'aider les autres comme il peut être assez agaçant
 d'essayer d'aider quelqu'un qui ne montre aucun effort pour s'aider
@@ -81,9 +65,9 @@ novices ne connaissent pas les premières étapes de résolution des
 problèmes sur GNU/Linux et ne savent pas quels types d'informations
 rechercher ni comment les obtenir. J'espère que ce petit guide sera
 utile pour ceux qui font leurs premiers pas sur linux.</p>
-<div class="section" id="i-diagnostiquer-soi-meme">
+<section id="i-diagnostiquer-soi-meme">
 <h2>I - Diagnostiquer soi-même</h2>
-<div class="section" id="la-premiere-etape-est-la-collecte-d-informations">
+<section id="la-premiere-etape-est-la-collecte-d-informations">
 <h3>1 - La première étape est la collecte d'informations.</h3>
 <p>Si un programme plante ou ne fait pas ce qu'il est censé faire, il faut
 se poser et réfléchir calmement.</p>
@@ -110,14 +94,14 @@ live-cd). Il est toujours bon d'avoir un live-cd sous la main pour ce
 genre d'opération. Une fois que vous avez démarré sur le live-cd, montez
 votre partition root et récupérez les informations dans les fichiers
 cités plus haut.</p>
-</div>
-<div class="section" id="le-probleme-est-il-reproductible">
+</section>
+<section id="le-probleme-est-il-reproductible">
 <h3>2 - Le problème est-il reproductible?</h3>
 <p>S'il est possible de reproduire le problème facilement, faites-le.
 N'oubliez pas de le faire sur des fichiers peu important ou sur une
 copie du fichier concerné afin de ne pas endommager vos données.</p>
-</div>
-<div class="section" id="est-ce-un-probleme-materiel">
+</section>
+<section id="est-ce-un-probleme-materiel">
 <h3>3 - Est-ce un problème matériel ?</h3>
 <p>Les problèmes non reproductibles sont souvent dus au matériel. Si vous
 pensez que c'est le cas, regardez alors dans le fichier
@@ -128,61 +112,61 @@ commande tail ne vous sera pas d'un grand secours. Utilisez plutôt
 <strong>less /var/log/boot</strong>et parcourez les pages à la recherche d'un
 message en rapport avec votre problème. Recopiez également ce message
 dans votre fichier de départ.</p>
-</div>
-<div class="section" id="lisez-la-documentation-du-programme">
+</section>
+<section id="lisez-la-documentation-du-programme">
 <h3>4 - Lisez la documentation du programme.</h3>
 <p>Ceci est à faire en particulier si le programme ne réagit pas de la
 manière souhaitée. Lisez l'aide en ligne du programme et utilisez
 également le manuel universel (dans un terminal : man
 nom_du_programme).</p>
-</div>
-<div class="section" id="recherchez-votre-message-d-erreur-sur-internet">
+</section>
+<section id="recherchez-votre-message-d-erreur-sur-internet">
 <h3>5 - Recherchez votre message d'erreur sur internet</h3>
 <p>Copiez/collez le message d'erreur dans un moteur de recherche ou un
 meta-moteur tel que ixquick et ajoutez-y le nom du programme. Vous
 trouverez certainement des messages sur des forums d'utilisateurs qui
 ont le même problème que vous. Lisez le thread complet, vous y trouverez
 peut-être une solution.</p>
-</div>
-<div class="section" id="reflechissez-avec-logique">
+</section>
+<section id="reflechissez-avec-logique">
 <h3>6 - Réfléchissez avec logique</h3>
 <p>Si, arrivé ici, vous commencez à avoir une idée sur la cause du
 problème, vous pouvez peut être tester cette idée. Il y a beaucoup de
 petites commandes simples qui peuvent vous aider à recueillir plus
 d'informations sur votre problème et votre système, qui vont seront d'un
 grand secours.</p>
-<ul class="simple">
+<ul>
 <li><strong>lspci</strong> pour lister votre matériel</li>
 <li><strong>lsusb</strong> pour lister les périphériques usb</li>
 <li><strong>cat /proc/cpuinfo</strong> pour avoir les caractéristiques de votre CPU</li>
 <li><strong>free -m</strong> pour connaitre le taux de charge de votre RAM</li>
 </ul>
-</div>
-<div class="section" id="maintenant-vous-pouvez-penser-a-demander-de-l-aide">
+</section>
+<section id="maintenant-vous-pouvez-penser-a-demander-de-l-aide">
 <h3>7 - Maintenant, vous pouvez penser à demander de l'aide.</h3>
 <p>Si après tout ça, vous n'avez toujours pas résolu votre problème, il est
 temps de demander de l'aide sur un forum d'utilisateurs. Avant de passer
 à cette étape, rappelez vous que les utilisateurs des forums ne sont pas
 payés pour répondre à vos questions. Ce sont seulement des utilisateurs
 ayant une certaine expérience et qui font cela bénévolement.</p>
-</div>
-</div>
-<div class="section" id="ii-obtenir-de-l-aide">
+</section>
+</section>
+<section id="ii-obtenir-de-l-aide">
 <h2>II - Obtenir de l'aide</h2>
-<div class="section" id="d-abord-observer">
+<section id="d-abord-observer">
 <h3>1 - D'abord, observer</h3>
 <p>Commencez par choisir votre forum. Il est préférable dans un premier
 temps de choisir le forum de votre distribution, puis le forum du
 programme concerné. Si ce forum possède une FAQ, lisez-la. Lisez aussi
 les règles du forum. Si votre question ne respecte pas les règles, il y
 a de grandes chances pour que vous n'obteniez pas de réponse.</p>
-</div>
-<div class="section" id="ne-soyez-pas-hors-sujet">
+</section>
+<section id="ne-soyez-pas-hors-sujet">
 <h3>2 - Ne soyez pas hors-sujet</h3>
 <p>Trouvez le sous-forum qui correspond à votre problème. Ne postez pas
 votre message dans plusieurs sous-forums, ceci est très mal vu.</p>
-</div>
-<div class="section" id="choisissez-bien-le-titre-de-votre-topic">
+</section>
+<section id="choisissez-bien-le-titre-de-votre-topic">
 <h3>3 - Choisissez bien le titre de votre topic.</h3>
 <p>N'utilisez pas de sujet tel que &quot;Besoin d'aide&quot; ou &quot;J'ai un problème&quot;.
 Ceci a tendance à irriter les gens.</p>
@@ -191,8 +175,8 @@ Ainsi, une personne qui pense pouvoir vous aider sera plus encline à
 lire votre sujet et poster une réponse. Soyez aussi précis que possible.
 Par exemple &quot;Impossible d'obtenir une adresse IP&quot; sera plus utile que
 &quot;Je n'arrive pas à aller sur internet&quot;.</p>
-</div>
-<div class="section" id="donnez-des-informations">
+</section>
+<section id="donnez-des-informations">
 <h3>4 - Donnez des informations</h3>
 <p>Dans le corps de votre message, donnez le nom et la version de votre
 distribution, le nom et la version du programme utilisé et les
@@ -201,13 +185,13 @@ les messages d'erreurs (c'est là que le fichier que vous avez créé au
 début devient utile). Indiquez ce que vous avez fait pour tenter de
 résoudre le problème. En faisant cela, vous montrerez aux autres que
 vous ne vous êtes pas jeté sur le forum dès que le problème est apparu.</p>
-</div>
-<div class="section" id="pas-de-langage-sms">
+</section>
+<section id="pas-de-langage-sms">
 <h3>5 - Pas de langage SMS</h3>
 <p>Ça saoule! Ça n'aide pas à vous faire comprendre et on vous répondra
 d'autant moins.</p>
-</div>
-<div class="section" id="ne-perdez-pas-une-opportunite-d-apprendre">
+</section>
+<section id="ne-perdez-pas-une-opportunite-d-apprendre">
 <h3>6 - Ne perdez pas une opportunité d'apprendre</h3>
 <p>Ne suivez pas les conseils aveuglément. Vous êtes ici pour apprendre
 quelque chose. Si on vous demande d'utiliser un outil en ligne de
@@ -216,8 +200,8 @@ pourrez ensuite réutiliser cet outil si vous rencontrez un problème
 similaire. Si on vous demande de poster un fichier pour plus
 d'informations, recherchez l'utilité de ce fichier. Les fichiers
 systèmes importants possèdent souvent une page man dédiée.</p>
-</div>
-<div class="section" id="dites-merci">
+</section>
+<section id="dites-merci">
 <h3>7 - Dites merci</h3>
 <p>Les logiciels libres reposent sur la communauté. Personne n'est payé
 pour vous aider. Les personnes qui vous aident le font car elles ont
@@ -226,29 +210,36 @@ En plus de dire merci, vous pouvez également aider les autres qui ne
 savent peut-être pas quelque chose que vous savez. Vous ressentirez
 alors une certaine satisfaction que les logiciels propriétaires ne
 peuvent vous apporter.</p>
+</section>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2009-12-25T19:34:00+01:00">Fri 25 December 2009</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-</div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - supervision</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/supervision.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-12-29T00:23:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Zabbix - Authentification SAML avec Keycloak et provider Google Auth</title><link href="https://blog.devarieux.net/2021/12/zabbix-saml-keycloak-google.html" rel="alternate"></link><published>2021-12-29T00:23:00+01:00</published><updated>2021-12-29T00:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-12-29:/2021/12/zabbix-saml-keycloak-google.html</id><summary type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Supervision</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/supervision.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-12-29T00:23:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Zabbix - Authentification SAML avec Keycloak et provider Google Auth</title><link href="https://blog.devarieux.net/2021/12/zabbix-saml-keycloak-google.html" rel="alternate"></link><published>2021-12-29T00:23:00+01:00</published><updated>2021-12-29T00:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-12-29:/2021/12/zabbix-saml-keycloak-google.html</id><summary type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
 De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
 &lt;p&gt;Cela fait plusieurs mois …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
 De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
 &lt;p&gt;Cela fait plusieurs mois que ce chantier est mis de coté et je viens enfin de trouver le temps de finaliser la mise en oeuvre de l'authentification des comptes utilisateurs sur Zabbix en SAML, avec Keycloak et le provider Google Auth. Je vais décrire ici les étapes afin d'avoir ce type d'authentification fonctionnelle.
 Je pars du principe que vous avez déjà un serveur Keycloak installé et que votre provider Google Auth est configuré.&lt;/p&gt;
 &lt;p&gt;L'objectif est que, au sein d'une entreprise utilisant Google Workspace, les utilisateurs de Zabbix puissent s'authentifier directement avec leurs comptes Google Workspace. Dans mon cas, Keycloak est le backend d'authentification global de l'entreprise et est utilisé par plusieurs autres applications, qu'elles soient internes ou à destination des clients.&lt;/p&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="gestion-des-certificats"&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;section id="gestion-des-certificats"&gt;
 &lt;h2&gt;Gestion des certificats&lt;/h2&gt;
-&lt;p&gt;La première étape est de générer un certificat pour Zabbix. Cela se passe dans &lt;code&gt;/usr/share/zabbix/conf/certs&lt;/code&gt;. On utilise openssl pour le générer.&lt;/p&gt;
+&lt;p&gt;La première étape est de générer un certificat pour Zabbix. Cela se passe dans &lt;code class="code"&gt;/usr/share/zabbix/conf/certs&lt;/code&gt;. On utilise openssl pour le générer.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd /usr/share/zabbix/conf/certs
 openssl req -x509 -sha256 -newkey rsa:2048 -keyout sp.key -out sp.crt -days 3650 -nodes -subj &amp;#39;/CN=My Zabbix Server&amp;#39;
 &lt;/pre&gt;&lt;/div&gt;
@@ -19,7 +19,7 @@ openssl req -x509 -sha256 -newkey rsa:2048 -keyout sp.key -out sp.crt -days 3650
 &lt;p&gt;La seconde étape consiste à récupérer le certificat X509 de l'identity provider (IDP) de Keycloak. Pour moi, le plus rapide a été de me rendre sur cette URL pour y copier la chaine du certificat.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml/descriptor
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Cette page doit afficher un bloc XML avec le nom du certificat et le certificat au format X509 entre les balises &lt;code&gt;&amp;lt;ds:X509Certificate&amp;gt;&lt;/code&gt;. Après avoir copié ce certificat, il faut le coller sur le serveur Zabbix dans le fichier &lt;code&gt;/usr/share/zabbix/conf/certs/idp.crt&lt;/code&gt;. Le fichier doit ressembler à ça :&lt;/p&gt;
+&lt;p&gt;Cette page doit afficher un bloc XML avec le nom du certificat et le certificat au format X509 entre les balises &lt;code class="code"&gt;&amp;lt;ds:X509Certificate&amp;gt;&lt;/code&gt;. Après avoir copié ce certificat, il faut le coller sur le serveur Zabbix dans le fichier &lt;code class="code"&gt;/usr/share/zabbix/conf/certs/idp.crt&lt;/code&gt;. Le fichier doit ressembler à ça :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;-----BEGIN CERTIFICATE-----
 MIICmSF...........g20plgaFEwvQERGH=
 -----END CERTIFICATE-----
@@ -27,73 +27,721 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;p&gt;Puis changer les permissions du fichier.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;chmod 755 idp.crt
 &lt;/pre&gt;&lt;/div&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="configuration-de-keycloak"&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="configuration-de-keycloak"&gt;
 &lt;h2&gt;Configuration de Keycloak&lt;/h2&gt;
-&lt;p&gt;Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id &lt;code&gt;zabbix&lt;/code&gt; et pour protocol &lt;code&gt;SAML&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Creation du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
+&lt;p&gt;Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id &lt;code class="code"&gt;zabbix&lt;/code&gt; et pour protocol &lt;code class="code"&gt;SAML&lt;/code&gt;.&lt;/p&gt;
+&lt;img alt="Creation du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
 &lt;p&gt;Une fois le client ajouté, il faut l'éditer pour terminer sa configuration. Voici les paramètres à configurer &lt;em&gt;(note : mon installation de Zabbix est joignable à la racine du serveur web et non via le chemin /zabbix comme dans la configuration par defaut. Prenez soin de bien mettre le chemin complet vers votre serveur Zabbix)&lt;/em&gt; :&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Master SAML Processing URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/index_sso.php?acs&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Valid Redirect URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/*&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Dans la section Fine Grain, Logout Service Redirect Binding URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://zabbix.domain.tld/index_sso.php?sls&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Les paramètres devant être sur 'ON' sont : &lt;tt class="docutils literal"&gt;Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Le Name ID Format est code : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;Master SAML Processing URL : &lt;code&gt;https://zabbix.domain.tld/index_sso.php?acs&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Valid Redirect URL : &lt;code&gt;https://zabbix.domain.tld/*&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Dans la section Fine Grain, Logout Service Redirect Binding URL : &lt;code&gt;https://zabbix.domain.tld/index_sso.php?sls&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Les paramètres devant être sur 'ON' sont : &lt;code&gt;Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Le Name ID Format est code : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Configuration du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Configuration.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
+&lt;img alt="Configuration du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Configuration.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
 &lt;p&gt;Créer ensuite le Mapper, dans l'onglet Mapper du client Zabbix.&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Name: &lt;tt class="docutils literal"&gt;zabbixuser&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Mapper Type : &lt;tt class="docutils literal"&gt;User Attribute&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;User Attribute : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Friendly Name : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;SAML Attribute Name : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;Name: &lt;code&gt;zabbixuser&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Mapper Type : &lt;code&gt;User Attribute&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;User Attribute : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Friendly Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SAML Attribute Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Mapper du client Zabbix dans Keycloak" src="/images/Keycloak-Client-Zabbix-Mapper.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
+&lt;img alt="Mapper du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Mapper.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
 &lt;p&gt;Sauvegarder cette configuration.&lt;/p&gt;
-&lt;p&gt;Dernière étape de la configuration de Keycloak. Aller dans &lt;code&gt;Client Scopes&lt;/code&gt; et sélectionner &lt;code&gt;role_list&lt;/code&gt; et dans l'onglet Mapper, editer le mapper &lt;code&gt;role list&lt;/code&gt;. Activer &lt;code&gt;Single Role Attribute&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Client Scopes dans Keycloak" src="/images/Keycloak-Client-Scopes.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="configuration-de-zabbix"&gt;
+&lt;p&gt;Dernière étape de la configuration de Keycloak. Aller dans &lt;code class="code"&gt;Client Scopes&lt;/code&gt; et sélectionner &lt;code class="code"&gt;role_list&lt;/code&gt; et dans l'onglet Mapper, editer le mapper &lt;code class="code"&gt;role list&lt;/code&gt;. Activer &lt;code class="code"&gt;Single Role Attribute&lt;/code&gt;.&lt;/p&gt;
+&lt;img alt="Client Scopes dans Keycloak" class="m-image" src="/images/Keycloak-Client-Scopes.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="configuration-de-zabbix"&gt;
 &lt;h2&gt;Configuration de Zabbix&lt;/h2&gt;
 &lt;p&gt;Connectez-vous sur Zabbix avec un compte Super Admin. Dans Administration &amp;gt; Authentication selectionner l'onglet SAML, l'activer et le configurer de cette façon :&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;IdP entity ID : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;SSO service URL :&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;SLO service URL : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Username attribute : &lt;tt class="docutils literal"&gt;email&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;SP entity ID : &lt;tt class="docutils literal"&gt;zabbix&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;SP name ID format : &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;ul&gt;
+&lt;li&gt;IdP entity ID : &lt;code&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SSO service URL :&lt;code&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SLO service URL : &lt;code&gt;https://&amp;lt;keycloakaddress&amp;gt;/auth/realms/&amp;lt;realmname&amp;gt;/protocol/saml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Username attribute : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SP entity ID : &lt;code&gt;zabbix&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;SP name ID format : &lt;code&gt;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.&lt;/p&gt;
 &lt;p&gt;Dans Administration &amp;gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.&lt;/p&gt;
 &lt;p&gt;Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur &lt;strong&gt;Sign in with Single Sign-On (SAML)&lt;/strong&gt; puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.&lt;/p&gt;
-&lt;img alt="Page d'Authentification Zabbix avec option SAML" class="align-center" src="/images/Zabbix-Auth-SAML.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;img alt="Page d'Authentification Keycloak avec option Google" class="align-center" src="/images/Keycloak-Auth-Google.png" /&gt;
-&lt;div class="line-block"&gt;
-&lt;div class="line"&gt;&lt;br /&gt;&lt;/div&gt;
-&lt;/div&gt;
+&lt;img alt="Page d'Authentification Zabbix avec option SAML" class="m-image" src="/images/Zabbix-Auth-SAML.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;img alt="Page d'Authentification Keycloak avec option Google" class="m-image" src="/images/Keycloak-Auth-Google.png" /&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;/p&gt;
 &lt;p&gt;Le bouton Logout de Zabbix doit vous ramener sur la page d'authentification de Zabbix et également vous déconnecter de Keycloak.&lt;/p&gt;
 &lt;p&gt;Pour moi, la prochaine étape est de faire la même chose avec Netbox.&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Supervision"></category></entry><entry><title>Zabbix et TimescaleDB 2 - Erreur Z3005</title><link href="https://blog.devarieux.net/2021/02/zabbix-timescaledb2.html" rel="alternate"></link><published>2021-02-23T21:45:00+01:00</published><updated>2021-02-23T21:45:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-23:/2021/02/zabbix-timescaledb2.html</id><summary type="html">&lt;p&gt;Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer.&lt;/p&gt;
+&lt;p&gt;TimescaleDB est une time serie database et est donc particulièrement adapaté pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer.&lt;/p&gt;
+&lt;p&gt;TimescaleDB est une time serie database et est donc particulièrement adapaté pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL et permet de transformer certaines tables d'une base en mode time series. Le gros avantage est que cela permet de stocker l'ensemble des informations dans un endroit unique, que ce soit la configuration du logiciel (utilisateurs, droits d'accès, paramètres...) et aussi les métriques récupérées par le système de supervision. En plus de cela, timescaleDB propose le partitionnemet automatique des tables ainsi que la compression des données ayant plus de 7 jours.&lt;/p&gt;
+&lt;p&gt;On a donc d'un coté un gain opérationnel car on n'a plus q'une base de données à gérer et de l'autre un gain en ressources car les tables sont adaptées à ce qu'elles stockent et peuvent être compréssées pour des économies de stockage substantielles.&lt;/p&gt;
+&lt;p&gt;Lors de ma dernière installation, j'ai pu voir que le plugin TimescaleDB était sorti en version 2. La documentation de Zabbix ne spécifiant pas la version de TimescaleDB à installer, j'ai naturellement installé cette dernière version.&lt;/p&gt;
+&lt;p&gt;Mal m'en a pris! Cette version 2 n'est pas compatible avec Zabbix 5.2! J'ai pu le voir rapidement lors du démarrage du service &lt;code class="code"&gt;zabbix-server&lt;/code&gt; avec ces logs que vous n'êtes pas obligé lire en entier. C'est un gros vomi d'erreurs comme on n'aime pas en voir (TL;DR - Plusieurs erreurs Z3005 - query failed - clairement en rapport avec TimescaleDB)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: relation &amp;quot;_timescaledb_config.bgw_policy_compress_chunk s&amp;quot; does not exist
+LINE 1: select (p.older_than).integer_interval from _timescaledb_con...
+^
+[select (p.older_than).integer_interval from _timescaledb_config.bgw_policy_compress_chunks p inner join _timescaledb_catalog.hypertable h on (h.id = p.hypertable_id) where h.table_name=&amp;#39;history&amp;#39;]
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: function add_compress_chunks_policy(unknown, integer) does not exist
+LINE 1: select add_compress_chunks_policy(&amp;#39;history&amp;#39;, integer &amp;#39;612000...
+^
+HINT: No function matches the given name and argument types. You might need to add explicit type casts.
+[select add_compress_chunks_policy(&amp;#39;history&amp;#39;, integer &amp;#39;612000&amp;#39;)]
+0000000000000 failed to add compression policy to table &amp;#39;history&amp;#39;
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: relation &amp;quot;_timescaledb_config.bgw_policy_compress_chunk s&amp;quot; does not exist
+LINE 1: select (p.older_than).integer_interval from _timescaledb_con...
+^
+[select (p.older_than).integer_interval from _timescaledb_config.bgw_policy_compress_chunks p inner join _timescaledb_catalog.hypertable h on (h.id = p.hypertable_id) where h.table_name=&amp;#39;history_uint&amp;#39;]
+0000000000000 [Z3005] query failed: [0] PGRES_FATAL_ERROR:ERROR: function add_compress_chunks_policy(unknown, integer) does not exist
+LINE 1: select add_compress_chunks_policy(&amp;#39;history_uint&amp;#39;, integer &amp;#39;6...
+^
+HINT: No function matches the given name and argument types. You might need to add explicit type casts.
+[select add_compress_chunks_policy(&amp;#39;history_uint&amp;#39;, integer &amp;#39;612000&amp;#39;)]
+0000000000000 failed to add compression policy to table &amp;#39;history_uint&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Cette erreur provient d'une incompatibilité entre Zabbix 5.2 et TimescaleDB 2. Cette incompatibilité est causée par des modifications de certaines fonctions de l'API de TimescaleDB, entre autre la fonction &lt;a href="https://docs.timescale.com/latest/api#add_compression_policy"&gt;add_compression_policy&lt;/a&gt;. A partir de là, on a deux solutions.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Soit on refait l'installation de TimescaleDB avec la dernière version 1.X.&lt;/li&gt;
+&lt;li&gt;Soit on tente de corriger ces erreurs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;J'ai opté pour la seconde option. En fouillant, j'ai trouvé un &lt;a href="https://support.zabbix.com/projects/ZBX/issues/ZBX-18854"&gt;ticket sur le Jira&lt;/a&gt; de Zabbix qui aborde ce problème. Dans les échanges, un utilisateur propose une solution avec quelques lignes à envoyer vers la db pour corriger tout ça. Voici comment la mettre en oeuvre.&lt;/p&gt;
+&lt;p&gt;On commence par se préparer à mettre à jour la base de données&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# systemctl stop zabbix-server
+# sudo -u postgres psql zabbix
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On peut maintenant envoyer le code SQL suivant :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TYPE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;_timescaledb_catalog&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ts_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_time_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;BOOLEAN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;INTERVAL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;integer_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;BIGINT&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;ALTER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TYPE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;_timescaledb_catalog&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ts_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OWNER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TO&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;zabbix&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;CREATE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OR&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;REPLACE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;VIEW&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;_timescaledb_config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bgw_policy_compress_chunks&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;job_id&lt;/span&gt;&lt;span class="p"&gt;,(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hypertable_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="nb"&gt;INTEGER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;hypertable_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;FALSE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;compress_after&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="n"&gt;_timescaledb_catalog&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ts_interval&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;older_than&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;timescaledb_information&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jobs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;WHERE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;proc_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;policy_compression&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;ALTER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;VIEW&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;_timescaledb_config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bgw_policy_compress_chunks&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OWNER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TO&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;zabbix&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;CREATE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OR&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;REPLACE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FUNCTION&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;add_compress_chunks_policy&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hypertable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;regclass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;older_than&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;anyelement&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;if_not_exists&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;BOOLEAN&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DEFAULT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FALSE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;RETURNS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;INTEGER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;LANGUAGE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;sql&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;add_compression_policy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hypertable&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;older_than&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;if_not_exists&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;ALTER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FUNCTION&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;add_compress_chunks_policy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OWNER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TO&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;zabbix&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;CREATE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OR&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;REPLACE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FUNCTION&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;drop_chunks&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;older_than&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;anyelement&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DEFAULT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="k"&gt;UNKNOWN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="k"&gt;table_name&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;NAME&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;DEFAULT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;NAME&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;RETURNS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;SETOF&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;TEXT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;LANGUAGE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;sql&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;AS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;drop_chunks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;table_name&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;regclass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;older_than&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="k"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="k"&gt;FALSE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;ALTER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;FUNCTION&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;drop_chunks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;anyelement&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;NAME&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;OWNER&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;TO&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;zabbix&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On peut maintenant redémarrer le service zabbix-server (&lt;code class="code"&gt;systemctl start zabbix-server&lt;/code&gt;) et on voit dans les logs que les erreurs ont disparu.
+Zabbix devrait rapidement corriger cela, dans un premier temps en mettant à jour la documentation et dans un second temps en adaptant l'application.&lt;/p&gt;
+</content><category term="Supervision"></category></entry><entry><title>Monitoring 101 : Que faut-il surveiller?</title><link href="https://blog.devarieux.net/2017/11/monitoring-101-que-surveiller.html" rel="alternate"></link><published>2017-11-12T16:52:00+01:00</published><updated>2017-11-12T16:52:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2017-11-12:/2017/11/monitoring-101-que-surveiller.html</id><summary type="html">&lt;section id="introduction"&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="introduction"&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Les métriques sont la partie la plus visible d'une architecture de supervision. Ce sont des données en général facile à récupérer et à stocker. Par conséquent, il arrive souvent qu'on n'investisse pas assez de temps dans la compréhension des données collectées, du pourquoi nous les collectons et ce que nous en faisons. Dans la manjorité des architectures de supervision, on se concentre sur la détection simple des problèmes: détecter si un evènement ou un état à eu lieu (une ligne d'erreur dans un log, un processus qui tombe). Puis, quand on reçoit la notification du problème, on se connecte sur la plateforme de supervision pour visualiser les métriques et essayer de comprendre ce qu'il se passe. Dans cette version de la supervision, les métriques sont vues comme un supplément à la detection d'erreurs.&lt;/p&gt;
+&lt;p&gt;Afin de tenter de sortir de l'ornière et utiliser pleinement les métriques comme moyen d'alerte, nous devons nous mettre d'accord sur la définition de métrique. Je vous donne donc ma version de cette définition.
+Les métriques sont les mesures des propriétés d'une partie d'un logiciel ou de materiel. Pour qu'une métrique soit utile, il faut conserver une trace de son état en général en enregistrant l'observation d'une valeur à un temps donné. Une observation contient une valeur, un timestamp et parfois des propriétés (source, tag...)&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="les-metriques"&gt;
+&lt;h2&gt;Les Métriques&lt;/h2&gt;
+&lt;p&gt;Il y a 3 catégories de métriques. Les métriques systèmes, les métriques applicatives et les évenements. Chacune de ses catégories se traite différemment et ne sert pas le même objectif.&lt;/p&gt;
+&lt;section id="les-metriques-systemes"&gt;
+&lt;h3&gt;Les Métriques Systèmes&lt;/h3&gt;
+&lt;p&gt;Ce sont les métriques liées à l'infrastructure servant la partie applicative. Cette infrastrcuture est composée de différentes ressources qui peuvent être de bas niveau comme le materiel physique (CPU, RAM, Disques, Réseau) ou de plus haut niveau comme une base de données qui peut aussi être considéré comme une ressource afin qu'une application puisse fournir des résultats. C'est la notion de middleware. Ces métriques peuvent être classées en 3 grandes catégories :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Taux de disponiblité&lt;/strong&gt;: Pourcentage de temps durant lequel la ressource est capable de répondre à des requêtes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Taux d'utilisation&lt;/strong&gt;: Pourcentage de temps durant lequel la ressource est occupée à répondre à des requêtes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Contention&lt;/strong&gt;: C'est la quantité de requêtes que la ressource ne peut servir car elle est occupée. Cela peut être une file d'attente, des I/O Wait...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Voici quelques exemples de métriques systèmes :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th&gt;Ressource&lt;/th&gt;
+&lt;th&gt;Disponibilité&lt;/th&gt;
+&lt;th&gt;Utilisation&lt;/th&gt;
+&lt;th&gt;Contention&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Base de données&lt;/td&gt;
+&lt;td&gt;% de temps durant
+lequel la DB est
+joignable&lt;/td&gt;
+&lt;td&gt;% de temps durant
+lequel chaque
+connection est occupée&lt;/td&gt;
+&lt;td&gt;Nombre de requêtes
+en file d'attente&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Mémoire Vive&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;% de la RAM totale
+utilisée&lt;/td&gt;
+&lt;td&gt;Utilisation du swap&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="les-metriques-applicatives"&gt;
+&lt;h3&gt;Les Métriques Applicatives&lt;/h3&gt;
+&lt;p&gt;C'est ici qu'est mesurée l'experience utilisateur ainsi que la santé global du service. Comme pour les métriques système, elles sont classées en plusieurs catégories.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Performance&lt;/strong&gt;: Cette métrique quantifie l'efficacité d'un composant. La métrique de performance la plus commune est la latence, qui représente le temps nécessaire pour accomplir une tâche. Il y a plusieurs façon d'exprimer cette métrique. On peut en faire une moyenne ou utiliser les percentiles, du type &amp;quot;99% des requêtes ont reçu une réponse en moins de 0.2 secondes&amp;quot;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Debit&lt;/strong&gt;: ou également &lt;strong&gt;entrées sorties&lt;/strong&gt;. C'est la quantité de requêtes traitée par unité de temps. Par exemple, un nombre de pages affichées par seconde.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Succès&lt;/strong&gt;: C'est le pourcentage d'entrées sorties traitées dont l'execution s'est bien déroulée. Par exemple, le nombre de code HTTP 2XX.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Echec&lt;/strong&gt;: A l'inverse, le pourcentage d'entrée sorties traitées dont l'execution s'est mal déroulée. Par exemple, le nombre de code HTTP 5XX.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ces métriques permettent de rapidement répondre aux questions qui intéressent les utilisateurs finaux du service. Le service est-il disponible et remplit-il sa mission? A quelle vitesse le fait-il? Avec quelles résultats?&lt;/p&gt;
+&lt;p&gt;Voici quelques exemples de métriques applicatives pour un service web:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th&gt;Catégorie&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;Valeur&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Performance&lt;/td&gt;
+&lt;td&gt;99ème percentil du temps de réponse (s)&lt;/td&gt;
+&lt;td&gt;0.3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Débit&lt;/td&gt;
+&lt;td&gt;Requêtes par seconde&lt;/td&gt;
+&lt;td&gt;220&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Succès&lt;/td&gt;
+&lt;td&gt;Pourcentage de code retour HTTP 2XX&lt;/td&gt;
+&lt;td&gt;99.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Echec&lt;/td&gt;
+&lt;td&gt;Pourcentage de code retour HTTP 5XX&lt;/td&gt;
+&lt;td&gt;0.2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="les-evenements"&gt;
+&lt;h3&gt;Les Evenements&lt;/h3&gt;
+&lt;p&gt;En plus des métriques systèmes et applicatives, il y a certaine information qu'on souhaite récupérer de façon plus sporadique. Certains systèmes permettent de superviser des évenements. Les évenements n'ont pas lieu de façon fréquentes et il est souvent difficile voir impossible de les prévoir.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tâche planifiée en échec&lt;/li&gt;
+&lt;li&gt;Virus détecté dans un système de fichier&lt;/li&gt;
+&lt;li&gt;Trap SNMP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Contrairement aux métriques qui doivent être analysées dans leur context, les évenements contiennent en général en eux-même suffisamment d'informations pour être directement interprétés.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="conclusion"&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Dans le doute, ne pas hésiter à collecter les données. Sachant que ces données doivent être &lt;strong&gt;bien comprises&lt;/strong&gt; (je sais ce que cette donnée signifie), avoir une &lt;strong&gt;granularité&lt;/strong&gt; adequat (si la granularité est trop large, je perds en précision; si la granularité est trop fine je risque d'impacter le système que je supervise) et être &lt;strong&gt;conservée suffisamment&lt;/strong&gt; longtemps pour comprendre quels sont les comportements normaux et anormaux.&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+</content><category term="Supervision"></category></entry><entry><title>Monitoring 101 : Les alertes durant les astreintes</title><link href="https://blog.devarieux.net/2017/10/monitoring-101-alertes-durant-astreintes.html" rel="alternate"></link><published>2017-10-29T19:30:00+01:00</published><updated>2017-10-29T19:30:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2017-10-29:/2017/10/monitoring-101-alertes-durant-astreintes.html</id><summary type="html">&lt;section id="introduction"&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Après avoir déployé un système de supervision dans une infrastructure de
+taille moyenne et avoir passé quelques temps en rotation dans une équipe
+d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que
+devrait être la supervision et surtout les alertes qui doivent être
+levées lors des astreintes …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="introduction"&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Après avoir déployé un système de supervision dans une infrastructure de
+taille moyenne et avoir passé quelques temps en rotation dans une équipe
+d'astreinte, j'ai tiré un certains nombre de conclusions sur ce que
+devrait être la supervision et surtout les alertes qui doivent être
+levées lors des astreintes. L'écriture et l'audit de règles d'alertes
+doivent respecter certains principes afin que les astreintes se
+déroulent le plus sereinement possible:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Une alerte envoyée en astreinte doit être urgente, réelle et
+concrète. C'est à dire qu'il doit être possible d'intervenir pour
+corriger le problème.&lt;/li&gt;
+&lt;li&gt;Une alerte doit être levée pour des problèmes imminent ou en cours.&lt;/li&gt;
+&lt;li&gt;Ne pas hésiter à supprimer les alertes générant du bruit. L'excès de
+supervision nuit à la supervision.&lt;/li&gt;
+&lt;li&gt;La meilleur façon de comprendre un problème est d'alerter sur ses
+symptômes.&lt;/li&gt;
+&lt;li&gt;Corollaire : Eviter d'alerter directement sur les causes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Avant de détailler un peu plus ces principes, voici les 3 règles majeurs
+qui, à mon sens, doivent servir de guide:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A chaque fois que je reçois une alerte, &lt;strong&gt;je dois la considérer comme
+urgente&lt;/strong&gt; et agir comme tel. Je ne peux agir comme ça trop souvent
+avant de ressentir une lassitude.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Chaque alerte doit être concrète&lt;/strong&gt;. Je dois pouvoir réaliser une
+action pour la corriger.&lt;/li&gt;
+&lt;li&gt;Chaque action sur alerte doit se faire avec un certain &lt;strong&gt;niveau
+d'expertise&lt;/strong&gt;. Si le problème peut être traité par un script, alors
+je n'aurais pas du être dérangé.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Vu comme ça, c'est un peu ambitieux mais ces règles doivent avant tout
+servir de guides pour l'écriture et la revue des alertes. Voici quelques
+questions qu'on peut se poser lors de l'écriture d'une nouvelle règle:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cette nouvelle règle ne vient-elle pas surcharger une règle déjà
+existante qui est elle-même urgente, concrète et impactante.&lt;/li&gt;
+&lt;li&gt;Vais-je un jour ignorer cette alerte sachant qu'elle est bénigne?
+Puis-je affiner cette règle pour éviter cette situation?&lt;/li&gt;
+&lt;li&gt;Cette alerte se lève-t-elle pour une condition qui va réellement
+impacter les utilisateurs?&lt;/li&gt;
+&lt;li&gt;Il y a-t-il des actions à mener en réponse à cette alerte? Cette
+action doit-elle être réalisée tout de suite ou peut-elle attendre
+demain matin, ou lundi, ou le trimestre prochain?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Evidemment, aucun système d'alerte dans une infrastructure croissante et
+changeante n'est aussi parfait que celui que je viens de décrire mais ce
+sont quelques règles qui permettent de s'en approcher autant que
+possible.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="avoir-une-vue-utilisateurs"&gt;
+&lt;h2&gt;Avoir une vue utilisateurs&lt;/h2&gt;
+&lt;p&gt;C'est ce que qu'on appelle la &amp;quot;&lt;strong&gt;supervision des symptômes&lt;/strong&gt;&amp;quot;, opposée
+à la &amp;quot;&lt;strong&gt;supervision des causes&lt;/strong&gt;&amp;quot;. Un petit exemple afin de préciser
+le propos : vos utilisateurs se soucient-ils de savoir si votre serveur
+SQL est down? Non, ils s'inquiètent si leur requêtes sont en échecs (je
+vous entends déjà pleurer sur vos petits check 'SQL Server' Nagios).&lt;/p&gt;
+&lt;p&gt;En général, les utilisateurs se soucient d'un petit nombre d’éléments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Disponibilité&lt;/strong&gt;. Pas d'erreur 500, de requête en attente, de pages
+a moitié chargées. Un service qui ne fonctionne pas pleinement doit
+être considéré comme un service non disponible.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Latence.&lt;/strong&gt; ça doit aller vite!&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Exactitude des données&lt;/strong&gt;. Les données doivent être en sécurité.
+Elles doivent aussi être à jour.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fonctionnalités.&lt;/strong&gt;Le service doit fournir toutes ses
+fonctionnalités, même si ce n'est pas une fonction principale du
+service. Par exemple, l'auto-complétion dans un champ de recherche.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;C'est à peu prêt tout.&lt;/p&gt;
+&lt;p&gt;La différence entre un serveur de base de données &lt;em&gt;down&lt;/em&gt; et des données
+utilisateurs non disponible est très importante. La première est une
+cause, la seconde est un symptôme et l’indisponibilité des données peu
+provenir de plusieurs choses. On peut avoir un problème d'I/O ou de CPU
+sur le serveur de BDD, rendant les temps de réponses trop long. Vous
+n'allez pas pour autant lever une alerte chaque fois que le CPU est à
+100% ou chaque fois que l'I/O Wait monte à 60%. Avoir une vue
+utilisateur permet de directement savoir si un problème nécessite une
+intervention.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="alerter-sur-les-causes-c-est-nul-mais-parfois-on-n-a-pas-le-choix"&gt;
+&lt;h2&gt;Alerter sur les causes, c'est nul! (mais parfois, on n'a pas le choix)&lt;/h2&gt;
+&lt;p&gt;On sait bien que si le serveur de BDD est down les utilisateurs n'auront
+pas accès à leur données et il est très tentant de superviser juste le
+serveur de BDD et d'ajouter une supervision sur la bonne connexion du
+service à la BDD. Ceci pose d'autres problèmes :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Il faudra de toute façon vérifier les symptômes. Peut être avons nous
+des déconnexions réseaux intempestives, de la contention sur le CPU
+ou sur les performances du stockages (qui a dit backup en cours?) ou
+une tonnes d'autres problèmes auxquels on ne pense pas. On doit donc
+vérifier les symptômes.&lt;/li&gt;
+&lt;li&gt;Si on attrape les symptômes et les causes, on se retrouve avec une
+redondance des alertes et on a donc soit de la duplication d'alerte
+soit la mise en place d'un système de dépendances entre les alertes
+qui ajoute de la complexité.&lt;/li&gt;
+&lt;li&gt;Peut être qu'un cluster de base de données a été créé et qu'on ne se
+soucie plus de savoir qu'un serveur est tombé.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Mais il est vrai que parfois, les alertes sur les causes sont
+nécessaires. Par exemple, en général, il n'y a pas de symptômes sur des
+problèmes d'espace disque plein à 95% et il est pourtant nécessaire
+d'agir avant qu'un manque d'espace ne vienne perturber le service. Ce
+type d'alerte est à utiliser avec parcimonie.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="des-tickets-des-emails"&gt;
+&lt;h2&gt;Des tickets, des emails...&lt;/h2&gt;
+&lt;p&gt;Qu'on le veuille ou non, on se retrouve toujours avec des alertes qu'on
+peut qualifier de non critique. Elles méritent qu'on s'en occupe, mais
+pas forcement maintenant.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dans ce cas, l'ouverture d'un ticket peut-être utile. Votre
+plateforme du supervision ouvre un ticket que vous pourrez traiter
+lorsque vous aurez plus de temps (après la nuit par exemple).&lt;/li&gt;
+&lt;li&gt;Chaque alerte devrait automatiquement être tracée quelque part. Par
+seulement les envoyer par e-mail, sur un canal IRC ou dans un canal
+Slack. En général, ce type d'envoie permet juste de mieux ignorer les
+alertes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Le point soulevé ici est qu'il est important de créer un système
+d'astreinte qui limite la lassitude, responsabilise sur la réactivité et
+qui ne va pas trop régulièrement réveiller la personne d'astreinte,
+l'interrompre dans son dîner ou l'empêcher de passer du temps avec sa
+famille.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="procedure"&gt;
+&lt;h2&gt;Procédure&lt;/h2&gt;
+&lt;p&gt;Il est préférable d'avoir une documentation dédiée pour chaque alerte ou
+famille d'alerte qui est susceptible d'être levée. Cette documentation
+doit expliquer ce que signifie l'alerte et comment elle peut être
+résolue.&lt;/p&gt;
+&lt;p&gt;Cette documentation ne doit pas être un long pavé expliquant toute
+l'architecture en long et en large. Elle doit expliquer brièvement les
+points à vérifier et les différentes actions à mener.&lt;/p&gt;
+&lt;p&gt;Inversement, la documentation ne doit pas être une simple commande à
+taper ou une action simpliste à réaliser. Cela signifierai que l'action
+de correction est scriptable et n'aurait pas du déranger la personne
+d'astreinte. L'alerte devrait être levée si l’exécution du script ne
+corrige pas le problème et nécessite alors une intervention humaine.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="ne-soyez-pas-naif"&gt;
+&lt;h2&gt;Ne soyez pas naïf!&lt;/h2&gt;
+&lt;p&gt;Voici quelques bonnes raisons de ne pas respecter ces règles :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Vous avez une cause connue qui fait qu'un service répond de façon
+aléatoire&lt;/strong&gt;. Dans ce cas, alerter sur un les symptômes ne sera pas
+d'une grande aide et il est plus simple d'alerter sur la cause.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Les symptômes apparaissent quand c'est déjà trop tard&lt;/strong&gt;, par
+exemple quand il n'y a plus d'espace disque.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Le système d'alerte semble être plus complexe que le problème qu'il
+tente de détecter&lt;/strong&gt;. Le but est de tendre vers plus de simplicité,
+plus de robustesse et des système auto-réparant. Avant d'atteindre
+cet objectif sur le moyen terme, il est possible qu'il soit plus
+efficace d'avoir un système d'alerte complexe mais qui soit fiable et
+ne lève pas trop de faux positifs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+</content><category term="Supervision"></category></entry><entry><title>State SaltStack pour déploiement de Zabbix-agent</title><link href="https://blog.devarieux.net/2016/08/state-saltstack-deploiement-de-zabbix-agent.html" rel="alternate"></link><published>2016-08-10T15:36:00+02:00</published><updated>2016-08-10T15:36:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-08-10:/2016/08/state-saltstack-deploiement-de-zabbix-agent.html</id><summary type="html">&lt;p&gt;SaltStack est un gestionnaire de configuration comparable à Ansible,
+Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur
+Salt est appelé 'master' et les clients des 'minions'. Les states sont
+des listes de commandes que le serveur fait exécuter par le client. On
+utilise YAML pour écrire les …&lt;/p&gt;</summary><content type="html">&lt;p&gt;SaltStack est un gestionnaire de configuration comparable à Ansible,
+Chef ou Puppet fonctionnant sur le modèle Client/Serveur. Le serveur
+Salt est appelé 'master' et les clients des 'minions'. Les states sont
+des listes de commandes que le serveur fait exécuter par le client. On
+utilise YAML pour écrire les states.&lt;/p&gt;
+&lt;p&gt;Comme je l'avais promis
+à &lt;a href="https://twitter.com/SteveDESTIVELLE"&gt;&amp;#64;SteveDESTIVELLE&lt;/a&gt; voici le
+state SaltStack que nous utilisons pour déployer rapidement et
+simplement l'agent Zabbix sur nos serveurs.&lt;/p&gt;
+&lt;p&gt;Ce state installe zabbix-agent sur les serveur Windows 32 et 64bits, sur
+les CentOS 6 et 7 ainsi que sur Debian Wheezy. Il est assez simple d'y
+ajouter la prise en charge d'autres OS. Sur les linux, le repository
+Zabbix est déployé pour faciliter l'installation et la mise à jour de
+l'agent. Enfin, le state pousse également le fichier de configuration de
+zabbix-agent. Pensez à bien y ajouter le nom ou l'adresse IP de votre
+serveur (fichier files/linux/zabbix/zabbix_agentd.conf  et
+files/windows/zabbix/conf/zabbix_agentd.win.conf ).&lt;/p&gt;
+&lt;p&gt;Enfin, le state ouvre le firewall Windows, n'oubliez pas d'ajouter l'IP
+de votre serveur Zabbix ligne 122 de init.sls  .&lt;/p&gt;
+&lt;p&gt;Pour télécharger les fichiers, ça se passe &lt;a href="https://github.com/aldevar/Zabbix_SaltState"&gt;sur
+github&lt;/a&gt;.&lt;/p&gt;
+</content><category term="Supervision"></category></entry><entry><title>Superviser un serveur HAproxy avec Zabbix</title><link href="https://blog.devarieux.net/2016/08/superviser-serveur-haproxy-zabbix.html" rel="alternate"></link><published>2016-08-01T08:30:00+02:00</published><updated>2016-08-01T08:30:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-08-01:/2016/08/superviser-serveur-haproxy-zabbix.html</id><summary type="html">&lt;p&gt;Après avoir monté le &lt;a href="/monter-cluster-galera-mariadb.html"&gt;cluster MariaDB
+Galera&lt;/a&gt;
+et placé un serveur &lt;a href="/galera-load-balancing-failover-haproxy.html"&gt;HAproxy en
+frontal&lt;/a&gt;,
+il me restait encore à mettre en place la supervision de ce cluster. Je
+voulais notamment, en dehors de la supervision de base qu'on peut
+déployer sur un serveur (classiquement processeurs / RAM / disques /
+Réseau) pouvoir visualiser …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir monté le &lt;a href="/monter-cluster-galera-mariadb.html"&gt;cluster MariaDB
+Galera&lt;/a&gt;
+et placé un serveur &lt;a href="/galera-load-balancing-failover-haproxy.html"&gt;HAproxy en
+frontal&lt;/a&gt;,
+il me restait encore à mettre en place la supervision de ce cluster. Je
+voulais notamment, en dehors de la supervision de base qu'on peut
+déployer sur un serveur (classiquement processeurs / RAM / disques /
+Réseau) pouvoir visualiser l'état du cluster rapidement.&lt;/p&gt;
+&lt;p&gt;Je me suis lancé dans la recherche d'un template Zabbix déjà existant
+pour superviser HAproxy mais je n'ai rien trouvé de convainquant. Je me
+suis décidé à écrire mon propre template et donc le script qui va avec.&lt;/p&gt;
+&lt;p&gt;Avant d'utiliser ce script, il faut activer les stats dans le fichiers
+de configuration d'HAproxy dans la section [global]&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;span class="c1"&gt;# turn on stats unix socket
+&lt;/span&gt;stats socket /var/lib/haproxy/stats&lt;/pre&gt;
+&lt;p&gt;Le script Python va ensuite lire les données en communiquant avec le
+socket d'HAproxy directement et retourner la statistique demandée pour
+le couple frontend/serveur.&lt;/p&gt;
+&lt;p&gt;Voici le script.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#! /usr/bin/python&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;subprocess&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+
+&lt;span class="n"&gt;req&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;req&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;px&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;sv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;queryStat&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Usage: run script with one or three arguments&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;One argument: &lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;    discovery : json output of discovered pxname and svname &lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s2"&gt;Three arguments:&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;    pxname : pxname in which you want to process the stat&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;    svname : svname in the pxname in which you want to process the stat&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;    stat : stat you want to query for pxname,svname&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;allstats&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;echo &amp;quot;show stat&amp;quot; | socat /var/lib/haproxy/stats stdio&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PIPE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;communicate&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;req&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;discovery&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;haDiscovery&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;myLine&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;allstats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splitlines&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+        &lt;span class="n"&gt;lineStats&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;myLine&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;pxname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lineStats&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;svname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lineStats&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;haDiscovery&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{#PXNAME}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;pxname&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{#SVNAME}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;svname&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dumps&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;haDiscovery&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;statNameList&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;allstats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splitlines&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;monDico&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;myLine&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;allstats&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splitlines&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+    &lt;span class="n"&gt;statList&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;myLine&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;px&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;statList&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;sv&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;statList&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+        &lt;span class="n"&gt;monDico&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;itertools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;izip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;statNameList&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;statList&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;monDico&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;queryStat&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Une fois toutes ces métriques récupérées, j'ai pu construire un
+dashboard Grafana afin d'avoir rapidement sous les yeux l'état général
+du cluster.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Grafana-Galera.png"&gt;&lt;img src="https://blog.devarieux.net/images/Grafana-Galera.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
-</content><category term="supervision"></category><category term="zabbix"></category><category term="authentification"></category><category term="keycloak"></category></entry></feed>
+&lt;p&gt;Le script, le template Zabbix et le fichier de paramétrage de l'agent
+sont disponible &lt;a href="https://github.com/aldevar/Zabbix_HAproxy"&gt;sur
+Github&lt;/a&gt;&lt;/p&gt;
+</content><category term="Supervision"></category></entry><entry><title>Zabbix - Superviser un cluster Ceph</title><link href="https://blog.devarieux.net/2016/07/zabbix-superviser-cluster-ceph.html" rel="alternate"></link><published>2016-07-05T21:45:00+02:00</published><updated>2016-07-05T21:45:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-07-05:/2016/07/zabbix-superviser-cluster-ceph.html</id><summary type="html">&lt;p&gt;Ceph est une solution open source de stockage distribué avec réplication
+des données et une forte tolérance aux pannes. Différentes commandes
+existent pour vérifier l'état du cluster et nous allons voir comment les
+exploiter avec des scripts Python pour que Zabbix puisse récupérer les
+métriques.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Ceph_Logo" class="m-image" src="/images/Ceph_Logo.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Je suis parti d'un &lt;a href="https://github.com/thelan/ceph-zabbix"&gt;template …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;Ceph est une solution open source de stockage distribué avec réplication
+des données et une forte tolérance aux pannes. Différentes commandes
+existent pour vérifier l'état du cluster et nous allons voir comment les
+exploiter avec des scripts Python pour que Zabbix puisse récupérer les
+métriques.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Ceph_Logo" class="m-image" src="/images/Ceph_Logo.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Je suis parti d'un &lt;a href="https://github.com/thelan/ceph-zabbix"&gt;template déjà
+existant&lt;/a&gt;, avec un script bash
+qui exécute les commandes, parse la sortie et retourne la métrique
+attendue. Ce script, à mon avis, a cependant un problème. A chaque
+exécution, il exécute toutes les commandes, parse toutes les réponses et
+retourne enfin la métrique attendue suivant l'argument passé en entrée.
+Ce comportement peu optimisé induit que parfois, suivant la charge du
+serveur, l’exécution du script peut prendre trop de temps et l'item
+Zabbix tombe en timeout. Ce n'est évidemment pas un comportement que
+nous souhaitons avoir.&lt;/p&gt;
+&lt;p&gt;Puisqu'il fallait reprendre le script, je me suis lancé dans sa complète
+réécriture en Python. J'ai pu ainsi profiter du format json proposé par
+les outils Ceph pour l'output des données et également du module json
+inclus dans Python. Cela m'a permis de gagner du temps (pour moi et le
+processeur) car je peux parser les données plus facilement. Le script
+bash utilise beaucoup d'expressions régulières via sed. Dorénavant, je
+n'ai qu'à appeler le bon objet json et l'afficher.&lt;/p&gt;
+&lt;p&gt;La version actuel du template comporte 3 scripts. Je peux encore
+optimisé tout cela en 1 seul fichier, ce sera pour la prochaine version.
+Le premier script nommé cephpools.py permet la découverte automatique
+des pools rados Ceph. Le second, cephimages.py, permet quant à lui la
+découverte automatique des images rbd de chaque pool. C'est également ce
+script qui est appelé pour récupérer la taille des images.&lt;/p&gt;
+&lt;p&gt;Enfin, le script principal ceph-status.py s'occupe de retourner les
+valeurs des métriques à  Zabbix : état des pg, santé du cluster, IOPS,
+état des mon etc.&lt;/p&gt;
+&lt;p&gt;Vous pouvez retrouver ces scripts et template zabbix &lt;a href="https://github.com/aldevar/ceph-zabbix"&gt;sur la page github
+dédiée&lt;/a&gt;&lt;/p&gt;
+</content><category term="Supervision"></category></entry><entry><title>Nutanix Template for Zabbix</title><link href="https://blog.devarieux.net/2016/03/nutanix-template-for-zabbix.html" rel="alternate"></link><published>2016-03-31T17:35:00+02:00</published><updated>2016-03-31T17:35:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-03-31:/2016/03/nutanix-template-for-zabbix.html</id><summary type="html">&lt;p&gt;Cet article est également disponible &lt;a href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/"&gt;en
+français&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;For the needs of our infrastructure, I built a Nutanix Template for the
+monitoring plateforme Zabbix. This template automatically discover
+containers, CVMs, hard drives, hypervisors and virtual machines.&lt;/p&gt;
+&lt;p&gt;Once the items are discovered, some metrics, graphs and triggers are
+deployed&lt;/p&gt;
+&lt;p&gt;To be able …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cet article est également disponible &lt;a href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/"&gt;en
+français&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;For the needs of our infrastructure, I built a Nutanix Template for the
+monitoring plateforme Zabbix. This template automatically discover
+containers, CVMs, hard drives, hypervisors and virtual machines.&lt;/p&gt;
+&lt;p&gt;Once the items are discovered, some metrics, graphs and triggers are
+deployed&lt;/p&gt;
+&lt;p&gt;To be able to use this template, the prism's SNMP server needs to be
+configured, the Nutanix MIB needs to be integrated in the zabbix server
+and some macros needs to be set at the host level in Zabbix. We will go
+through these few steps in the next part of this post.&lt;/p&gt;
+&lt;p&gt;The template is configured to use SNMPv3 in authPriv mode, using SHA
+auth and AES privacy.&lt;/p&gt;
+&lt;section id="prism-central"&gt;
+&lt;h2&gt;Prism Central&lt;/h2&gt;
+&lt;p&gt;The prism configuration is quite simple, using the SNMP configuration
+interface&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Make sure at least one Transport is configured in UDP, on the port of
+your choice (161 by default)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="images/2016/03/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Then, go in the 'Users' tab and add a new user for Zabbix.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;While you are here, you can download the MIB, we will need it later.&lt;/p&gt;
+&lt;p&gt;Clic Save. The prim configuration is done.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="nutanix-mib"&gt;
+&lt;h2&gt;Nutanix MIB&lt;/h2&gt;
+&lt;p&gt;One you have downloaded the Nutanix MIB, we need to upload it on the
+Zabbix server. On CentOS, it is located in /usr/share/snmp/mibs&lt;/p&gt;
+&lt;pre&gt;# ls /usr/share/snmp/mibs/NUTANIX*
+/usr/share/snmp/mibs/NUTANIX-MIB&lt;/pre&gt;
+&lt;p&gt;Restart Zabbix so it can use this new MIB&lt;/p&gt;
+&lt;pre&gt;# systemctl restart zabbix-server&lt;/pre&gt;
+&lt;p&gt;You can test the MIB and the prism configuration using the snmpwalk
+command line tool. In the example, we are listing all the Nutanix
+containers.&lt;/p&gt;
+&lt;pre&gt;snmpwalk -v 3 -a SHA -A YOURSHAPASSWORD -u zabbix -x AES -X YOURAESPASSWORD IP.OF.PRISM.CENTRAL -l AuthPriv citContainerName
+NUTANIX-MIB::citContainerName.1 = STRING: container00.
+NUTANIX-MIB::citContainerName.2 = STRING: containerA.
+NUTANIX-MIB::citContainerName.3 = STRING: containerB.
+NUTANIX-MIB::citContainerName.4 = STRING: containerC.
+NUTANIX-MIB::citContainerName.5 = STRING: RESERVED_SPACE.
+NUTANIX-MIB::citContainerName.6 = STRING: containerD.&lt;/pre&gt;
+&lt;p&gt;The server configuration is done, we can now configure Zabbix itself.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="zabbix"&gt;
+&lt;h2&gt;Zabbix&lt;/h2&gt;
+&lt;p&gt;If it's not already done, create a new host for prism central in Zabbix.
+The host needs 3 macros for the Nutanix Template to work on it.&lt;/p&gt;
+&lt;p&gt;Those 3 macros are&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;{$NTX_SNMP_USER} : the SNMP user&lt;/li&gt;
+&lt;li&gt;{$NTX_SNMP_AUTH} : the SHA password&lt;/li&gt;
+&lt;li&gt;{$NTX_SNMP_PRIV} : the AES password&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then, import this
+&lt;a href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml"&gt;Template&lt;/a&gt;
+in Zabbix and apply it on your prism central host.&lt;/p&gt;
+&lt;p&gt;By default, the VM discovery is disabled because I couldn't find a good
+way to create hosts from the LLD process.&lt;/p&gt;
+&lt;p&gt;If you have a big Nutanix cluster and Zabbix shows a timeout error while
+parsing the SNMP OIDs, you can increase this timeout in the Zabbix
+configuration file&lt;/p&gt;
+&lt;pre&gt;Timeout=10&lt;/pre&gt;
+&lt;p&gt;Known bugs :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Until NOS 4.6, LLD can't discover all hypervisors. This behavior is
+the same when using snmpwalk. I guess this is a Nutanix problem.
+Everything works fine in NOS 4.6&lt;/li&gt;
+&lt;li&gt;The number of found VMs is limited to 250. I guess this is a
+limitation on the Nutanix side.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+</content><category term="Supervision"></category></entry><entry><title>Template Nutanix pour Zabbix</title><link href="https://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix.html" rel="alternate"></link><published>2016-03-31T17:32:00+02:00</published><updated>2016-03-31T17:32:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-03-31:/2016/03/template_nutanix_pour_zabbix.html</id><summary type="html">&lt;p&gt;This post is also available in english&lt;/p&gt;
+&lt;p&gt;Afin de superviser correctement notre cluster Nutanix sans passer trop
+de temps à configurer les objets à surveiller, j'ai construit un
+template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe
+de découvrir automatiquement les containers, les CVM, les disques durs,
+les hyperviseurs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This post is also available in english&lt;/p&gt;
+&lt;p&gt;Afin de superviser correctement notre cluster Nutanix sans passer trop
+de temps à configurer les objets à surveiller, j'ai construit un
+template Nutanix pour l'outil de monitoring Zabbix. Ce template s'occupe
+de découvrir automatiquement les containers, les CVM, les disques durs,
+les hyperviseurs ainsi que les machines virtuelles.&lt;/p&gt;
+&lt;p&gt;Une fois les objets découverts, un certains nombre de relevés de
+métriques, de graphs et de triggers sont mis en place.&lt;/p&gt;
+&lt;p&gt;Pour utiliser ce template correctement, il est nécessaire de paramétrer
+le serveur snmp de prism central, de récupérer la MIB de Nutanix pour
+l'intégrer dans le serveur Zabbix et de configurer quelques macro au
+niveau de l'hôte prism dans Zabbix. Nous allons tout de suite détailler
+ces quelques étapes.&lt;/p&gt;
+&lt;p&gt;Le template est paramétré pour utiliser SNMPv3 en mode authPriv avec
+Auth SHA et Privacy AES.&lt;/p&gt;
+&lt;section id="prism-central"&gt;
+&lt;h2&gt;Prism Central&lt;/h2&gt;
+&lt;p&gt;La configuration de prism se fait de façon assez simple via l'interface
+de paramétrage SNMP.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Assurez-vous que le transport soit bien configuré en UDP, sur le port de
+votre choix (161 par défaut)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Se rendre ensuite dans l'onglet Users et ajouter un nouvel utilisateur
+pour que zabbix puisse se connecter&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Profitez-en pour télécharger la MIB via le bouton Download MIB, nous
+allons en avoir besoin.&lt;/p&gt;
+&lt;p&gt;Cliquez sur Save. La configuration de prism est terminée&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="mib-nutanix"&gt;
+&lt;h2&gt;MIB Nutanix&lt;/h2&gt;
+&lt;p&gt;Une fois la MIB Nutanix récupérée, il faut la placer sur le serveur
+Zabbix. Sur un serveur CentOS, il faut placer le fichier dans
+/usr/share/snmp/mibs&lt;/p&gt;
+&lt;pre&gt;# ls /usr/share/snmp/mibs/NUTANIX*
+/usr/share/snmp/mibs/NUTANIX-MIB&lt;/pre&gt;
+&lt;p&gt;Afin que Zabbix prenne ce nouveau fichier en considération, il est
+nécessaire de redémarrer le service&lt;/p&gt;
+&lt;pre&gt;# systemctl restart zabbix-server&lt;/pre&gt;
+&lt;p&gt;Pour tester le bon fonctionnement de la MIB et de la configuration de
+prism, utilisons la commande snmpwalk qui va, dans cet exemple, lister
+les noms des containers Nutanix.&lt;/p&gt;
+&lt;pre&gt;snmpwalk -v 3 -a SHA -A VOTREMOTDEPASSESHA -u zabbix -x AES -X VOTREMOTDEPASSEAES IP.DE.PRISM.CENTRAL -l AuthPriv citContainerName
+NUTANIX-MIB::citContainerName.1 = STRING: container00.
+NUTANIX-MIB::citContainerName.2 = STRING: containerA.
+NUTANIX-MIB::citContainerName.3 = STRING: containerB.
+NUTANIX-MIB::citContainerName.4 = STRING: containerC.
+NUTANIX-MIB::citContainerName.5 = STRING: RESERVED_SPACE.
+NUTANIX-MIB::citContainerName.6 = STRING: containerD.&lt;/pre&gt;
+&lt;p&gt;La configuration du serveur est terminée. On peut passer à la
+configuration de Zabbix.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="zabbix"&gt;
+&lt;h2&gt;Zabbix&lt;/h2&gt;
+&lt;p&gt;Si ce n'est pas déjà fait, créez un nouvel hôte pour prism central dans
+Zabbix. Cet hôte à besoin de 3 macros pour que le template Nutanix
+fonctionne. Ces 3 macros sont l'utilisateurs SNMP, le mot de passe SHA
+et le mot de passe AES.&lt;/p&gt;
+&lt;p&gt;Ces macros sont :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;{$NTX_SNMP_USER}&lt;/li&gt;
+&lt;li&gt;{$NTX_SNMP_AUTH}&lt;/li&gt;
+&lt;li&gt;{$NTX_SNMP_PRIV}&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" class="m-image" src="images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Importez ensuite ce
+&lt;a href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml"&gt;Template&lt;/a&gt;
+dans Zabbix et appliquez le sur votre hôte Prism Central.&lt;/p&gt;
+&lt;p&gt;Par défaut, la découverte des VM est désactivée car il n'est pas
+possible de créer proprement des hôtes depuis ce processus LLD.&lt;/p&gt;
+&lt;p&gt;Si vous avez un cluster Nutanix volumineux et que Zabbix ne peux
+remonter les informations à cause d'une erreur de timeout, pensez à
+augmenter ce timeout dans la configuration de Zabbix&lt;/p&gt;
+&lt;pre&gt;Timeout=10&lt;/pre&gt;
+&lt;p&gt;Les bugs rencontrés actuellement sont les suivants :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jusqu'à la version 4.6 de NOS, le Discovery n'arrive pas à remonter
+tous les hyperviseurs. Le comportement est le même avec snmpwalk. Il
+semble que ce soit un problème du coté de Nutanix. Le problème est
+corrigé en 4.6.&lt;/li&gt;
+&lt;li&gt;Le nombre de VM remontées est limité à 250. Sans doute une limitation
+coté Nutanix également.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+</content><category term="Supervision"></category></entry></feed>

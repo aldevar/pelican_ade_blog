@@ -1,84 +1,65 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Présentation de Caddy | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2021/02/caddy-presentation.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Dans un tweet récent, j'expliquais voir trop peu de publications d'articles sur le serveur web / reverse proxy Caddy. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation. Je vois pas mal de partage d'articles sur Traefik dans mon fil Twitter. J'aime beaucoup …">
-
-
+  <meta charset="UTF-8" />
+  <title>Présentation de Caddy | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2021/02/caddy-presentation.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Présentation de Caddy" />
+  <meta name="twitter:title" content="Présentation de Caddy" />
+  <meta property="og:url" content="https://blog.devarieux.net/2021/02/caddy-presentation.html" />
+  <meta property="og:description" content="Dans un tweet récent, j&#39;expliquais voir trop peu de publications d&#39;articles sur le serveur web / reverse proxy Caddy. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation. Je vois pas mal de partage d&#39;articles sur Traefik dans mon fil Twitter. J&#39;aime beaucoup …" />
+  <meta name="twitter:description" content="Dans un tweet récent, j&#39;expliquais voir trop peu de publications d&#39;articles sur le serveur web / reverse proxy Caddy. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation. Je vois pas mal de partage d&#39;articles sur Traefik dans mon fil Twitter. J&#39;aime beaucoup …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Présentation de Caddy
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2021-02-19T06:55:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Fri 19 February 2021
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/web.html">web</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/caddy.html">#caddy</a>,               <a href="../../tag/web.html">#web</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Dans un tweet récent, j'expliquais voir trop peu de publications d'articles sur le serveur web / reverse proxy <a class="reference external" href="https://caddyserver.com/">Caddy</a>. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2021/02/caddy-presentation.html" rel="bookmark" title="Permalink to Présentation de Caddy">
+          <time class="m-date" datetime="2021-02-19T06:55:00+01:00">
+            Feb <span class="m-date-day">19</span> 2021
+          </time>
+          Présentation de Caddy
+        </a></h1>
+        <p>Dans un tweet récent, j'expliquais voir trop peu de publications d'articles sur le serveur web / reverse proxy <a href="https://caddyserver.com/">Caddy</a>. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation.</p>
+        <blockquote class="twitter-tweet" data-partner="tweetdeck"><p lang="fr" dir="ltr">Je vois pas mal de partage d&#39;articles sur Traefik dans mon fil Twitter. J&#39;aime beaucoup …</p></blockquote>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Dans un tweet récent, j'expliquais voir trop peu de publications d'articles sur le serveur web / reverse proxy <a href="https://caddyserver.com/">Caddy</a>. Je pense que Caddy gagne a être connu, voici donc un premier article de présentation.</p>
 <blockquote class="twitter-tweet" data-partner="tweetdeck"><p lang="fr" dir="ltr">Je vois pas mal de partage d&#39;articles sur Traefik dans mon fil Twitter. J&#39;aime beaucoup Traefik mais je lui préfère <a href="https://twitter.com/caddyserver?ref_src=twsrc%5Etfw">@caddyserver</a>.<br>Je profite donc de la reprise des activités sur mon blog pour vous préparer quelques articles sur Caddy et l&#39;utilisation de son API.</p>&mdash; Alain Devarieux (@landvarx) <a href="https://twitter.com/landvarx/status/1362078709436592130?ref_src=twsrc%5Etfw">February 17, 2021</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Caddy est un serveur web, de même que Apache ou Nginx. Il dispose également d'une fonctionnalité de reverse proxy et utilise des options de sécurités avancées par défaut (HTTPS par défaut avec Let's Encrypt ou ZeroSSL, TLS 1.3, OCSP Stapling, Cipher Suite modernes). Le logiciel est écrit en Go.
 En plus de ces fonctionnalités de sécurités, Caddy est multiplateforme, il fonctionne avec un seul binaire, supporte les plugins et supporte plusieurs types de challenges ACME.</p>
-<p>Je ne vais pas revenir sur son installation, parfaitement décrite dans <a class="reference external" href="https://caddyserver.com/docs/install">la documentation</a>.</p>
-<div class="section" id="configuration">
+<p>Je ne vais pas revenir sur son installation, parfaitement décrite dans <a href="https://caddyserver.com/docs/install">la documentation</a>.</p>
+<section id="configuration">
 <h2>Configuration</h2>
-<p>Caddy peut se configurer de deux manières. Via le fichier de configuration, appelé <code>Caddyfile</code> ou via son API avec un payload JSON. L'utilisation de l'API sera décrite dans un prochain article.
+<p>Caddy peut se configurer de deux manières. Via le fichier de configuration, appelé <code class="code">Caddyfile</code> ou via son API avec un payload JSON. L'utilisation de l'API sera décrite dans un prochain article.
 J'utilise Caddy principalement pour ses fonctionnalités de reverse proxy. Voyons donc quelques exemples de configuration de Caddy via le Caddyfile.</p>
 <div class="highlight"><pre><span></span>sub.domain.com {
     reverse_proxy 10.0.0.1:8000
@@ -88,7 +69,7 @@ J'utilise Caddy principalement pour ses fonctionnalités de reverse proxy. Voyon
 }
 </pre></div>
 <p>Bien, avec ça, nous avons un reverse proxy qui écoute sur le port 80 et 443, avec redirection automatique HTTP vers HTTPS. Les logs seront renvoyés vers un fichier. Avec cette configuration, le certificat Let's Encrypt est généré (si le DNS est bien configuré et que Caddy est accessible depuis l'exterieur) et seuls les protocoles TLS 1.2 et 1.3 sont supportés. Niveau sécurité, on est pas mal.</p>
-<p>De la même façon, le header <code>X-Forwarded-For</code> est automatiquement intégré dans l'entête HTTP envoyé au serveur de backend. Cette intégration permet de gagner quelques lignes de configuration.
+<p>De la même façon, le header <code class="code">X-Forwarded-For</code> est automatiquement intégré dans l'entête HTTP envoyé au serveur de backend. Cette intégration permet de gagner quelques lignes de configuration.
 Voyons maintenant comment gérer l'utilisation de deux backends différents pour des URI différentes.</p>
 <div class="highlight"><pre><span></span>sub.domain.com {
 reverse_proxy /api/v1/* 10.0.0.2:4000
@@ -102,7 +83,7 @@ log {
         }
 }
 </pre></div>
-<p>Là encore, c'est assez simple. On traite d'abord les requêtes vers <code>/api/v1</code> qui sont envoyées vers un premier backend et le reste des requêtes est envoyé vers <code>10.0.0.1</code>. J'en ai profité pour ajouter une rotation des logs.</p>
+<p>Là encore, c'est assez simple. On traite d'abord les requêtes vers <code class="code">/api/v1</code> qui sont envoyées vers un premier backend et le reste des requêtes est envoyé vers <code class="code">10.0.0.1</code>. J'en ai profité pour ajouter une rotation des logs.</p>
 <p>Tout cela fonctionne bien quand on a un site disponible publiquement et pour lequel Caddy peut générer un certificat Let's Encrypt. Voyons maintenant comment intégrer son propre certificat (autosigné ou non). Pour cet exemple, je m'appuie sur une configuration de Caddy pour servir un serveur Graylog</p>
 <div class="highlight"><pre><span></span>logs.domain.com {
         reverse_proxy 127.0.0.1:9000
@@ -116,7 +97,7 @@ log {
         }
 }
 </pre></div>
-<p>L'option <code>tls</code> permet de passer directement le certificat puis la clé privée du certificat. L'ajout d'un header se fait de façon assez simple ici aussi.</p>
+<p>L'option <code class="code">tls</code> permet de passer directement le certificat puis la clé privée du certificat. L'ajout d'un header se fait de façon assez simple ici aussi.</p>
 <p>Enfin, comment faire lorsqu'on souhaite servir son site en plain HTTP, sans TLS. L'option est assez simple et plutot ingénieuse. Il suffit de forcer le site en HTTP dans l'URL.</p>
 <div class="highlight"><pre><span></span>http://sub.domain.com {
     reverse_proxy 10.0.0.1:8000
@@ -127,28 +108,35 @@ log {
 </pre></div>
 <p>Avec cette configuration, Caddy ne va pas tenter de générer le certificat Let's Encrypt ni proposer de redirection HTTP vers HTTPS.</p>
 <p>Dans le prochain article nous verrons comment utiliser l'API de Caddy en lecture et en écriture totale ou partielle de configuration.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-02-19T06:55:00+01:00">Fri 19 February 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

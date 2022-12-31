@@ -1,77 +1,62 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Pydio - migration, upgrade, package [EN] | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2016/05/pydio-migration-upgrade-package-en.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Cet article est également disponible en français. This unclear title reveals an operation i've just done to make 3 moves in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the tar.gz archive. The primary goal was to upgrade Pydio to 6.4. Unfortunately …">
-
-
+  <meta charset="UTF-8" />
+  <title>Pydio - migration, upgrade, package [EN] | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Pydio - migration, upgrade, package [EN]" />
+  <meta name="twitter:title" content="Pydio - migration, upgrade, package [EN]" />
+  <meta property="og:url" content="https://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en.html" />
+  <meta property="og:description" content="Cet article est également disponible en français. This unclear title reveals an operation i&#39;ve just done to make 3 moves in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the tar.gz archive. The primary goal was to upgrade Pydio to 6.4. Unfortunately …" />
+  <meta name="twitter:description" content="Cet article est également disponible en français. This unclear title reveals an operation i&#39;ve just done to make 3 moves in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the tar.gz archive. The primary goal was to upgrade Pydio to 6.4. Unfortunately …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Pydio - migration, upgrade, package [EN]
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2016-05-27T23:02:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Fri 27 May 2016
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/centos.html">#centos</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/pydio.html">#pydio</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Cet article est également disponible <a class="reference external" href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/">en
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-en.html" rel="bookmark" title="Permalink to Pydio - migration, upgrade, package [EN]">
+          <time class="m-date" datetime="2016-05-27T23:02:00+02:00">
+            May <span class="m-date-day">27</span> 2016
+          </time>
+          Pydio - migration, upgrade, package [EN]
+        </a></h1>
+        <p>Cet article est également disponible <a href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/">en
+        français</a>.</p>
+        <p>This unclear title reveals an operation i've just done to make 3 moves
+        in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
+        tar.gz archive.</p>
+        <p>The primary goal was to upgrade Pydio to 6.4. Unfortunately …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Cet article est également disponible <a href="http://blog.devarieux.net/2016/05/pydio-migration-upgrade-package-fr/">en
 français</a>.</p>
 <p>This unclear title reveals an operation i've just done to make 3 moves
 in one. Pydio 6.0.7 was running on a CentOS 6 server, installed via the
@@ -87,114 +72,97 @@ easily and it also ease the automation for an autmatic deployement.
 Also, the plugin management is facilitated.</p>
 <p>These are the steps I'll describe here.</p>
 <p>Install mariadb and httpd</p>
-<pre class="code sh literal-block">
-yum install -y mariadb mariadb-server
+<pre class="code sh">yum install -y mariadb mariadb-server
 systemctl start mariadb.service
 systemctl <span class="nb">enable</span> mariadb.service
 mysql_secure_installation
 yum install httpd
 systemctl <span class="nb">enable</span> httpd.service
-systemctl start httpd.service
-</pre>
+systemctl start httpd.service</pre>
 <p>Installing Pydio dependancies :</p>
-<pre class="code literal-block">
-yum -y install php php-gd php-ldap php-pear php-xml php-xmlrpc php-mbstring curl php-mcrypt* php-mysql
-</pre>
+<pre class="code">yum -y install php php-gd php-ldap php-pear php-xml php-xmlrpc php-mbstring curl php-mcrypt* php-mysql</pre>
 <p>Installing Pydio repositories</p>
-<pre class="code literal-block">
-wget https://download.pydio.com/pub/linux/centos/7/pydio-release-1-1.el7.centos.noarch.rpm
-</pre>
+<pre class="code">wget https://download.pydio.com/pub/linux/centos/7/pydio-release-1-1.el7.centos.noarch.rpm</pre>
 <p>If you own a licence (free up to 10 users), you can also have the
 enterprise repo.</p>
-<pre class="code literal-block">
-wget https://API_KEY:API_SECRET&#64;download.pydio.com/auth/linux/centos/7/x86_64/pydio-enterprise-release-1-1.el7.centos.noarch.rpm
-</pre>
-<p>With API_KEY and API_SECRET &nbsp;in your dashboard on pydio.com, licence
+<pre class="code">wget https://API_KEY:API_SECRET&#64;download.pydio.com/auth/linux/centos/7/x86_64/pydio-enterprise-release-1-1.el7.centos.noarch.rpm</pre>
+<p>With API_KEY and API_SECRET  in your dashboard on pydio.com, licence
 tab</p>
-<pre class="code literal-block">
-rpm -ivh pydio-release-1-1.el7.centos.noarch.rpm
-rpm -ivh pydio-enterprise-release-1-1.el7.centos.noarch.rpm
-</pre>
+<pre class="code">rpm -ivh pydio-release-1-1.el7.centos.noarch.rpm
+rpm -ivh pydio-enterprise-release-1-1.el7.centos.noarch.rpm</pre>
 <p>Edit the repo file to add your API_KEY and API_SECRET</p>
-<pre class="code literal-block">
-vim /etc/yum.repos.d/pydio-enterprise.repo
-</pre>
+<pre class="code">vim /etc/yum.repos.d/pydio-enterprise.repo</pre>
 <p>InstallPydio</p>
-<pre class="code literal-block">
-yum update
-yum install pydio-enterprise
-</pre>
+<pre class="code">yum update
+yum install pydio-enterprise</pre>
 <p>I use to modify the default vhost file /etc/httpd/conf.d/pydio.conf</p>
-<pre class="code apache literal-block">
-<span class="nt">&lt;VirtualHost</span> <span class="s">nom.du.vhost:80</span><span class="nt">&gt;</span>
-<span class="nb">Alias</span> / <span class="sx">/usr/share/pydio/</span>
-<span class="nb">Alias</span> <span class="sx">/pydio_public</span> <span class="sx">/var/lib/pydio/public/</span>
+<pre class="code apache"><span class="nt">&lt;VirtualHost</span><span class="w"> </span><s>nom.du.vhost:80</s><span class="nt">&gt;</span><span class="w">
+</span><span class="nb">Alias</span><span class="w"> </span>/<span class="w"> </span><span class="sx">/usr/share/pydio/</span><span class="w">
+</span><span class="nb">Alias</span><span class="w"> </span><span class="sx">/pydio_public</span><span class="w"> </span><span class="sx">/var/lib/pydio/public/</span><span class="w">
 
-<span class="nt">&lt;Directory</span> <span class="s">/usr/share/pydio/</span><span class="nt">&gt;</span>
-<span class="nb">Options</span> FollowSymLinks
-<span class="nb">AllowOverride</span> Limit FileInfo
-<span class="nb">Require</span> <span class="k">all</span> granted
-<span class="nb">php_value</span> error_reporting <span class="m">2</span>
-<span class="nb">php_value</span> upload_max_filesize <span class="m">100</span>M
-<span class="nb">php_value</span> post_max_size <span class="m">100</span>M
-<span class="nb">php_value</span> output_buffering <span class="k">Off</span>
+</span><span class="nt">&lt;Directory</span><span class="w"> </span><s>/usr/share/pydio/</s><span class="nt">&gt;</span><span class="w">
+</span><span class="nb">Options</span><span class="w"> </span>FollowSymLinks<span class="w">
+</span><span class="nb">AllowOverride</span><span class="w"> </span>Limit<span class="w"> </span>FileInfo<span class="w">
+</span><span class="nb">Require</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>granted<span class="w">
+</span><span class="nb">php_value</span><span class="w"> </span>error_reporting<span class="w"> </span><span class="m">2</span><span class="w">
+</span><span class="nb">php_value</span><span class="w"> </span>upload_max_filesize<span class="w"> </span><span class="m">100</span>M<span class="w">
+</span><span class="nb">php_value</span><span class="w"> </span>post_max_size<span class="w"> </span><span class="m">100</span>M<span class="w">
+</span><span class="nb">php_value</span><span class="w"> </span>output_buffering<span class="w"> </span><span class="k">Off</span><span class="w">
 
-<span class="nt">&lt;/Directory&gt;</span>
+</span><span class="nt">&lt;/Directory&gt;</span><span class="w">
 
-<span class="nt">&lt;Directory</span> <span class="s">/var/lib/pydio/public/</span><span class="nt">&gt;</span>
-<span class="nb">AllowOverride</span> Limit FileInfo
-<span class="nb">Require</span> <span class="k">all</span> granted
-<span class="nb">php_value</span> error_reporting <span class="m">2</span>
-<span class="nt">&lt;/Directory&gt;</span>
-<span class="nt">&lt;/VirtualHost&gt;</span>
-</pre>
+</span><span class="nt">&lt;Directory</span><span class="w"> </span><s>/var/lib/pydio/public/</s><span class="nt">&gt;</span><span class="w">
+</span><span class="nb">AllowOverride</span><span class="w"> </span>Limit<span class="w"> </span>FileInfo<span class="w">
+</span><span class="nb">Require</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>granted<span class="w">
+</span><span class="nb">php_value</span><span class="w"> </span>error_reporting<span class="w"> </span><span class="m">2</span><span class="w">
+</span><span class="nt">&lt;/Directory&gt;</span><span class="w">
+</span><span class="nt">&lt;/VirtualHost&gt;</span></pre>
 <p>Customize the charset in /etc/pydio/bootstrap_conf.php</p>
-<pre class="code literal-block">
-define(&quot;AJXP_LOCALE&quot;, &quot;fr_FR.UTF-8&quot;);
-</pre>
+<pre class="code">define(&quot;AJXP_LOCALE&quot;, &quot;fr_FR.UTF-8&quot;);</pre>
 <p>Create the database:</p>
-<pre class="code literal-block">
-mysql -u root -p
+<pre class="code">mysql -u root -p
 create database pydio;
 create user pydio&#64;localhost identified by 'mypassword';
 grant all privileges on pydio.* to pydio&#64;localhost identified by 'mypassword';
 use mysql
-update mysql.users set Super_Priv='Y' where user like pydio;
-</pre>
+update mysql.users set Super_Priv='Y' where user like pydio;</pre>
 <p>The last command gives the Super Privileges to the pydio user for it to
 be able to create triggers.</p>
 <p>Install the Pydio plugins;</p>
-<pre class="code literal-block">
-yum install pydio-plugin*
-</pre>
+<pre class="code">yum install pydio-plugin*</pre>
 <p>The last step is to import your old pydio database in your brand new one</p>
-<pre class="code literal-block">
-mysql -u pydio -p pydio &lt; mondumppydio.sql
-</pre>
+<pre class="code">mysql -u pydio -p pydio &lt; mondumppydio.sql</pre>
 <p>Finally, you can go to the pydio page and go through the First Run
 Wizard. Once done, you should be able to connect with your account and
 find all your files.</p>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2016-05-27T23:02:00+02:00">Fri 27 May 2016</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

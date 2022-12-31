@@ -1,77 +1,57 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  VPN Meraki et Fedora | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2021/04/vpn-meraki-fedora.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …">
-
-
+  <meta charset="UTF-8" />
+  <title>VPN Meraki et Fedora | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="VPN Meraki et Fedora" />
+  <meta name="twitter:title" content="VPN Meraki et Fedora" />
+  <meta property="og:url" content="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" />
+  <meta property="og:description" content="Cela fait plusieurs années que je n&#39;ai pas pu utiliser Linux de façon professionnelle à cause d&#39;applications purement Windows et aussi un peu par facilité. Depuis peu, je n&#39;ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …" />
+  <meta name="twitter:description" content="Cela fait plusieurs années que je n&#39;ai pas pu utiliser Linux de façon professionnelle à cause d&#39;applications purement Windows et aussi un peu par facilité. Depuis peu, je n&#39;ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  VPN Meraki et Fedora
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2021-04-12T18:32:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Mon 12 April 2021
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/cisco.html">#cisco</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/vpn.html">#vpn</a>,               <a href="../../tag/reseau.html">#reseau</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2021/04/vpn-meraki-fedora.html" rel="bookmark" title="Permalink to VPN Meraki et Fedora">
+          <time class="m-date" datetime="2021-04-12T18:32:00+02:00">
+            Apr <span class="m-date-day">12</span> 2021
+          </time>
+          VPN Meraki et Fedora
+        </a></h1>
+        <p>Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Cela fait plusieurs années que je n'ai pas pu utiliser Linux de façon professionnelle à cause d'applications purement Windows et aussi un peu par facilité. Depuis peu, je n'ai plus à utiliser toutes ces applications je repars donc à la conquête de mon desktop avec une Fedora 33 fraichement installée.</p>
 <p>De même que sous Windows, je dois utiliser des VPN Meraki dans le cadre de mon activité professionnelle. Il parait que sous Ubuntu, les VPN Clients Meraki fonctionnent directement, ce qui n'est pas le cas sous Fedora. Nous allons voir pourquoi et comment y remédier.</p>
 <p>Les VPN Clients Meraki utilisent le protocole L2TP/IPSec qui n'est pas installé par defaut sur la distribution. La premièr étape est d'installer le plugin L2TP pour NetworkManager</p>
 <div class="highlight"><pre><span></span># dnf install network-manager-l2tp-gnome
@@ -83,47 +63,54 @@
 # dnf install strongswan
 </pre></div>
 <p>Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.</p>
-<img alt="Configuration réseau" src="/images/F33-MerakiVPN01.png" />
+<img alt="Configuration réseau" class="m-image" src="/images/F33-MerakiVPN01.png" />
 <p>En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.</p>
-<img alt="Choix du type de VPN" src="/images/F33-MerakiVPN02.png" />
+<img alt="Choix du type de VPN" class="m-image" src="/images/F33-MerakiVPN02.png" />
 <p>On choisi le VPN L2TP puis on arrive sur la configuration du VPN</p>
-<img alt="Configuration du VPN L2TP" src="/images/F33-MerakiVPN03.png" />
-<p>Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur <code>IPsec Settings</code>.</p>
-<img alt="Configuration IPsec" src="/images/F33-MerakiVPN04.png" />
+<img alt="Configuration du VPN L2TP" class="m-image" src="/images/F33-MerakiVPN03.png" />
+<p>Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur <code class="code">IPsec Settings</code>.</p>
+<img alt="Configuration IPsec" class="m-image" src="/images/F33-MerakiVPN04.png" />
 <p>On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :</p>
 <div class="highlight"><pre><span></span>aes128-sha1-modp1024,3des-sha1-modp1024!
 </pre></div>
 <p>C'est ce pramètre qui n'est pas accepté par libreswan. Si vous utilisez libreswan avec ces paramètres IPsec, voici le messages d'erreurs qui va apparaitre dans les logs :</p>
 <div class="highlight"><pre><span></span>ike string error: IKE DH algorithm &#39;modp1024&#39; is not supported
 </pre></div>
-<p>On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur <code>PPP Settings</code>. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.</p>
-<img alt="Configuration PPP" src="/images/F33-MerakiVPN05.png" />
+<p>On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur <code class="code">PPP Settings</code>. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.</p>
+<img alt="Configuration PPP" class="m-image" src="/images/F33-MerakiVPN05.png" />
 <p>Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :</p>
-<ul class="simple">
-<li><code>journalctl -f</code> dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.</li>
+<ul>
+<li><code class="code">journalctl -f</code> dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.</li>
 <li>Sur le dashboard Meraki, se rendre dans Network Wide &gt; Event Log pour visualiser ce que voit le MX.</li>
 </ul>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-04-12T18:32:00+02:00">Mon 12 April 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

@@ -1,89 +1,69 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Caddy, OVH et les certificats wildcard | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2021/04/caddy-ovh-acme.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Après avoir présenté dans un premier article ce qu'est Caddy et son utilisation de façon basique, puis dans un second le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …">
-
-
+  <meta charset="UTF-8" />
+  <title>Caddy, OVH et les certificats wildcard | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Caddy, OVH et les certificats wildcard" />
+  <meta name="twitter:title" content="Caddy, OVH et les certificats wildcard" />
+  <meta property="og:url" content="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" />
+  <meta property="og:description" content="Après avoir présenté dans un premier article ce qu&#39;est Caddy et son utilisation de façon basique, puis dans un second le pilotage de Caddy par API ainsi qu&#39;une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let&#39;s Encrypt avec le …" />
+  <meta name="twitter:description" content="Après avoir présenté dans un premier article ce qu&#39;est Caddy et son utilisation de façon basique, puis dans un second le pilotage de Caddy par API ainsi qu&#39;une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let&#39;s Encrypt avec le …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Caddy, OVH et les certificats wildcard
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2021-04-05T08:55:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Mon 05 April 2021
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/tech.html">Tech</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/caddy.html">#caddy</a>,               <a href="../../tag/web.html">#web</a>,               <a href="../../tag/acme.html">#acme</a>,               <a href="../../tag/ovh.html">#ovh</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Après avoir présenté dans un <a class="reference external" href="/2021/02/caddy-presentation.html">premier article</a> ce qu'est Caddy et son utilisation de façon basique, puis dans <a class="reference external" href="/2021/02/caddy-api.html">un second</a> le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge <a class="reference external" href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01">DNS-01</a>.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2021/04/caddy-ovh-acme.html" rel="bookmark" title="Permalink to Caddy, OVH et les certificats wildcard">
+          <time class="m-date" datetime="2021-04-05T08:55:00+02:00">
+            Apr <span class="m-date-day">05</span> 2021
+          </time>
+          Caddy, OVH et les certificats wildcard
+        </a></h1>
+        <p>Après avoir présenté dans un <a href="/2021/02/caddy-presentation.html">premier article</a> ce qu'est Caddy et son utilisation de façon basique, puis dans <a href="/2021/02/caddy-api.html">un second</a> le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Après avoir présenté dans un <a href="/2021/02/caddy-presentation.html">premier article</a> ce qu'est Caddy et son utilisation de façon basique, puis dans <a href="/2021/02/caddy-api.html">un second</a> le pilotage de Caddy par API ainsi qu'une configuration un peu plus avancée, je souhaites ici aborder le sujet de la génération de certificats TLS via Let's Encrypt avec le challenge <a href="https://letsencrypt.org/fr/docs/challenge-types/#d%C3%A9fi-dns-01">DNS-01</a>.</p>
 <p>Le challenge DNS à l'avantage de pouvoir être utilisé pour générer un certificat DV wildcard. Une fois passé un certain nombre de sous domaines servis par un reverse proxy, il devient intéressant d'utiliser ce type de certificat afin d'éviter de générer trop de requêtes vers les serveurs de Let's Encrypt. De plus, avec un seul certificat à gérer pour l'ensemble des sous domaines, la gestion devient simplifiée, et notamment la supervision ou même le renouvellement.</p>
-<p>Caddy intègre de base la gestion de Let's Encrypt pour les challenges HTTP-01 car celui-ci est universel et ne dépend d'aucun autre services. C'est un échange réalisé directement entre le serveur Caddy et les serveurs de Let's Encrypt. Pour le challenge DNS-01, il y a un intermédiaire. Cet intermédiaire est le serveur DNS du domaine pour lequel on souhaite générer un certificat wildcard. De part la multitude de serveurs disponibles et de prestataires fournissant ces services, il est difficile d'avoir un protocole unifié de modification distante des entrées DNS. A ma connaissance, le seul standard qui existe pour cela est la <a class="reference external" href="https://tools.ietf.org/html/rfc2136">RFC 2136</a> qui ne semble pas être implémentée chez la plupart des fournisseurs de services DNS.</p>
+<p>Caddy intègre de base la gestion de Let's Encrypt pour les challenges HTTP-01 car celui-ci est universel et ne dépend d'aucun autre services. C'est un échange réalisé directement entre le serveur Caddy et les serveurs de Let's Encrypt. Pour le challenge DNS-01, il y a un intermédiaire. Cet intermédiaire est le serveur DNS du domaine pour lequel on souhaite générer un certificat wildcard. De part la multitude de serveurs disponibles et de prestataires fournissant ces services, il est difficile d'avoir un protocole unifié de modification distante des entrées DNS. A ma connaissance, le seul standard qui existe pour cela est la <a href="https://tools.ietf.org/html/rfc2136">RFC 2136</a> qui ne semble pas être implémentée chez la plupart des fournisseurs de services DNS.</p>
 <p>Nous allons donc voir comment, avec Caddy, générer un certificat wildcard avec OVH en fournisseur de service DNS. La procédure est assez similaire avec les autres fournisseurs qui ont, je l'espère, pris plus de soin dans la documentation de cette fonctionnalité.</p>
-<p>Caddy n'intègre pas, de base, l'ensemble des plugins permettant de résoudre les challenges DNS de tous les fournisseurs. Pour intégrer le bon plugin, il est nécessaire de compiler Caddy. L'opération est particulièrement simple à réaliser et à l'avantage de produire en sortie un binaire unique qu'il est ensuite facile de déployer sur ses serveurs. La compilation de Caddy est assez bien expliquée dans <a class="reference external" href="https://caddyserver.com/docs/build#xcaddy">la documentation</a> et voici la liste des <a class="reference external" href="https://caddyserver.com/docs/modules/">plugins disponible</a>. A ce jour, aucun plugin spécifique n'a été écrit pour OVH, il faut donc se rabattre sur le module <a class="reference external" href="https://github.com/caddy-dns/lego-deprecated">Lego Deprecated</a>. Ce module utilise une ancienne API mais est actuellement le seul qui permet de gérer un grand nombre de fournisseurs de DNS, dont OVH.</p>
-<div class="section" id="compilation-de-caddy">
+<p>Caddy n'intègre pas, de base, l'ensemble des plugins permettant de résoudre les challenges DNS de tous les fournisseurs. Pour intégrer le bon plugin, il est nécessaire de compiler Caddy. L'opération est particulièrement simple à réaliser et à l'avantage de produire en sortie un binaire unique qu'il est ensuite facile de déployer sur ses serveurs. La compilation de Caddy est assez bien expliquée dans <a href="https://caddyserver.com/docs/build#xcaddy">la documentation</a> et voici la liste des <a href="https://caddyserver.com/docs/modules/">plugins disponible</a>. A ce jour, aucun plugin spécifique n'a été écrit pour OVH, il faut donc se rabattre sur le module <a href="https://github.com/caddy-dns/lego-deprecated">Lego Deprecated</a>. Ce module utilise une ancienne API mais est actuellement le seul qui permet de gérer un grand nombre de fournisseurs de DNS, dont OVH.</p>
+<section id="compilation-de-caddy">
 <h2>Compilation de Caddy</h2>
 <p>Pour compiler Caddy, nous avons besoin de 2 choses. Golang et le binaire xcaddy qui permet de facilement compiler caddy avec les modules spécifiés. On commence donc par installer Golang et déclarer son binaire dans le PATH.</p>
 <div class="highlight"><pre><span></span># wget https://golang.org/dl/go&lt;version&gt;.linux-amd64.tar.gz
 # tar -C /usr/local -xzf go&lt;version&gt;.linux-amd64.tar.gz
 # rm -f go&lt;version&gt;.linux-amd64.tar.gz
 </pre></div>
-<p>On édite le fichier <tt class="docutils literal">/etc/profile</tt> pour ajouter le binaire go dans le PATH. A la fin du fichier on ajoute :</p>
+<p>On édite le fichier <code>/etc/profile</code> pour ajouter le binaire go dans le PATH. A la fin du fichier on ajoute :</p>
 <div class="highlight"><pre><span></span>export PATH=$PATH:/usr/local/go/bin
 </pre></div>
 <p>Puis, on source le fichier pour mettre à jour le PATH et on s'assure que go est bien installé en affichant la version (ici 1.16).</p>
@@ -103,28 +83,28 @@ LICENSE  README.md  xcaddy  xcaddy_0.1.8_linux_amd64.tar.gz
 # ls
 LICENSE  README.md  caddy  xcaddy  xcaddy_0.1.8_linux_amd64.tar.gz
 </pre></div>
-</div>
-<div class="section" id="configuration-d-ovh">
+</section>
+<section id="configuration-d-ovh">
 <h2>Configuration d'OVH</h2>
-<p>Il faut autoriser Caddy à créer et supprimer des entrées DNS sur les serveurs d’OVH. Pour cela, il faut créer une application chez OVH, via ce lien : <a class="reference external" href="https://eu.api.ovh.com/createApp/">https://eu.api.ovh.com/createApp/</a></p>
-<p>On rentre son account ID et mot de passe. On choisit un nom d’application ici <tt class="docutils literal"><span class="pre">xcaddy-dns-challenge</span></tt> ainsi qu’une description. OVH affiche alors l’Application Key et l’Application Secret. On les conserve bien au chaud pour la suite.</p>
+<p>Il faut autoriser Caddy à créer et supprimer des entrées DNS sur les serveurs d’OVH. Pour cela, il faut créer une application chez OVH, via ce lien : <a class="m-link-wrap" href="https://eu.api.ovh.com/createApp/">https://eu.api.ovh.com/createApp/</a></p>
+<p>On rentre son account ID et mot de passe. On choisit un nom d’application ici <code>xcaddy-dns-challenge</code> ainsi qu’une description. OVH affiche alors l’Application Key et l’Application Secret. On les conserve bien au chaud pour la suite.</p>
 <p>Ensuite, il faut donner des droits à cette application. On réalise cela par un call API directement sur la console OVH.</p>
 <div class="highlight"><pre><span></span>curl -XPOST -H &quot;X-Ovh-Application: &lt;Application Key&gt;&quot; -H &quot;Content-type: application/json&quot; https://eu.api.ovh.com/1.0/auth/credential -d &#39;{&quot;accessRules&quot;:[{&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/record&quot;},{&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/refresh&quot;},{&quot;method&quot;:&quot;DELETE&quot;,&quot;path&quot;:&quot;/domain/zone/&lt;Nom De Domaine&gt;/record/*&quot;}],&quot;redirection&quot;: &quot;https://www.foo.com&quot;}&#39;
 </pre></div>
 <p>La partie redirection a la fin ne nous intéresse pas mais est obligatoire. Elle indique vers quelle page l’application doit être redirigée une fois connectée.</p>
 <p>En retour, on obtient un JSON avec la consumer Key. C’est cette info qu’il faut conserver.</p>
-<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;validationUrl&quot;</span><span class="p">:</span><span class="s2">&quot;https://eu.api.ovh.com/auth/?credentialToken=xxxxxxxxxxxxxxx&quot;</span><span class="p">,</span><span class="nt">&quot;consumerKey&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;The Consumer Key&gt;&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;pendingValidation&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;validationUrl&quot;</span><span class="p">:</span><span class="s2">&quot;https://eu.api.ovh.com/auth/?credentialToken=xxxxxxxxxxxxxxx&quot;</span><span class="p">,</span><span class="nt">&quot;consumerKey&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;The Consumer Key&gt;&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="s2">&quot;pendingValidation&quot;</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>On voit que l'état est “Pending Validation”. Afin de valider, il faut se rendre sur le lien validationUrl.</p>
 <p>Sur ce lien, on entre de nouveau ses codes d'accès OVH puis on choisi la durée de validité de l’accès.
 On a maintenant toutes les infos dont nous avons besoin :</p>
-<ul class="simple">
+<ul>
 <li>Application Key</li>
 <li>Application Secret</li>
 <li>Consumer Key</li>
 </ul>
-</div>
-<div class="section" id="configuration-de-caddy">
+</section>
+<section id="configuration-de-caddy">
 <h2>Configuration de Caddy</h2>
 <p>Voyons maintenant comment générer un certificat wildcard pour un domaine puis servir plusieurs sous-domaines en dessous. J'ai mis un peu de temps à trouver la bonne façon de faire, la voici servie pour vous sur un plateau :)
 Voici un extrait de mon fichier de configuration, je vais décrire en dessous les différentes sections.</p>
@@ -152,18 +132,18 @@ Voici un extrait de mon fichier de configuration, je vais décrire en dessous le
 
     }
 </pre></div>
-<p>On déclare d'abord <tt class="docutils literal">*.domain.com</tt> qui est le domaine pour lequel on souhaite que Caddy génère un certificat wildcard. Pour cela, une première section tls avec l'entrée <tt class="docutils literal">dns lego_deprecated ovh</tt> signifie :</p>
-<ul class="simple">
+<p>On déclare d'abord <code>*.domain.com</code> qui est le domaine pour lequel on souhaite que Caddy génère un certificat wildcard. Pour cela, une première section tls avec l'entrée <code>dns lego_deprecated ovh</code> signifie :</p>
+<ul>
 <li>dns: Résolution du challenge DNS-01</li>
 <li>lego_deprecated: Utilisation du module lego_deprecated</li>
 <li>ovh: Parmi les providers proposés par lego_deprecated, utiliser OVH.</li>
 </ul>
-<p>L'entrée <tt class="docutils literal">&#64;backend host backend.domain.com</tt> est un <tt class="docutils literal">matcher</tt>. C'est à dire qu'on place sous le nom <tt class="docutils literal">backend</tt> l'ensemble des requêtes dont le SNI est <tt class="docutils literal">backend.domain.com</tt>. Puis, juste en dessous, l'ensemble des requêtes qui matchent <tt class="docutils literal">&#64;backend</tt> sont reverse proxyfiées (oui, je sais...) vers 10.0.0.2:3001.</p>
-<p>Les 2 entrées suivantes sont un peu similaires au matcher <tt class="docutils literal">&#64;backend</tt> mais comme je devais spécifié plusieurs filtres (1 sur le SNI et 1 sur le path), les filtres sont placés dans un bloc d'accolades. Ensuite, les matchers <tt class="docutils literal">&#64;prodapi</tt> et <tt class="docutils literal">&#64;prod</tt> sont également reverse proxyfiés (oui, bon, ça va...) vers leurs serveurs respectifs.</p>
+<p>L'entrée <code>&#64;backend host backend.domain.com</code> est un <code>matcher</code>. C'est à dire qu'on place sous le nom <code>backend</code> l'ensemble des requêtes dont le SNI est <code>backend.domain.com</code>. Puis, juste en dessous, l'ensemble des requêtes qui matchent <code>&#64;backend</code> sont reverse proxyfiées (oui, je sais...) vers 10.0.0.2:3001.</p>
+<p>Les 2 entrées suivantes sont un peu similaires au matcher <code>&#64;backend</code> mais comme je devais spécifié plusieurs filtres (1 sur le SNI et 1 sur le path), les filtres sont placés dans un bloc d'accolades. Ensuite, les matchers <code>&#64;prodapi</code> et <code>&#64;prod</code> sont également reverse proxyfiés (oui, bon, ça va...) vers leurs serveurs respectifs.</p>
 <p>On est prêt à lancer Caddy. Il faut cependant trouver un moyen de lui spécifier les clés et secret OVH pour que le module lego_deprecated puisse se connecter et générer les entrées DNS. Pour cela, plusieurs solutions. La plus simple est d'executer Caddy depuis le terminal avec les variables d'environnement, de cette façon :</p>
 <div class="highlight"><pre><span></span>OVH_APPLICATION_KEY=&lt;Application Key&gt; OVH_APPLICATION_SECRET=&lt;Application Secret&gt; OVH_CONSUMER_KEY=&lt;Consumer Key&gt; OVH_ENDPOINT=ovh-eu ./caddy run --config Caddyfile
 </pre></div>
-<p>C'est bien, ça fonctionne mais c'est pas vraiment production ready. L'autre solution est de placer ces variables d'environnement directement dans le fichier systemd de Caddy. Dans la section <tt class="docutils literal">[Service]</tt> on peut ajouter des variables d'environnement de cette façon :</p>
+<p>C'est bien, ça fonctionne mais c'est pas vraiment production ready. L'autre solution est de placer ces variables d'environnement directement dans le fichier systemd de Caddy. Dans la section <code>[Service]</code> on peut ajouter des variables d'environnement de cette façon :</p>
 <div class="highlight"><pre><span></span>[Service]
 User=caddy
 Group=caddy
@@ -223,28 +203,35 @@ caddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295361.128
 Mcaddy[575954]: {&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:1615295361.1286106,&quot;logger&quot;:&quot;tls.obtain&quot;,&quot;msg&quot;:&quot;releasing lock&quot;,&quot;identifier&quot;:&quot;*.domain.com&quot;}
 </pre></div>
 <p>Cet article ne fait qu'effleurer les possiblités offerte par Caddy. Comme toujours, je vous invite à vous plonger dans la documentation du logiciel et à parcourir la liste des plugins disponible. Si vous souhaitez voir d'autres fonctionnalités de Caddy détaillées sur ce blog n'hésitez pas à m'en faire part directement.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-04-05T08:55:00+02:00">Mon 05 April 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

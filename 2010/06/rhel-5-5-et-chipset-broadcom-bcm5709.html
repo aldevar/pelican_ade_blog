@@ -1,77 +1,61 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  RHEL 5.5 et chipset broadcom BCM5709 | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Nous avons récemment installé une nouvelle machine qui sert de serveur principal pour notre nouveau système de sauvegarde. Lors des tests des sauvegardes complètes du week end, le chipset réseau du serveur s'écroulait lamentablement sous la charge du nombre de paquets qui arrivaient. Même si le réseau semblait toujours fonctionnel …">
-
-
+  <meta charset="UTF-8" />
+  <title>RHEL 5.5 et chipset broadcom BCM5709 | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="RHEL 5.5 et chipset broadcom BCM5709" />
+  <meta name="twitter:title" content="RHEL 5.5 et chipset broadcom BCM5709" />
+  <meta property="og:url" content="https://blog.devarieux.net/2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html" />
+  <meta property="og:description" content="Nous avons récemment installé une nouvelle machine qui sert de serveur principal pour notre nouveau système de sauvegarde. Lors des tests des sauvegardes complètes du week end, le chipset réseau du serveur s&#39;écroulait lamentablement sous la charge du nombre de paquets qui arrivaient. Même si le réseau semblait toujours fonctionnel …" />
+  <meta name="twitter:description" content="Nous avons récemment installé une nouvelle machine qui sert de serveur principal pour notre nouveau système de sauvegarde. Lors des tests des sauvegardes complètes du week end, le chipset réseau du serveur s&#39;écroulait lamentablement sous la charge du nombre de paquets qui arrivaient. Même si le réseau semblait toujours fonctionnel …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  RHEL 5.5 et chipset broadcom BCM5709
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2010-06-28T19:36:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Mon 28 June 2010
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/broadcom.html">#broadcom</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/pilote.html">#pilote</a>,               <a href="../../tag/red-hat.html">#Red hat</a>,               <a href="../../tag/reseau.html">#réseau</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Nous avons récemment installé une nouvelle machine qui sert de serveur
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2010/06/rhel-5-5-et-chipset-broadcom-bcm5709.html" rel="bookmark" title="Permalink to RHEL 5.5 et chipset broadcom BCM5709">
+          <time class="m-date" datetime="2010-06-28T19:36:00+02:00">
+            Jun <span class="m-date-day">28</span> 2010
+          </time>
+          RHEL 5.5 et chipset broadcom BCM5709
+        </a></h1>
+        <p>Nous avons récemment installé une nouvelle machine qui sert de serveur
+        principal pour notre nouveau système de sauvegarde. Lors des tests des
+        sauvegardes complètes du week end, le chipset réseau du serveur
+        s'écroulait lamentablement sous la charge du nombre de paquets qui
+        arrivaient. Même si le réseau semblait toujours fonctionnel …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Nous avons récemment installé une nouvelle machine qui sert de serveur
 principal pour notre nouveau système de sauvegarde. Lors des tests des
 sauvegardes complètes du week end, le chipset réseau du serveur
 s'écroulait lamentablement sous la charge du nombre de paquets qui
@@ -82,62 +66,55 @@ redémarrage du service réseau ne suffit pas à retrouver une
 connectivité.</p>
 <p>A l'heure où la sauvegarde s'arrêtait, voici ce qu'on pouvait trouver
 dans /var/log/messages :</p>
-<pre class="literal-block">
-server1 kernel: NETDEV WATCHDOG: eth0: transmit timed out
-server1 kernel: bnx2: eth0 NIC Copper Link is Down
-</pre>
+<pre>server1 kernel: NETDEV WATCHDOG: eth0: transmit timed out
+server1 kernel: bnx2: eth0 NIC Copper Link is Down</pre>
 <p>La résolution du problème passe par une mise à jour du pilote. On trouve
 le pilote pour ce chipset à cette page :
-<a class="reference external" href="http://www.broadcom.com/support/ethernet_nic/netxtremeii.php">http://www.broadcom.com/support/ethernet_nic/netxtremeii.php</a> Après avoir
+<a class="m-link-wrap" href="http://www.broadcom.com/support/ethernet_nic/netxtremeii.php">http://www.broadcom.com/support/ethernet_nic/netxtremeii.php</a> Après avoir
 extrait l'archive, on installe les sources :</p>
-<pre class="literal-block">
-rpm -ivh netxtreme2-&lt;version&gt;.src.rpm
-</pre>
+<pre>rpm -ivh netxtreme2-&lt;version&gt;.src.rpm</pre>
 <p>Installation de kernel-devel pour pouvoir compiler les sources du
 pilotes :</p>
-<pre class="literal-block">
-yum install kernel-devel
-</pre>
+<pre>yum install kernel-devel</pre>
 <p>Construction du paquet :</p>
-<pre class="literal-block">
-cd /usr/src/redhat
-rpm -bb SPECS/netxtreme2.spec
-</pre>
+<pre>cd /usr/src/redhat
+rpm -bb SPECS/netxtreme2.spec</pre>
 <p>Installation du paquet fraichement installé :</p>
-<pre class="literal-block">
-rpm -ivh RPMS/&lt;arch&gt;/netxtreme2-&lt;version&gt;.&lt;arch&gt;.rpm
-</pre>
+<pre>rpm -ivh RPMS/&lt;arch&gt;/netxtreme2-&lt;version&gt;.&lt;arch&gt;.rpm</pre>
 <p>déchargement de l'ancien module :</p>
-<pre class="literal-block">
-rmmode bnx2
-</pre>
+<pre>rmmode bnx2</pre>
 <p>Chargement du nouveau module :</p>
-<pre class="literal-block">
-modprobe bnx2
-</pre>
+<pre>modprobe bnx2</pre>
 <p>Suite à cette petite manipulation, plus de soucis de chipset réseau qui
 ne répond plus. Problème résolu :D</p>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2010-06-28T19:36:00+02:00">Mon 28 June 2010</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

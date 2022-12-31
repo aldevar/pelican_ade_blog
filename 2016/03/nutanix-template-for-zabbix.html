@@ -1,77 +1,64 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Nutanix Template for Zabbix | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2016/03/nutanix-template-for-zabbix.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Cet article est également disponible en français For the needs of our infrastructure, I built a Nutanix Template for the monitoring plateforme Zabbix. This template automatically discover containers, CVMs, hard drives, hypervisors and virtual machines. Once the items are discovered, some metrics, graphs and triggers are deployed To be able …">
-
-
+  <meta charset="UTF-8" />
+  <title>Nutanix Template for Zabbix | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2016/03/nutanix-template-for-zabbix.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/supervision.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Supervision" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Nutanix Template for Zabbix" />
+  <meta name="twitter:title" content="Nutanix Template for Zabbix" />
+  <meta property="og:url" content="https://blog.devarieux.net/2016/03/nutanix-template-for-zabbix.html" />
+  <meta property="og:description" content="Cet article est également disponible en français For the needs of our infrastructure, I built a Nutanix Template for the monitoring plateforme Zabbix. This template automatically discover containers, CVMs, hard drives, hypervisors and virtual machines. Once the items are discovered, some metrics, graphs and triggers are deployed To be able …" />
+  <meta name="twitter:description" content="Cet article est également disponible en français For the needs of our infrastructure, I built a Nutanix Template for the monitoring plateforme Zabbix. This template automatically discover containers, CVMs, hard drives, hypervisors and virtual machines. Once the items are discovered, some metrics, graphs and triggers are deployed To be able …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Nutanix Template for Zabbix
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2016-03-31T17:35:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Thu 31 March 2016
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/nutanix.html">#nutanix</a>,               <a href="../../tag/supervision.html">#supervision</a>,               <a href="../../tag/template.html">#template</a>,               <a href="../../tag/zabbix.html">#zabbix</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Cet article est également disponible <a class="reference external" href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/">en
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2016/03/nutanix-template-for-zabbix.html" rel="bookmark" title="Permalink to Nutanix Template for Zabbix">
+          <time class="m-date" datetime="2016-03-31T17:35:00+02:00">
+            Mar <span class="m-date-day">31</span> 2016
+          </time>
+          Nutanix Template for Zabbix
+        </a></h1>
+        <p>Cet article est également disponible <a href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/">en
+        français</a></p>
+        <p>For the needs of our infrastructure, I built a Nutanix Template for the
+        monitoring plateforme Zabbix. This template automatically discover
+        containers, CVMs, hard drives, hypervisors and virtual machines.</p>
+        <p>Once the items are discovered, some metrics, graphs and triggers are
+        deployed</p>
+        <p>To be able …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Cet article est également disponible <a href="http://blog.devarieux.net/2016/03/template_nutanix_pour_zabbix/">en
 français</a></p>
 <p>For the needs of our infrastructure, I built a Nutanix Template for the
 monitoring plateforme Zabbix. This template automatically discover
@@ -84,96 +71,95 @@ and some macros needs to be set at the host level in Zabbix. We will go
 through these few steps in the next part of this post.</p>
 <p>The template is configured to use SNMPv3 in authPriv mode, using SHA
 auth and AES privacy.</p>
-<div class="section" id="prism-central">
+<section id="prism-central">
 <h2>Prism Central</h2>
 <p>The prism configuration is quite simple, using the SNMP configuration
 interface</p>
-<p><img alt="2016-03-18 09_52_19-Nutanix Web Console" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /></p>
+<p><img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /></p>
 <p>Make sure at least one Transport is configured in UDP, on the port of
 your choice (161 by default)</p>
-<p><img alt="2016-03-18 09_52_56-Nutanix Web Console" src="images/2016/03/2016-03-18-09_52_56-Nutanix-Web-Console.png" /></p>
+<p><img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="images/2016/03/2016-03-18-09_52_56-Nutanix-Web-Console.png" /></p>
 <p>Then, go in the 'Users' tab and add a new user for Zabbix.</p>
-<p><img alt="2016-03-18 09_53_41-Nutanix Web Console" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /></p>
+<p><img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /></p>
 <p>While you are here, you can download the MIB, we will need it later.</p>
 <p>Clic Save. The prim configuration is done.</p>
-</div>
-<div class="section" id="nutanix-mib">
+</section>
+<section id="nutanix-mib">
 <h2>Nutanix MIB</h2>
 <p>One you have downloaded the Nutanix MIB, we need to upload it on the
 Zabbix server. On CentOS, it is located in /usr/share/snmp/mibs</p>
-<pre class="literal-block">
-# ls /usr/share/snmp/mibs/NUTANIX*
-/usr/share/snmp/mibs/NUTANIX-MIB
-</pre>
+<pre># ls /usr/share/snmp/mibs/NUTANIX*
+/usr/share/snmp/mibs/NUTANIX-MIB</pre>
 <p>Restart Zabbix so it can use this new MIB</p>
-<pre class="literal-block">
-# systemctl restart zabbix-server
-</pre>
+<pre># systemctl restart zabbix-server</pre>
 <p>You can test the MIB and the prism configuration using the snmpwalk
 command line tool. In the example, we are listing all the Nutanix
 containers.</p>
-<pre class="literal-block">
-snmpwalk -v 3 -a SHA -A YOURSHAPASSWORD -u zabbix -x AES -X YOURAESPASSWORD IP.OF.PRISM.CENTRAL -l AuthPriv citContainerName
+<pre>snmpwalk -v 3 -a SHA -A YOURSHAPASSWORD -u zabbix -x AES -X YOURAESPASSWORD IP.OF.PRISM.CENTRAL -l AuthPriv citContainerName
 NUTANIX-MIB::citContainerName.1 = STRING: container00.
 NUTANIX-MIB::citContainerName.2 = STRING: containerA.
 NUTANIX-MIB::citContainerName.3 = STRING: containerB.
 NUTANIX-MIB::citContainerName.4 = STRING: containerC.
 NUTANIX-MIB::citContainerName.5 = STRING: RESERVED_SPACE.
-NUTANIX-MIB::citContainerName.6 = STRING: containerD.
-</pre>
+NUTANIX-MIB::citContainerName.6 = STRING: containerD.</pre>
 <p>The server configuration is done, we can now configure Zabbix itself.</p>
-</div>
-<div class="section" id="zabbix">
+</section>
+<section id="zabbix">
 <h2>Zabbix</h2>
 <p>If it's not already done, create a new host for prism central in Zabbix.
 The host needs 3 macros for the Nutanix Template to work on it.</p>
 <p>Those 3 macros are</p>
-<ul class="simple">
+<ul>
 <li>{$NTX_SNMP_USER} : the SNMP user</li>
 <li>{$NTX_SNMP_AUTH} : the SHA password</li>
 <li>{$NTX_SNMP_PRIV} : the AES password</li>
 </ul>
 <p>Then, import this
-<a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml">Template</a>
+<a href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml">Template</a>
 in Zabbix and apply it on your prism central host.</p>
 <p>By default, the VM discovery is disabled because I couldn't find a good
 way to create hosts from the LLD process.</p>
 <p>If you have a big Nutanix cluster and Zabbix shows a timeout error while
 parsing the SNMP OIDs, you can increase this timeout in the Zabbix
 configuration file</p>
-<pre class="literal-block">
-Timeout=10
-</pre>
+<pre>Timeout=10</pre>
 <p>Known bugs :</p>
-<ul class="simple">
+<ul>
 <li>Until NOS 4.6, LLD can't discover all hypervisors. This behavior is
 the same when using snmpwalk. I guess this is a Nutanix problem.
 Everything works fine in NOS 4.6</li>
 <li>The number of found VMs is limited to 250. I guess this is a
 limitation on the Nutanix side.</li>
 </ul>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2016-03-31T17:35:00+02:00">Thu 31 March 2016</time> in <a href="https://blog.devarieux.net/category/supervision.html">Supervision</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

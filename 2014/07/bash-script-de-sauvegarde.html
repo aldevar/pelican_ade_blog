@@ -1,87 +1,70 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Bash : Script de sauvegarde | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2014/07/bash-script-de-sauvegarde.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="On ne le dira jamais assez : FAITES DES SAUVEGARDES!!!!! Ayant un petit serveur dédié sous CentOS, j'ai évidemment appliqué cet adage à moi même. Je vous présente donc un script duquel vous pouvez librement vous inspirer afin de l'adapter à votre environnement. Ce script place quelques répertoires et quelques exports …">
-
-
+  <meta charset="UTF-8" />
+  <title>Bash : Script de sauvegarde | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2014/07/bash-script-de-sauvegarde.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Bash : Script de sauvegarde" />
+  <meta name="twitter:title" content="Bash : Script de sauvegarde" />
+  <meta property="og:url" content="https://blog.devarieux.net/2014/07/bash-script-de-sauvegarde.html" />
+  <meta property="og:description" content="On ne le dira jamais assez : FAITES DES SAUVEGARDES!!!!! Ayant un petit serveur dédié sous CentOS, j&#39;ai évidemment appliqué cet adage à moi même. Je vous présente donc un script duquel vous pouvez librement vous inspirer afin de l&#39;adapter à votre environnement. Ce script place quelques répertoires et quelques exports …" />
+  <meta name="twitter:description" content="On ne le dira jamais assez : FAITES DES SAUVEGARDES!!!!! Ayant un petit serveur dédié sous CentOS, j&#39;ai évidemment appliqué cet adage à moi même. Je vous présente donc un script duquel vous pouvez librement vous inspirer afin de l&#39;adapter à votre environnement. Ce script place quelques répertoires et quelques exports …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Bash : Script de sauvegarde
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2014-07-24T11:14:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Thu 24 July 2014
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/bash.html">#bash</a>,               <a href="../../tag/centos.html">#centos</a>,               <a href="../../tag/cron.html">#cron</a>,               <a href="../../tag/ftp.html">#ftp</a>,               <a href="../../tag/gz.html">#gz</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/pydio.html">#pydio</a>,               <a href="../../tag/sauvegarde.html">#sauvegarde</a>,               <a href="../../tag/script.html">#script</a>,               <a href="../../tag/tar.html">#tar</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>On ne le dira jamais assez : <strong>FAITES DES SAUVEGARDES!!!!!</strong>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2014/07/bash-script-de-sauvegarde.html" rel="bookmark" title="Permalink to Bash : Script de sauvegarde">
+          <time class="m-date" datetime="2014-07-24T11:14:00+02:00">
+            Jul <span class="m-date-day">24</span> 2014
+          </time>
+          Bash : Script de sauvegarde
+        </a></h1>
+        <p>On ne le dira jamais assez : <strong>FAITES DES SAUVEGARDES!!!!!</strong>
+        Ayant un petit serveur dédié sous CentOS, j'ai évidemment appliqué
+        cet adage à moi même. Je vous présente donc un script duquel vous pouvez
+        librement vous inspirer afin de l'adapter à votre environnement.
+        Ce script place quelques répertoires et quelques exports …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>On ne le dira jamais assez : <strong>FAITES DES SAUVEGARDES!!!!!</strong>
 Ayant un petit serveur dédié sous CentOS, j'ai évidemment appliqué
 cet adage à moi même. Je vous présente donc un script duquel vous pouvez
 librement vous inspirer afin de l'adapter à votre environnement.
 Ce script place quelques répertoires et quelques exports de base de
 données dans un fichier tar.gz puis envoie ce fichier sur 2 serveurs FTP
 (ceinture + bretelles) et enfin déplace l'archive dans un répertoire de
-<a class="reference external" href="http://pyd.io">pydio</a> afin de pouvoir facilement récupérer le
+<a href="http://pyd.io">pydio</a> afin de pouvoir facilement récupérer le
 fichier sur ma machine personnelle.</p>
-<pre class="literal-block">
-#!/bin/bash
+<pre>#!/bin/bash
 #Fichier de Backup créé par Alain Devarieux
 # - créer un fichier tar.gz contenant plusieurs élements de l'arborescence
 # - Envoie ce fichier tar.gz sur un serveur FTP dédié au backup
@@ -161,22 +144,17 @@ statusmv=&quot;Fichier $backup_file déplacé dans Pydio&quot;
 fi
 logger -t backup &quot;$statusmv&quot;
 logger -t backup &quot;########## Fin de la sauvegarde ##########&quot;
-exit 0
-</pre>
+exit 0</pre>
 <p>Le script est planifié pour être lancé tous les dimanche à 5h00.
 J'ai écris un 2nd script qui m'envoie un email avec les logs de la
 sauvegarde afin que je puisse surveillé que tout c'est bien passé</p>
-<pre class="literal-block">
-#!/bin/bash
+<pre>#!/bin/bash
 #Envoie d'un mail suite à l'execution du script de sauvegarde
 datejour=$(LC_ALL=&quot;en_EN.UTF-8&quot; date &quot;+%b %d&quot;)
-grep backup /var/log/messages |grep &quot;$datejour&quot; | mail -s &quot;Backup du mois de $(date &quot;+%B&quot;)&quot; adresse&#64;email.com adresse2&#64;email.com
-</pre>
+grep backup /var/log/messages |grep &quot;$datejour&quot; | mail -s &quot;Backup du mois de $(date &quot;+%B&quot;)&quot; adresse&#64;email.com adresse2&#64;email.com</pre>
 <p>Petite explication sur le LC_ALL=&quot;en_EN.UTF-8&quot;
 Lorsque je tape</p>
-<pre class="literal-block">
-date &quot;+%b&quot;
-</pre>
+<pre>date &quot;+%b&quot;</pre>
 <p>J'obtiens la version courte et francisée du mois. Par exemple, pour le
 mois de juillet, je vais avoir comme retour <em>juil</em>. Hors syslog lui
 écris dans le fichier <em>/var/log/messages</em> en anglais. Ce qui donne pour
@@ -186,27 +164,34 @@ retourne les informations en anglais également. C'est ce qui explique le
 positionnement de cette variable en amont.</p>
 <p>Ce second script est également placé dans un cron et est lancé a 5h15
 tous les dimanches.</p>
-
-    </div>
-  </article>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2014-07-24T11:14:00+02:00">Thu 24 July 2014</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

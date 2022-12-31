@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - humeur</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/humeur.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2015-09-25T07:14:00+02:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Scripter, programmer</title><link href="https://blog.devarieux.net/2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2015-09-25:/2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Humeur</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/humeur.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2021-03-17T22:30:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>L'ingé qui veut des responsabilités</title><link href="https://blog.devarieux.net/2021/03/senior.html" rel="alternate"></link><published>2021-03-17T22:30:00+01:00</published><updated>2021-03-17T22:30:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-03-17:/2021/03/senior.html</id><summary type="html">&lt;p&gt;Cela fait un moment que cet article est dans mes brouillons et que je tente de formuler correctement mes idées. Il est maintenant temps de le publier, un peu sous la forme d'un coup de gueule contre une partie de la profession.&lt;/p&gt;
+&lt;p&gt;Durant mes quelques années d'expérience et en progressant …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cela fait un moment que cet article est dans mes brouillons et que je tente de formuler correctement mes idées. Il est maintenant temps de le publier, un peu sous la forme d'un coup de gueule contre une partie de la profession.&lt;/p&gt;
+&lt;p&gt;Durant mes quelques années d'expérience et en progressant dans ma carrière, j'ai pu constater une évolution de la façon dont se présentent les problèmes que j'ai à résoudre. A mes débuts, ces problèmes étaient assez simples dans le sens où, même si je rencontrais des difficultés techniques pour les résoudre, la solution était connue et il suffisait de trouver comment procéder à la mise en œuvre. Je parle là des problèmes communs pour un junior, tel que trouver la bonne configuration pour Apache ou Nginx, comment mettre en place VRRP, comment migrer un serveur OpenLDAP, comment gérer le quorum d'un cluster etc.&lt;/p&gt;
+&lt;p&gt;En prenant plus d'assurance et de responsabilité, en devenant de plus en plus autonome, la définition des problèmes intéressants évolue. L'intérêt n'est plus dans la technique pure, même si cela reste toujours un plaisir (et un moyen pour moi aujourd'hui de retourner de temps en temps dans ma zone de confort). La plupart des problèmes qui méritent d'être résolus sont vagues, mal définis. Ils contiennent plus de questions que de réponses. Souvent, on ne sait même pas s'il existe de bonnes réponses, et encore moins où commencer à chercher pour en trouver. On rencontre ce type de problèmes par exemple lors de design d'architecture (assumer les compromis), de planification des évolutions d'une infrastructure (asusmer les choix et les hypothèses d'évolution), pour ne parler que des aspects ops que je connais.&lt;/p&gt;
+&lt;p&gt;Le rôle d'ingénieur principal, responsable d'équipe, tech lead, senior etc. est (ou devrait être) attribué à celles et ceux qui gèrent bien cette incertitude et qui parviennent à apporter des solutions à ces problèmes vagues et mals définis. Cela impose aussi d'avoir la capacité à convertir les idées ou les propositions des autres (qu'ils viennent ou pas du milieu technique) en projets ou en tâches, tickets pour les juniors. Plus on accumule d'experience ou plus on monte dans la hiérarchie, moins on est impliqué dans la construction proprement dite.&lt;/p&gt;
+&lt;p&gt;Au-delà des injonctions de bienveillances, j'estime que beaucoup d'ingénieurs ne sont pas prêts à assumer l'autonomie et la liberté qu'ils demandent. C'est vrai dans les métiers d'ops mais aussi pour les devs. Lorsqu'on s'estime assez bon, assez talentueux ou experimenté pour réclamer l'autonomie de résoudre un problème comme on le souhaite, il faut aussi s'attendre à assumer les responsabilités qui incombent.&lt;/p&gt;
+&lt;p&gt;Plusieurs fois j'ai pu observer des coéquipiers avec lesquels le dialogue était particulièrement difficile à cause justement de ce manque d'assomption Malheureusement dans l'esprit de ces collaborateurs, le mechant est souvent celui qui le place face à ses errements.&lt;/p&gt;
+&lt;p&gt;Faire des erreurs fait parti du processus, nous en faisons tous. J'ai cependant beaucoup de mal à tolérer que les erreurs ne soient pas assumées ou pire que la faute soit rejetée sur quelqu'un d'autre. Un ingénieur senior doit comprendre la complexité, appréhender les aléas et les doutes et enfin assumer ses choix.&lt;/p&gt;
+</content><category term="Humeur"></category></entry><entry><title>Scripter, programmer</title><link href="https://blog.devarieux.net/2015/09/scripter-programmer.html" rel="alternate"></link><published>2015-09-25T07:14:00+02:00</published><updated>2015-09-25T07:14:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-09-25:/2015/09/scripter-programmer.html</id><summary type="html">&lt;p&gt;Il y a quelques mois, &lt;a href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
 ingénieur réseau chez Brocade, a présenté un discours très intéressant
-au &lt;a class="reference external" href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
+au &lt;a href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
 sujet de la programmabilité en réseau.&lt;/p&gt;
 &lt;p&gt;Durant la conversation (qui vaut vraiment le coup d'être vu), une
 question de John Herbert de
-&lt;a class="reference external" href="http://movingpackets.net/"&gt;MovingPackets.net&lt;/a&gt; a été …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il y a quelques mois, &lt;a class="reference external" href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
+&lt;a href="http://movingpackets.net/"&gt;MovingPackets.net&lt;/a&gt; a été …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il y a quelques mois, &lt;a href="https://twitter.com/_Desmoden"&gt;Jon Hudson&lt;/a&gt;,
 ingénieur réseau chez Brocade, a présenté un discours très intéressant
-au &lt;a class="reference external" href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
+au &lt;a href="http://techfieldday.com/event/nfd9"&gt;Network Field Day 9&lt;/a&gt; sur le
 sujet de la programmabilité en réseau.&lt;/p&gt;
 &lt;p&gt;Durant la conversation (qui vaut vraiment le coup d'être vu), une
 question de John Herbert de
-&lt;a class="reference external" href="http://movingpackets.net/"&gt;MovingPackets.net&lt;/a&gt; a été posée : &amp;quot;&lt;em&gt;Les
+&lt;a href="http://movingpackets.net/"&gt;MovingPackets.net&lt;/a&gt; a été posée : &amp;quot;&lt;em&gt;Les
 ingénieurs réseaux deviendront-ils des programmeurs?&lt;/em&gt;&amp;quot;. La réponse de
 Jon Hudson a suscité les applaudissements de l'audience :&lt;/p&gt;
 &lt;blockquote&gt;
@@ -67,7 +75,7 @@ religion de l'IT. Si vous avez besoin d'une scie, utilisez une scie. Si
 vous avez besoin d'une scie sauteuse pour mieux scier, construisez votre
 scie sauteuse mais faite attention de ne pas devenir un constructeur de
 scie sauteuse qui a oublié comment scier.&lt;/p&gt;
-</content><category term="humeur"></category></entry><entry><title>Playskool présente: Numéricable concurrence Netflix</title><link href="https://blog.devarieux.net/2014/09/numericable-concurrence-netflix.html" rel="alternate"></link><published>2014-09-16T11:02:00+02:00</published><updated>2014-09-16T11:02:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2014-09-16:/2014/09/numericable-concurrence-netflix.html</id><summary type="html">&lt;p&gt;Sous ce titre un peu taquin se cache une grande frustration. Nous avons
+</content><category term="Humeur"></category></entry><entry><title>Playskool présente: Numéricable concurrence Netflix</title><link href="https://blog.devarieux.net/2014/09/numericable-concurrence-netflix.html" rel="alternate"></link><published>2014-09-16T11:02:00+02:00</published><updated>2014-09-16T11:02:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2014-09-16:/2014/09/numericable-concurrence-netflix.html</id><summary type="html">&lt;p&gt;Sous ce titre un peu taquin se cache une grande frustration. Nous avons
 tous plus ou moins l'habitude que nos différents fournisseurs tentent de
 nous la mettre bien profond avec différents services inutiles et mal
 conçus.&lt;/p&gt;
@@ -77,19 +85,19 @@ tous plus ou moins l'habitude que nos différents fournisseurs tentent de
 nous la mettre bien profond avec différents services inutiles et mal
 conçus.&lt;/p&gt;
 &lt;p&gt;Hier, Lundi 15 Septembre, nous avons atteint, je crois, le zenith du
-foutage de gueule, le paroxysme de la sodomie, les&lt;a class="reference external" href="http://lesabyssales.fr/"&gt;profondeurs
+foutage de gueule, le paroxysme de la sodomie, les&lt;a href="http://lesabyssales.fr/"&gt;profondeurs
 abyssales&lt;/a&gt; de mon trou du cul. Et j'ai beau
 ajouté du beurre, ça passe toujours pas. Vous l'avez compris, je suis
-colère, &lt;a class="reference external" href="https://www.youtube.com/watch?v=n4IEaJo43tc"&gt;je suis violence parce que je suis
+colère, &lt;a href="https://www.youtube.com/watch?v=n4IEaJo43tc"&gt;je suis violence parce que je suis
 trahison&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Bien... Maintenant que vous avez compris comment je me sens je vais vous
 dire ce qui me met dans cet état. Hier donc, Numéricable a lancé son
-service pour concurrencer Netflix : LaBox Series. &lt;a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2014/09/CP_Numericable_LaBox-Series.pdf"&gt;Le communiqué de
-presse&lt;/a&gt;&amp;nbsp;est
+service pour concurrencer Netflix : LaBox Series. &lt;a href="http://blog.devarieux.net/wp-content/uploads/2014/09/CP_Numericable_LaBox-Series.pdf"&gt;Le communiqué de
+presse&lt;/a&gt; est
 limpide : &amp;quot;Un accès SIMPLE et GRATUIT à 3000 épisodes de séries par mois
 pour les abonnés LaBox Fibre&amp;quot;. Parfait me dis-je, je suis abonné à LaBox
 Fibre avec une offre Power, même si le catalogue n'est sans doute pas
-encore énorme, ça semble être un bon début, surtout si &lt;a class="reference external" href="http://www.zdnet.fr/actualites/netflix-en-france-ce-sera-sans-numericable-qui-riposte-avec-labox-series-39806307.htm"&gt;Numéricable
+encore énorme, ça semble être un bon début, surtout si &lt;a href="http://www.zdnet.fr/actualites/netflix-en-france-ce-sera-sans-numericable-qui-riposte-avec-labox-series-39806307.htm"&gt;Numéricable
 refuse de
 développer&lt;/a&gt;
 une interface Netflix pour LaBox. Tout guilleret, je rentre donc chez
@@ -102,7 +110,7 @@ frein mais je suis bonne pâte et je leur trouve quelques excuses : c'est
 le premier jour de lancement, ça a été fait dans la précipitation pour
 contrer Netflix, ça va s'étoffer.&lt;/p&gt;
 &lt;p&gt;Une fois que j'ai fait le tour du pauvre catalogue (Ha si, y'a chapi
-chapo quand même), je lance l'épisode 1 de la saison 1 de&amp;nbsp;&lt;em&gt;Äkta
+chapo quand même), je lance l'épisode 1 de la saison 1 de &lt;em&gt;Äkta
 människor&lt;/em&gt;(la série suédoise sur la banalisation des androïdes (les
 robots, pas les smartphones)) et là... STUPEUR ET TREMBLEMENT :&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;ON ME DEMANDE DE PAYER!!!!&lt;/strong&gt;&lt;/p&gt;
@@ -114,7 +122,7 @@ mal ce matin.&lt;/p&gt;
 &lt;p&gt;Si j'étais un peu mesquin, je dirais que ce service est une incitation
 pour que les abonnés fibre migrent vers Bouygues qui s'appuie sur le
 réseau numéricable et proposera Netflix sur sa box au mois de novembre.&lt;/p&gt;
-</content><category term="humeur"></category><category term="fibre"></category><category term="nc"></category><category term="netflix"></category><category term="numericable"></category><category term="SVOD"></category><category term="VOD"></category></entry><entry><title>Résolutions de début d'année</title><link href="https://blog.devarieux.net/2013/12/resolution-de-debut-dannee.html" rel="alternate"></link><published>2013-12-28T18:22:00+01:00</published><updated>2013-12-28T18:22:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-12-28:/2013/12/resolution-de-debut-dannee.html</id><summary type="html">&lt;p&gt;En ce début d'année 2014, voici mes projets informatiques personnels
+</content><category term="Humeur"></category></entry><entry><title>Résolutions de début d'année</title><link href="https://blog.devarieux.net/2013/12/resolution-de-debut-dannee.html" rel="alternate"></link><published>2013-12-28T18:22:00+01:00</published><updated>2013-12-28T18:22:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-12-28:/2013/12/resolution-de-debut-dannee.html</id><summary type="html">&lt;p&gt;En ce début d'année 2014, voici mes projets informatiques personnels
 dont j'aimerai terminer la mise en œuvre rapidement.
 Le problème n'est pas de réunir les compétences mais tout simplement
 de prendre le temps de m'y mettre sérieusement pour enfin les terminer
@@ -155,7 +163,7 @@ n'aime pas du tout (remarquez l'effort surhumain que je fais pour ne pas
 dire &amp;quot;&lt;strong&gt;*C'est vraiment de la merde cette grosse bouse!!!!!*&lt;/strong&gt;&amp;quot;). Je
 pense revenir rapidement sous Mageia qui est ma distribution &lt;em&gt;out of the
 box&lt;/em&gt; favorite. Surtout depuis qu'elle supporte la technologie Optimus.&lt;/p&gt;
-</content><category term="humeur"></category><category term="laptop"></category><category term="mylife"></category><category term="owncloud"></category><category term="pc"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2013-06-26:/2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
+</content><category term="Humeur"></category></entry><entry><title>Comment vais-je me passer des services de Google?</title><link href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html" rel="alternate"></link><published>2013-06-26T21:31:00+02:00</published><updated>2013-06-26T21:31:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-06-26:/2013/06/comment-vais-je-me-passer-des-services-de-google.html</id><summary type="html">&lt;p&gt;Ça faisait quand même un moment qu'on s'en doutait, Snowden nous l'a
 confirmé. Tous les plus grands services en ligne américains mettent
 quasi à disposition les données qu'ils possèdent sur leurs utilisateurs
 aux services gouvernementaux des USA. Cela pose plusieurs problèmes.
@@ -174,25 +182,25 @@ raison pour que je partage mon agenda avec n'importe qui et qu'il puisse
 voir la date, l'heure et le lieu de mon RDV avec mon proctologue.&lt;/p&gt;
 &lt;p&gt;Et même si je n'ai rien à cacher, je n'ai pas non plus envie qu'en cas
 de problème avec les autorités mes communications et
-agissements&amp;nbsp;électroniques&amp;nbsp;puissent être utilisé contre moi. J'utilise
+agissements électroniques puissent être utilisé contre moi. J'utilise
 actuellement les services suivant chez Google, très pratique parce
 qu'ils sont synchronisé avec mon smartphone Android : Gmail, Google+,
 Agenda, Drive, Maps. Autant dire que ma vie est stockée sur les serveurs
 de Google, quelque part dans les nuages.&lt;/p&gt;
-&lt;p&gt;Le récent&amp;nbsp;scandale&amp;nbsp;PRISM m'a fait mettre le nez dans ma propre merde.
+&lt;p&gt;Le récent scandale PRISM m'a fait mettre le nez dans ma propre merde.
 Grand défenseur des LL, je me suis laissé happer par la facilité
 d'utilisation des services de Google. D'un autre coté, je ne veux pas
-non plus&amp;nbsp;disparaître&amp;nbsp;des radars sur Internet pour la simple et bonne
-raison que je veux&amp;nbsp;contrôler&amp;nbsp;mon identité en ligne. Je ne veux pas que
+non plus disparaître des radars sur Internet pour la simple et bonne
+raison que je veux contrôler mon identité en ligne. Je ne veux pas que
 ce soit les autres qui décident des liens qui ressortiront sur Google
 lorsqu'on y tape mon nom. Pour cela, il faut que je contrôle ma présence
 en ligne. Le blog est donc là pour ça.&lt;/p&gt;
 &lt;p&gt;Économiquement, j'imagine que les grandes entreprises françaises ainsi
-que certaines plus petites mais&amp;nbsp;innovantes et qui utilisent activement
-les services de Google, Yahoo ou même le cloud d'Amazon&amp;nbsp;pour les
-entreprises doivent être en train de&amp;nbsp;serrer&amp;nbsp;les fesses. Il devient
+que certaines plus petites mais innovantes et qui utilisent activement
+les services de Google, Yahoo ou même le cloud d'Amazon pour les
+entreprises doivent être en train de serrer les fesses. Il devient
 facile pour la NSA et la CIA de faire de l'espionnage à
-grande&amp;nbsp;échelle&amp;nbsp;et à peu de frais (théorie du complot powered).&lt;/p&gt;
+grande échelle et à peu de frais (théorie du complot powered).&lt;/p&gt;
 &lt;p&gt;La question qui se pose maintenant, c'est de savoir comment sortir de
 tous ces services. Tant qu'on n'entre pas dans les prisons dorées de
 Google ou Apple, il est relativement aisé de trouver des solutions
@@ -203,26 +211,26 @@ les données correctement et surtout ne rien oublier.&lt;/p&gt;
 de savoir mettre en place et gérer un serveur. La solution passera donc
 certainement par Owncloud pour tout ce qui concerne l'agenda, les
 contacts, le stockage de photos. Pour les mails, ça se complique, j'en
-ai déjà fait&amp;nbsp;l’expérience. J'ai essayé d'envoyer quelques mails avec mon
+ai déjà fait l’expérience. J'ai essayé d'envoyer quelques mails avec mon
 ancien domaine (aldevar.fr). Ceux ci finissaient souvent dans la boite à
 spam de mes destinataires. En plus de ça, même si j'arrive à régler ce
 problème, la très grande majorité de mes contacts utilisent Gmail ainsi
 que des smartphones Android. Donc, même si je décide de supprimer mes
 données perso des serveurs de Google, le géant du web aura toujours mes
-données&amp;nbsp;grâce&amp;nbsp;à mes amis qui synchronisent leurs contacts
-et&amp;nbsp;reçoivent&amp;nbsp;mes emails.&lt;/p&gt;
-&lt;p&gt;Ouais, je sais, c'est&amp;nbsp;ballot...&lt;/p&gt;
-</content><category term="humeur"></category><category term="google"></category><category term="owncloud"></category><category term="prism"></category><category term="snowden"></category></entry><entry><title>Good Bye Bouygues Telecom</title><link href="https://blog.devarieux.net/2012/11/good-bye-bouygues-telecom.html" rel="alternate"></link><published>2012-11-02T16:00:00+01:00</published><updated>2012-11-02T16:00:00+01:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-11-02:/2012/11/good-bye-bouygues-telecom.html</id><summary type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+données grâce à mes amis qui synchronisent leurs contacts
+et reçoivent mes emails.&lt;/p&gt;
+&lt;p&gt;Ouais, je sais, c'est ballot...&lt;/p&gt;
+</content><category term="Humeur"></category></entry><entry><title>Good Bye Bouygues Telecom</title><link href="https://blog.devarieux.net/2012/11/good-bye-bouygues-telecom.html" rel="alternate"></link><published>2012-11-02T16:00:00+01:00</published><updated>2012-11-02T16:00:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2012-11-02:/2012/11/good-bye-bouygues-telecom.html</id><summary type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
 pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
 ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
 il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
-&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;section id="demenagement-sur-les-dents"&gt;
 &lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
-&lt;p&gt;J'avais en …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
+&lt;p&gt;J'avais en …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;p&gt;Cela faisait quelques temps que je souhaitais quitter Bouygues Telecom
 pour la téléphonie. En fait, c'est surtout depuis l'arrivée de Free et
 ses forfaits à 20€. J'étais toujours engagé chez eux jusqu'à Aout 2013,
 il m'était donc difficile, financièrement parlant, de partir comme ça.&lt;/p&gt;
-&lt;div class="section" id="demenagement-sur-les-dents"&gt;
+&lt;section id="demenagement-sur-les-dents"&gt;
 &lt;h2&gt;Déménagement sur les dents&lt;/h2&gt;
 &lt;p&gt;J'avais en plus groupé mon forfait téléphone et Internet chez eux, avec
 une offre BBox Fibre. Donc, lors de mon déménagement en Septembre 2012
@@ -243,8 +251,8 @@ attention, je ne paierais même pas plus cher, ils me le font
 gracieusement au même prix... Ahem... Comment vous dire...? Je pense
 plutôt que je vais résilier mon offre Internet Fibre et aller chez
 Numéricable.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="choisir-un-nouveau-forfait-telephone"&gt;
+&lt;/section&gt;
+&lt;section id="choisir-un-nouveau-forfait-telephone"&gt;
 &lt;h2&gt;Choisir un nouveau forfait téléphone&lt;/h2&gt;
 &lt;p&gt;Puisque je quittais l'offre Bbox, il me fallait choisir un forfait de
 téléphonie. Je pensais pouvoir simplement revenir vers l'offre que j'ai
@@ -266,8 +274,8 @@ rendu sur le site de B&amp;amp;You pour faire l'acquisition d'une nouvelle carte
 SIM avec un forfait tout illimité à 20€. La somme que je dois à Bouygues
 pour pouvoir partir est donc de (14€ x 10 mois)/3 = 35€. Somme remboursé
 en 1 mois.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="et-maintenant"&gt;
+&lt;/section&gt;
+&lt;section id="et-maintenant"&gt;
 &lt;h2&gt;Et maintenant?&lt;/h2&gt;
 &lt;p&gt;Bon, oui, je vais maintenant devoir acheter moi même mes smartphones.&lt;/p&gt;
 &lt;p&gt;Ici aussi, faisons un rapide calcul.&lt;/p&gt;
@@ -282,45 +290,45 @@ forfait à 60€, il faut au minimum débourser 50 ou 80€ pour un smartphone
 dernier cri subventionné.&lt;/p&gt;
 &lt;p&gt;Quand je pense qu'on s'est fait pigeonner (pour le dire poliment)
 pendant toutes ses années...&lt;/p&gt;
-&lt;/div&gt;
-</content><category term="humeur"></category><category term="B&amp;amp"></category><category term="You, Bouygues, fibre, forfait, Free, internet"></category></entry><entry><title>To bulle or not to bulle</title><link href="https://blog.devarieux.net/2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2012-05-22:/2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
+&lt;/section&gt;
+</content><category term="Humeur"></category></entry><entry><title>To bulle or not to bulle</title><link href="https://blog.devarieux.net/2012/05/to-bulle-or-not-to-bulle.html" rel="alternate"></link><published>2012-05-22T19:39:00+02:00</published><updated>2012-05-22T19:39:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2012-05-22:/2012/05/to-bulle-or-not-to-bulle.html</id><summary type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
 confiance, pour l'instant en tout cas, en Facebook et sa capacité à
 générer des revenus. Le titre FB a eu du mal à se maintenir pour son
 premier jour de cotation Vendredi 18 Mai puis a dévissé complètement le …&lt;/p&gt;</summary><content type="html">&lt;p&gt;On s'y attendait plus ou moins, les investisseurs n'ont pas vraiment
 confiance, pour l'instant en tout cas, en Facebook et sa capacité à
 générer des revenus. Le titre FB a eu du mal à se maintenir pour son
 premier jour de cotation Vendredi 18 Mai puis a dévissé complètement le
-Lundi 21 en perdant plus de 11&amp;nbsp;% de sa valeur d'introduction. Cependant,
+Lundi 21 en perdant plus de 11 % de sa valeur d'introduction. Cependant,
 tout n'est pas aussi simple qu'il n'y paraît.&lt;/p&gt;
-&lt;p&gt;Les libristes crient victoire à coup de «&amp;nbsp;Je vous l'avais bien dit&amp;nbsp;»
+&lt;p&gt;Les libristes crient victoire à coup de « Je vous l'avais bien dit »
 mais la raison de la déroute du titre au NASDAQ n'est pas uniquement
 liée à la confiance que peux générer la société de Paolo Alto. En effet,
 la banque d'investissement Morgan Stanley, qui a géré en grande partie
 l'introduction en bourse, a joué la gourmande en demandant une
 introduction du prix du titre à 38USD, après un prix d'achat la veille à
-34USD. Las&amp;nbsp;! Les acheteurs potentiels n'ont pas suivi, estimant ce prix
+34USD. Las ! Les acheteurs potentiels n'ont pas suivi, estimant ce prix
 bien trop élevé par rapport à la valeur supposée de Facebook.&lt;/p&gt;
 &lt;p&gt;L'action s'est difficilement maintenue à 38USD Jeudi grâce aux
 perfusions de Morgan Stanley, qui a racheté les titres en vente avant la
 fin de clôture afin de maintenir artificiellement l'action au prix
 d'introduction, pour la modique somme de 2 milliards de $. Bien sûr, la
 banque ne pouvait conserver une telle stratégie éternellement et le
-lendemain, c'était la déroute avec 11&amp;nbsp;% de perte, alors que les autres
+lendemain, c'était la déroute avec 11 % de perte, alors que les autres
 valeurs technologique (Google et Apple notamment) se maintenaient ou
 progressaient.&lt;/p&gt;
 &lt;p&gt;A l'origine de tout cela, la banque avait décidé d'augmenter le nombre
 de titre en vente, fournissant à certains de ses investisseurs jusqu'à
-40&amp;nbsp;% de titre en plus que ce qu'ils avaient demandé. La réaction ne
+40 % de titre en plus que ce qu'ils avaient demandé. La réaction ne
 s'est donc pas faite attendre et ceux-ci ont rapidement remis en vente
 les titres en trop, ce qui explique en grande partie un tel fiasco pour
 l'action FB.&lt;/p&gt;
 &lt;p&gt;A l'heure où j'écris ces lignes, peu de temps avant la cloture du marché
-US, le titre perd 2&amp;nbsp;% alors qu'il en perdait encore 4,5&amp;nbsp;% il y a moins
+US, le titre perd 2 % alors qu'il en perdait encore 4,5 % il y a moins
 d'une heure. Cette remontée (ou cette limitation des pertes) est encore
 sans doute due à des rachats d'urgence par les banques ayant gérées
 cette introduction en bourse.&lt;/p&gt;
 &lt;p&gt;Comment alors essayer de comprendre ce que peut valoir l'entreprise
-Facebook&amp;nbsp;? Pour l'instant cela est très compliqué car seulement basé sur
+Facebook ? Pour l'instant cela est très compliqué car seulement basé sur
 des spéculations pures. Nous avons l'habitude de voir en Facebook une
 boite noire ne dévoilant que très peu de chiffre, notamment concernant
 ses revenus. Mais tout cela va changer car cette introduction en bourse
@@ -333,7 +341,7 @@ de son modèle économique.&lt;/p&gt;
 est fait l'internet. Les enseignes vont et viennent. Myspace, skyblog ne
 sont déjà plus que de lointain souvenir. Facebook is so 2007. Valoriser
 la société à hauteur de 100 milliards de $ (soit un chiffre astronomique
-de 133$ par utilisateur comme le &lt;a class="reference external" href="http://frederic.bezies.free.fr/blog/?p=7511"&gt;relève si bien frédéric
+de 133$ par utilisateur comme le &lt;a href="http://frederic.bezies.free.fr/blog/?p=7511"&gt;relève si bien frédéric
 Bezies&lt;/a&gt;)est un pari
 risqué. Cela nous rappel les heures sombres de l'internet et la bulle du
 début des années 2000. Plus que les 100 Millards de Facebook, le chiffre
@@ -371,7 +379,7 @@ startups de se développer sur les idées novatrices. Ceci risque de
 nécroser le developpement du net et ralentir son developpement. Cette
 problématique mériterait un article dédié, nous en reparlerons donc dans
 un prochain billet.&lt;/p&gt;
-</content><category term="humeur"></category><category term="bulle"></category><category term="économie"></category><category term="facebook"></category><category term="finance"></category></entry><entry><title>Lettre ouverte à Google</title><link href="https://blog.devarieux.net/2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-08-11:/2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
+</content><category term="Humeur"></category></entry><entry><title>Lettre ouverte à Google</title><link href="https://blog.devarieux.net/2011/08/lettre-ouverte-a-google.html" rel="alternate"></link><published>2011-08-11T10:22:00+02:00</published><updated>2011-08-11T10:22:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2011-08-11:/2011/08/lettre-ouverte-a-google.html</id><summary type="html">&lt;p&gt;Cher Google,&lt;/p&gt;
 &lt;p&gt;Je me souviens encore de notre première rencontre il y a une douzaine
 d’années.&lt;/p&gt;
 &lt;p&gt;Douze ans, dans l’informatique, c’est long. Sur Internet c’est même une
@@ -382,7 +390,7 @@ d’années.&lt;/p&gt;
 &lt;p&gt;Douze ans, dans l’informatique, c’est long. Sur Internet c’est même une
 éternité! En douze ans, nous somme passé du 56kb au 100Mb (1700 fois
 plus rapide!!), des pages persos avec fond d’écran Matrix aux sites
-‘régie&amp;nbsp;publicitaire’, des frames et tableaux au CSS et HTML5 etc. Quels
+‘régie publicitaire’, des frames et tableaux au CSS et HTML5 etc. Quels
 sont les sites que j’utilisais en 1999 et que j’utilise encore
 maintenant? Caramail? Multimania? Voilà? Ahem… Non en fait, à part toi,
 il n’y en a pas.&lt;/p&gt;
@@ -394,8 +402,8 @@ je faisais une recherche, j’avais les réponses que j’attendais. Je me
 demandais même comment d’autres pouvaient encore utiliser Lycos (qu’est
 devenu ce beau labrador noir d’ailleurs?), Altavista, Yahoo et
 compagnie. Enfin bref, j’étais comblé.&lt;/p&gt;
-&lt;p&gt;Aujourd’hui encore, je ne &amp;nbsp;vois pas comment je pourrais me passer de ton
-moteur de recherche. Il est devenu un&amp;nbsp;réflexe, il est &lt;a class="reference external" href="https://web.archive.org/web/20120418043655/http://www.slate.fr/story/41367/google-memoire"&gt;ma
+&lt;p&gt;Aujourd’hui encore, je ne  vois pas comment je pourrais me passer de ton
+moteur de recherche. Il est devenu un réflexe, il est &lt;a href="https://web.archive.org/web/20120418043655/http://www.slate.fr/story/41367/google-memoire"&gt;ma
 mémoire&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;En 2004, tu m’as surpris en te diversifiant. Gmail est arrivé. J’ai
 obtenu rapidement une invitation, j’étais content. Voilà donc 8 ans que
@@ -409,7 +417,7 @@ spam, y’a pas à tortiller, tu étais vraiment le meilleur et de loin.&lt;/p&g
 interfaces ont évolué, petit à petit, discrètement, sans jamais être
 révolutionnées et ainsi perdre les utilisateurs qui ont vite fait de ne
 plus savoir où cliquer.&lt;/p&gt;
-&lt;p&gt;Dorénavant, mon smartphone est également propulsé&amp;nbsp;grâce&amp;nbsp;à toi. Tu
+&lt;p&gt;Dorénavant, mon smartphone est également propulsé grâce à toi. Tu
 m’envoies mes mails instantanément, tu me géolocalises, tu me permets
 d’accéder à certaines informations dont je n’avais auparavant accès
 qu’en étant chez moi. Maintenant, dans le train, le temps passe plus
@@ -423,27 +431,27 @@ compte que ce n’était pas pratique du tout puisque quand je rentrais
 chez moi le soir, je retrouvais dans mon application les mêmes articles
 que j’avais déjà lu dans la journée. Je suis donc passé à… Google
 Reader. C’est vrai qu’il y a moult solutions équivalentes que je n’ai
-pas pris la peine de tester par&amp;nbsp;flemmardise.&lt;/p&gt;
+pas pris la peine de tester par flemmardise.&lt;/p&gt;
 &lt;p&gt;Le 1er Juillet j’obtenais mon invitation pour Google+. Enfin un réseau
 social qui me convient! Bon… Diaspora* aurait pu faire l’affaire mais
 les méthodes de développement employées et la lenteur de l’interface
 m’ont fait abandonner le projet malgré l’engouement initial.
-Contrairement à Facebook, j’ai enfin l’impression de&amp;nbsp;maîtriser&amp;nbsp;mon
+Contrairement à Facebook, j’ai enfin l’impression de maîtriser mon
 identité numérique. Peu à peu, mes amis m’y rejoignent, l’activité qui y
-règne est&amp;nbsp;enthousiasmante et surtout la masse de boulets n’a pas encore
+règne est enthousiasmante et surtout la masse de boulets n’a pas encore
 débarqué (ce qui arrivera bien un jour où l’autre).&lt;/p&gt;
 &lt;p&gt;Alors quoi? Je t’aurais écrit cette lettre juste pour lister les
-services que tu me proposes et que j’utilise? &amp;nbsp;Non bien sûr!&lt;/p&gt;
+services que tu me proposes et que j’utilise?  Non bien sûr!&lt;/p&gt;
 &lt;p&gt;Mon cher Google, tu es devenu petit à petit mon interface d’accès au
 web. Tu connais tout de moi, ce que je fais, où je vais, ce que j’aime,
 ce que je découvre. Tu possèdes les clés de mon identité. Je sais
 comment tu utilises ces données et pour l’instant, cela me convient. Je
 te fais confiance pour à l’avenir ne pas utiliser ces données à des fins
-moins glorieuses. Je te fais confiance pour&amp;nbsp;reconnaître&amp;nbsp;tes erreurs
+moins glorieuses. Je te fais confiance pour reconnaître tes erreurs
 quand tu en commettras, comme tu l’as déjà fait par le passé. Pour tout
 cela, moi et tous les autres utilisateurs seront vigilant afin que le
 pire ne se produise pas.&lt;/p&gt;
-</content><category term="humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="https://blog.devarieux.net/2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>alain</name></author><id>tag:blog.devarieux.net,2011-07-24:/2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
+</content><category term="Humeur"></category></entry><entry><title>Le web 2.0 est-il une idiocratie?</title><link href="https://blog.devarieux.net/2011/07/le-web-2-0-est-il-une-idiocratie.html" rel="alternate"></link><published>2011-07-24T19:37:00+02:00</published><updated>2011-07-24T19:37:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2011-07-24:/2011/07/le-web-2-0-est-il-une-idiocratie.html</id><summary type="html">&lt;p&gt;Comme moi, vous venez peut-être d'une génération qui a grandi en ligne
 avant le boom des réseaux sociaux. Internet était alors une chambre
 secrète que peu de personnes avaient visité. Nous trollions avant que ce
 soit appelé 'troller' et nous le faisions plus pour l'exercice
@@ -467,7 +475,7 @@ sympa et permettait de rencontrer pas mal de musiciens. Ceux-ci
 pouvaient recevoir des avis/critiques sur leurs musiques. Quand Myspace
 a commencé à mourir, il n'y avait plus cette communauté centrale pour
 les musiciens. Ce qui s'en approche le mieux aujourd'hui est sans doute
-&lt;a class="reference external" href="http://www.soundcloud.com/"&gt;Soundcloud&lt;/a&gt;. Myspace a ouvert les vannes
+&lt;a href="http://www.soundcloud.com/"&gt;Soundcloud&lt;/a&gt;. Myspace a ouvert les vannes
 de l'Internet à pas mal d'idiots. Difficile de nier qu'avec la création
 de Myspace le QI général des internautes a subit une forte chute.&lt;/p&gt;
 &lt;p&gt;L'internet devenait une sorte de centre commercial fantaisiste, avec
@@ -487,4 +495,4 @@ une idiocratie comme cela semble être le cas avec Facebook. En tant que
 personnes ayant utilisé Internet dans ses premiers jours, nous avons
 grandi, mûri, et nous devons utiliser nos connaissances numériques pour
 accompagner une nouvelle génération.&lt;/p&gt;
-</content><category term="humeur"></category><category term="google"></category><category term="idiot"></category><category term="myspace"></category><category term="soundcloud"></category><category term="web"></category></entry></feed>
+</content><category term="Humeur"></category></entry></feed>

@@ -1,77 +1,62 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Galera Mariadb: Load balancing et Failover HAproxy | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2016/06/galera-load-balancing-failover-haproxy.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Après avoir mis en place le cluster Galera Mariadb, nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut être un proxy mysql ou tout autre serveur HA. Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie les paquets vers la machine ayant le moins de connexions …">
-
-
+  <meta charset="UTF-8" />
+  <title>Galera Mariadb: Load balancing et Failover HAproxy | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Galera Mariadb: Load balancing et Failover HAproxy" />
+  <meta name="twitter:title" content="Galera Mariadb: Load balancing et Failover HAproxy" />
+  <meta property="og:url" content="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" />
+  <meta property="og:description" content="Après avoir mis en place le cluster Galera Mariadb, nous avons besoin d&#39;un point d&#39;accès au cluster. Ce point d&#39;accès peut être un proxy mysql ou tout autre serveur HA. Nous allons configurer HAproxy avec l&#39;option leastconn pour qu&#39;il envoie les paquets vers la machine ayant le moins de connexions …" />
+  <meta name="twitter:description" content="Après avoir mis en place le cluster Galera Mariadb, nous avons besoin d&#39;un point d&#39;accès au cluster. Ce point d&#39;accès peut être un proxy mysql ou tout autre serveur HA. Nous allons configurer HAproxy avec l&#39;option leastconn pour qu&#39;il envoie les paquets vers la machine ayant le moins de connexions …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Galera Mariadb: Load balancing et Failover HAproxy
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2016-06-21T21:47:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Tue 21 June 2016
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/cluster.html">#cluster</a>,               <a href="../../tag/failover.html">#failover</a>,               <a href="../../tag/galera.html">#galera</a>,               <a href="../../tag/ha.html">#ha</a>,               <a href="../../tag/haproxy.html">#haproxy</a>,               <a href="../../tag/mariadb.html">#mariadb</a>,               <a href="../../tag/mysql.html">#mysql</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Après avoir mis en place le <a class="reference external" href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/">cluster Galera
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" rel="bookmark" title="Permalink to Galera Mariadb: Load balancing et Failover HAproxy">
+          <time class="m-date" datetime="2016-06-21T21:47:00+02:00">
+            Jun <span class="m-date-day">21</span> 2016
+          </time>
+          Galera Mariadb: Load balancing et Failover HAproxy
+        </a></h1>
+        <p>Après avoir mis en place le <a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/">cluster Galera
+        Mariadb</a>,
+        nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
+        être un proxy mysql ou tout autre serveur HA.</p>
+        <p>Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie
+        les paquets vers la machine ayant le moins de connexions …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Après avoir mis en place le <a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/">cluster Galera
 Mariadb</a>,
 nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
 être un proxy mysql ou tout autre serveur HA.</p>
@@ -81,26 +66,23 @@ Balancing) et nous allons mettre en place un check http pour qu'en cas
 de problème sur un noeud, HAproxy ne lui envoie plus de paquets
 (FailOver).</p>
 <p>Pour cela, nous avons besoin du script clustercheck présent
-ici&nbsp;<a class="reference external" href="https://github.com/olafz/percona-clustercheck">https://github.com/olafz/percona-clustercheck</a>. Ce script doit être
+ici <a class="m-link-wrap" href="https://github.com/olafz/percona-clustercheck">https://github.com/olafz/percona-clustercheck</a>. Ce script doit être
 présent sur chaque noeud du cluster mariadb.</p>
-<div class="section" id="preparation-des-noeuds-du-cluster">
+<section id="preparation-des-noeuds-du-cluster">
 <h2>Préparation des nœuds du cluster</h2>
 <p>Toutes les opérations détaillées dans cette section doivent être
 effectuées sur tous les nœuds du cluster mariadb.</p>
 <p>On commence par récupérer le script clustercheck, puis on créé un
 utilisateur mysql pour l’exécution du script et on place le script au
 bon endroit</p>
-<pre class="literal-block">
-wget&nbsp;https://raw.githubusercontent.com/olafz/percona-clustercheck/master/clustercheck
+<pre>wget https://raw.githubusercontent.com/olafz/percona-clustercheck/master/clustercheck
 mysql&gt; GRANT PROCESS ON *.* TO 'clustercheckuser'&#64;'localhost' IDENTIFIED BY 'clustercheckpassword!'
 chmod +x clustercheck
-mv clustercheck /usr/bin
-</pre>
+mv clustercheck /usr/bin</pre>
 <p>L'étape suivante consiste à créer un service xinetd dont la tâche sera
 de lancer le script clustercheck à la demande.</p>
-<p>Création du fichier&nbsp;<tt class="docutils literal">/etc/xinetd.d/mariadbcheck</tt>:</p>
-<pre class="literal-block">
-# default: on
+<p>Création du fichier <code>/etc/xinetd.d/mariadbcheck</code>:</p>
+<pre># default: on
 # description: mariadbcheck
 service mariadbcheck
 {
@@ -113,87 +95,83 @@ service mariadbcheck
         server = /usr/bin/clustercheck clustercheckuser clustercheckpassword!
         log_on_failure += USERID
         only_from = 0.0.0.0/0
-        per_source = UNLIMITED }
-</pre>
+        per_source = UNLIMITED }</pre>
 <p>Dans le champ only_from, vous pouvez mettre l'adresse ip d'HAproxy si
 vous le souhaitez (avec un /32 à la fin).</p>
 <p>Pour avoir un service propre et bien configuré, on l'ajoute aussi dans
-<tt class="docutils literal">/etc/services</tt> en commentant les anciens services utilisant le port
+<code>/etc/services</code> en commentant les anciens services utilisant le port
 9200 (service wap, a priori votre serveur ne devrait pas en avoir besoin
 :) )</p>
-<pre class="literal-block">
-mariadbcheck&nbsp; &nbsp; &nbsp;9200/tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;mariadbcheck
-#wap-wsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9200/tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # WAP connectionless session service
-#wap-wsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9200/udp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # WAP connectionless session service
-</pre>
+<pre>mariadbcheck     9200/tcp                # mariadbcheck
+#wap-wsp         9200/tcp                # WAP connectionless session service
+#wap-wsp         9200/udp                # WAP connectionless session service</pre>
 <p>On redémarre xinetd et on devrait avoir le port 9200 en écoute.</p>
-<p>Pour vérifier que ça fonctionne, lancez la commande <tt class="docutils literal">clustercheck</tt>.
-Elle doit renvoyer du text contenant <tt class="docutils literal">HTTP/1.1 200 OK</tt> qui sera le
+<p>Pour vérifier que ça fonctionne, lancez la commande <code>clustercheck</code>.
+Elle doit renvoyer du text contenant <code>HTTP/1.1 200 OK</code> qui sera le
 retour attendu par HAproxy pour s'assurer que le noeud du cluster est
 atteignable.</p>
-</div>
-<div class="section" id="configuration-d-haproxy">
+</section>
+<section id="configuration-d-haproxy">
 <h2>Configuration d'HAproxy</h2>
 <p>La plus gros du boulot est fait. Reste à définir le cluster dans
 HAproxy.</p>
 <p>Ceci se fait dans le fichier de conf en y ajoutant à la fin :</p>
-<pre class="literal-block">
-listen galera-mariadb 0.0.0.0:3306
+<pre>listen galera-mariadb 0.0.0.0:3306
   balance leastconn
   option httpchk
   mode tcp
   server mariadb01 ip.de.mariadb.01:3306 check port 9200 inter 5000 fastinter 2000 rise 2 fall 2
   server mariadb02 ip.de.mariadb.02:3306 check port 9200 inter 5000 fastinter 2000 rise 2 fall 2
-  server mariadb03 ip.de.mariadb.03:3306 check port 9200 inter 5000 fastinter 2000 rise 2 fall 2
-</pre>
+  server mariadb03 ip.de.mariadb.03:3306 check port 9200 inter 5000 fastinter 2000 rise 2 fall 2</pre>
 <p>Après avoir redémarré HAproxy, le cluster doit être joignable et on doit
 pouvoir prouver le load balancing :</p>
-<pre class="literal-block">
-[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
+<pre>[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
 +-----------------+---------------+
 | Variable_name   | VALUE         |
 +-----------------+---------------+
 | wsrep_node_name |   mariadb01   |
-+-----------------+---------------+
-</pre>
-<pre class="literal-block">
-[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
++-----------------+---------------+</pre>
+<pre>[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
 +-----------------+---------------+
 | Variable_name   | VALUE         |
 +-----------------+---------------+
 | wsrep_node_name |   mariadb02   |
-+-----------------+---------------+
-</pre>
-<pre class="literal-block">
-[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
++-----------------+---------------+</pre>
+<pre>[root&#64;haproxy]# mysql -uroot -p -h127.0.0.1 -e &quot;show variables like 'wsrep_node_name' ;&quot;
 +-----------------+---------------+
 | Variable_name   | VALUE         |
 +-----------------+---------------+
 | wsrep_node_name |   mariadb03   |
-+-----------------+---------------+
-</pre>
++-----------------+---------------+</pre>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2016-06-21T21:47:00+02:00">Tue 21 June 2016</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

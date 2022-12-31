@@ -1,240 +1,228 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Pilotage de Caddy par API | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2022/11/meraki-ipsk-ise.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH. En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité …">
-
-
+  <meta charset="UTF-8" />
+  <title>Pilotage de Caddy par API | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/reseau.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Réseau" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Pilotage de Caddy par API" />
+  <meta name="twitter:title" content="Pilotage de Caddy par API" />
+  <meta property="og:url" content="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" />
+  <meta property="og:description" content="Comme promis dans l&#39;article précédent sur Caddy, je vais parler de l&#39;utilisation de l&#39;API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH. En plus de permettre de lire la configuration, l&#39;API de Caddy permet aussi d&#39;en pousser une nouvelle, en totalité …" />
+  <meta name="twitter:description" content="Comme promis dans l&#39;article précédent sur Caddy, je vais parler de l&#39;utilisation de l&#39;API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH. En plus de permettre de lire la configuration, l&#39;API de Caddy permet aussi d&#39;en pousser une nouvelle, en totalité …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Pilotage de Caddy par API
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2022-11-15T15:54:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Tue 15 November 2022
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/network.html">Network</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/ise.html">#ise</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/wifi.html">#wifi</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" rel="bookmark" title="Permalink to Pilotage de Caddy par API">
+          <time class="m-date" datetime="2022-11-15T15:54:00+01:00">
+            Nov <span class="m-date-day">15</span> 2022
+          </time>
+          Pilotage de Caddy par API
+        </a></h1>
+        <p>Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.</p>
+        <p>En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.</p>
 <p>En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité ou en partie. L'avantage est que, si la configuration envoyée est valide, celle ci est chargée à chaud et sinon un code retour autre que 200 est renvoyé, précisant l'erreur rencontrée.</p>
-<p>Attention au mode d'execution du service Caddy lorsqu'on commence à le configurer par API. Il est nécessaire d'utiliser le fichier de service décrit <a class="reference external" href="https://caddyserver.com/docs/install#linux-service">dans la documentation</a>. Sans cela, les modifications apportées seront perdues au prochain redémarrage du service.</p>
+<p>Attention au mode d'execution du service Caddy lorsqu'on commence à le configurer par API. Il est nécessaire d'utiliser le fichier de service décrit <a href="https://caddyserver.com/docs/install#linux-service">dans la documentation</a>. Sans cela, les modifications apportées seront perdues au prochain redémarrage du service.</p>
 <p>L'API est disponible par defaut seulement sur la boucle locale, port 2019. On peut déjà commencer par visualiser la configuration avant de commencer à en pousser une nouvelle.</p>
 <div class="highlight"><pre><span></span>curl http://localhost:2019/config/ | python3 -m json.tool
 </pre></div>
 <p>Le pipe vers la commande python permet d'obtenir directement un affichage json en mode pretty print.</p>
-<div class="section" id="pousser-une-configuration-complete">
+<section id="pousser-une-configuration-complete">
 <h2>Pousser une configuration complète</h2>
-<p>La configuration à envoyer vers Caddy est préparée dans un fichier, qu'on va appeler <code>config.json</code>. Ce fichier sera ensuite envoyé en tant que payload dans l'appel API.</p>
+<p>La configuration à envoyer vers Caddy est préparée dans un fichier, qu'on va appeler <code class="code">config.json</code>. Ce fichier sera ensuite envoyé en tant que payload dans l'appel API.</p>
 <p>Première configuration simple avec un reverse proxy.</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="nt">&quot;apps&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;http&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;servers&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;srv0&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;listen&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;:443&quot;</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;routes&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;handle&quot;</span><span class="p">:</span> <span class="p">[</span>
-                            <span class="p">{</span>
-                                <span class="nt">&quot;handler&quot;</span><span class="p">:</span> <span class="s2">&quot;reverse_proxy&quot;</span><span class="p">,</span>
-                                <span class="nt">&quot;upstreams&quot;</span><span class="p">:</span> <span class="p">[</span>
-                                    <span class="p">{</span>
-                                        <span class="nt">&quot;dial&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1:80&quot;</span>
-                                    <span class="p">}</span>
-                                <span class="p">]</span>
-                            <span class="p">}</span>
-                        <span class="p">]</span>
-                    <span class="p">}</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="nt">&quot;apps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;http&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;srv0&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;listen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                    </span><span class="s2">&quot;:443&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">],</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;routes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;handle&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                            </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;handler&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reverse_proxy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;upstreams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                                    </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                        </span><span class="nt">&quot;dial&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.0.0.1:80&quot;</span><span class="w"></span>
+<span class="w">                                    </span><span class="p">}</span><span class="w"></span>
+<span class="w">                                </span><span class="p">]</span><span class="w"></span>
+<span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="w">                        </span><span class="p">]</span><span class="w"></span>
+<span class="w">                    </span><span class="p">}</span><span class="w"></span>
+<span class="w">                </span><span class="p">]</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>Avec cette configuration, on a la génération du certificat TLS via Let's Encrypt ainsi que la redirection HTTP vers HTTPS. On pousse cette configuration avec la commande suivante :</p>
 <div class="highlight"><pre><span></span>curl 127.0.0.1:2019/load -X POST -H &quot;Content-Type: application/json&quot; -d @config.json
 </pre></div>
 <p>Passons maintenant à l'étape suivante. Nous allons ajouter plusieurs éléments de configuration</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="nt">&quot;admin&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;listen&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1:2019&quot;</span>
-<span class="p">},</span>
-<span class="nt">&quot;apps&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;http&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;servers&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;srv0&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;listen&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;:443&quot;</span>
-                <span class="p">],</span>
-                <span class="nt">&quot;routes&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;handle&quot;</span><span class="p">:</span> <span class="p">[</span>
-                            <span class="p">{</span>
-                                <span class="nt">&quot;handler&quot;</span><span class="p">:</span> <span class="s2">&quot;reverse_proxy&quot;</span><span class="p">,</span>
-                                <span class="nt">&quot;transport&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="nt">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;http&quot;</span><span class="p">,</span>
-                                    <span class="nt">&quot;tls&quot;</span><span class="p">:</span> <span class="p">{}</span>
-                                <span class="p">},</span>
-                                <span class="nt">&quot;upstreams&quot;</span><span class="p">:</span> <span class="p">[</span>
-                                    <span class="p">{</span>
-                                        <span class="nt">&quot;dial&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1:443&quot;</span>
-                                    <span class="p">}</span>
-                                <span class="p">]</span>
-                            <span class="p">}</span>
-                        <span class="p">],</span>
-                        <span class="nt">&quot;match&quot;</span><span class="p">:</span> <span class="p">[</span>
-                            <span class="p">{</span>
-                                <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="p">[</span>
-                                    <span class="s2">&quot;sub.domain.com&quot;</span>
-                                <span class="p">]</span>
-                            <span class="p">}</span>
-                        <span class="p">]</span>
-                    <span class="p">},</span>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="nt">&quot;admin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;listen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;127.0.0.1:2019&quot;</span><span class="w"></span>
+<span class="p">},</span><span class="w"></span>
+<span class="nt">&quot;apps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;http&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;servers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;srv0&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;listen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                    </span><span class="s2">&quot;:443&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">],</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;routes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;handle&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                            </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;handler&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reverse_proxy&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;transport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                    </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                                    </span><span class="nt">&quot;tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="w">                                </span><span class="p">},</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;upstreams&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                                    </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                        </span><span class="nt">&quot;dial&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.0.0.1:443&quot;</span><span class="w"></span>
+<span class="w">                                    </span><span class="p">}</span><span class="w"></span>
+<span class="w">                                </span><span class="p">]</span><span class="w"></span>
+<span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="w">                        </span><span class="p">],</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                            </span><span class="p">{</span><span class="w"></span>
+<span class="w">                                </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                                    </span><span class="s2">&quot;sub.domain.com&quot;</span><span class="w"></span>
+<span class="w">                                </span><span class="p">]</span><span class="w"></span>
+<span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="w">                        </span><span class="p">]</span><span class="w"></span>
+<span class="w">                    </span><span class="p">},</span><span class="w"></span>
 
-                <span class="p">],</span>
-                <span class="nt">&quot;tls_connection_policies&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="nt">&quot;certificate_selection&quot;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="nt">&quot;any_tag&quot;</span><span class="p">:</span> <span class="p">[</span>
-                                <span class="s2">&quot;companycert&quot;</span>
-                            <span class="p">]</span>
-                        <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">]</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;tls&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;certificates&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;load_files&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="nt">&quot;certificate&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/pki/tls/certs/companycert.crt&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/pki/tls/private/companycert.key&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="s2">&quot;companycert&quot;</span>
-                    <span class="p">]</span>
-                <span class="p">}</span>
-            <span class="p">]</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">}</span>
+<span class="w">                </span><span class="p">],</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;tls_connection_policies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="w">                        </span><span class="nt">&quot;certificate_selection&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                            </span><span class="nt">&quot;any_tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                                </span><span class="s2">&quot;companycert&quot;</span><span class="w"></span>
+<span class="w">                            </span><span class="p">]</span><span class="w"></span>
+<span class="w">                        </span><span class="p">}</span><span class="w"></span>
+<span class="w">                    </span><span class="p">}</span><span class="w"></span>
+<span class="w">                </span><span class="p">]</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;certificates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;load_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;certificate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/etc/pki/tls/certs/companycert.crt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/etc/pki/tls/private/companycert.key&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                        </span><span class="s2">&quot;companycert&quot;</span><span class="w"></span>
+<span class="w">                    </span><span class="p">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>Qu'avons nous exactement?
-Premièrement, nous créons une route qui utilise un handle. Un handle est un processus de Caddy qui permet d'activer certaines fonctionnalités spécifiques. Ici nous utilisons le handle <code>reverse_proxy</code> mais il y en a <a class="reference external" href="https://caddyserver.com/docs/json/apps/http/servers/routes/handle/">bien d'autres</a>.</p>
-<p>Ensuite, avec la directive <code>&quot;upstream&quot; &quot;dial&quot;</code>, on spécifie le serveur de backend à utiliser. En précisant <code>:443</code>, on force le reverse proxy à se connecter au backend en HTTPS.</p>
-<p>Puis la directive <code>&quot;match&quot; &quot;host&quot;</code> permet de répondre aux requêtes destinées à <code>sub.domain.com</code>.</p>
+Premièrement, nous créons une route qui utilise un handle. Un handle est un processus de Caddy qui permet d'activer certaines fonctionnalités spécifiques. Ici nous utilisons le handle <code class="code">reverse_proxy</code> mais il y en a <a href="https://caddyserver.com/docs/json/apps/http/servers/routes/handle/">bien d'autres</a>.</p>
+<p>Ensuite, avec la directive <code class="code">&quot;upstream&quot; &quot;dial&quot;</code>, on spécifie le serveur de backend à utiliser. En précisant <code class="code">:443</code>, on force le reverse proxy à se connecter au backend en HTTPS.</p>
+<p>Puis la directive <code class="code">&quot;match&quot; &quot;host&quot;</code> permet de répondre aux requêtes destinées à <code class="code">sub.domain.com</code>.</p>
 <p>On termine enfin avec la configuration TLS. D'une part, on indique la politique TLS du serveur &quot;srv0&quot;. La possibilitée d'utiliser des tags est assez pratique pour ne pas avoir à répéter les chemins des certificats lorsqu'on utilise plusieurs éléments &quot;server&quot; dans la même configuration. Il est même possible de spécifier plusieurs tags, correspondant à plusieurs certificats. Caddy choisira le certificat le plus adapté au SNI de destination.</p>
 <p>De la même façon, on pousse la configuration complète vers Caddy.</p>
 <div class="highlight"><pre><span></span>curl 127.0.0.1:2019/load -X POST -H &quot;Content-Type: application/json&quot; -d @config.json
 </pre></div>
-</div>
-<div class="section" id="mettre-a-jour-une-partie-de-la-configuration">
+</section>
+<section id="mettre-a-jour-une-partie-de-la-configuration">
 <h2>Mettre à jour une partie de la configuration</h2>
 <p>Pour mettre à jour ou remplacer une partie de la configuration, on va utiliser le chemin JSON qu'on souhaite mettre à jour et changer de verbe HTTP.</p>
-<dl class="docutils">
+<dl>
 <dt>POST /config/[chemin]</dt>
 <dd>Configure ou remplace un objet. Si l'objet est une liste, l'élément est ajouté à la liste.</dd>
 </dl>
 <p>Voici par exemple comment ajouter l'écoute sur le port 80, ce qui désactive la redirection automatique de HTTP vers HTTPS</p>
 <div class="highlight"><pre><span></span>curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;&quot;:80&quot;&#39; &quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen&quot;
 </pre></div>
-<dl class="docutils">
+<dl>
 <dt>PUT /config/[chemin]</dt>
 <dd>Créé un nouvel objet. Insert dans un liste</dd>
 </dl>
 <p>Pour continuer sur l'exemple du port d'écoute, on peut ajouter le port d'écoute 80 de cette façon :</p>
 <div class="highlight"><pre><span></span>curl -X PUT -H &quot;Content-Type: application/json&quot; -d &#39;&quot;:80&quot;&#39; &quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/0&quot;
 </pre></div>
-<dl class="docutils">
+<dl>
 <dt>PATCH /config/[chemin]</dt>
 <dd>Remplace un objet ou une liste</dd>
 </dl>
-<p>Dison qu'on souhaite remettre en place la redirection du port 80 vers 443. Cela est automatique lorsqu'on demande à Caddy d'écouter seulement sur le port 443. Cette commande va remplacer la liste <code>[&quot;:80&quot;, &quot;:443&quot;]</code> par simplement <code>[&quot;:443&quot;]</code>.</p>
+<p>Dison qu'on souhaite remettre en place la redirection du port 80 vers 443. Cela est automatique lorsqu'on demande à Caddy d'écouter seulement sur le port 443. Cette commande va remplacer la liste <code class="code">[&quot;:80&quot;, &quot;:443&quot;]</code> par simplement <code class="code">[&quot;:443&quot;]</code>.</p>
 <div class="highlight"><pre><span></span>curl -X PATCH -H &quot;Content-Type: application/json&quot; -d &#39;&quot;:443&quot;&#39; &quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/&quot;
 </pre></div>
 <p>Voilà pour un tour rapide de l'utilisation de l'API de Caddy. Dans un prochain article j'expliquerai comment compiler Caddy avec des plugins et comment générer un certificat wildcard pour un domaine hébergé chez OVH, en remplissant le challenge DNS proposé par Let's Encrypt.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2022-11-15T15:54:00+01:00">Tue 15 November 2022</time> in <a href="https://blog.devarieux.net/category/reseau.html">Réseau</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

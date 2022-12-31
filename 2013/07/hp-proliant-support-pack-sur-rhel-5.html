@@ -1,77 +1,61 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  HP Proliant Support Pack sur RHEL 5 | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2013/07/hp-proliant-support-pack-sur-rhel-5.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Dans le cadre de mon travail, je suis en train d'installer et de configurer un serveur HP System Insight Manager (SIM). Une sorte de Nagios amélioré pour serveur HP, avec anticipation des pannes matériel. Ce serveur SIM nous a permis par exemple de détecter qu'une pile de cache RAID était …">
-
-
+  <meta charset="UTF-8" />
+  <title>HP Proliant Support Pack sur RHEL 5 | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2013/07/hp-proliant-support-pack-sur-rhel-5.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="HP Proliant Support Pack sur RHEL 5" />
+  <meta name="twitter:title" content="HP Proliant Support Pack sur RHEL 5" />
+  <meta property="og:url" content="https://blog.devarieux.net/2013/07/hp-proliant-support-pack-sur-rhel-5.html" />
+  <meta property="og:description" content="Dans le cadre de mon travail, je suis en train d&#39;installer et de configurer un serveur HP System Insight Manager (SIM). Une sorte de Nagios amélioré pour serveur HP, avec anticipation des pannes matériel. Ce serveur SIM nous a permis par exemple de détecter qu&#39;une pile de cache RAID était …" />
+  <meta name="twitter:description" content="Dans le cadre de mon travail, je suis en train d&#39;installer et de configurer un serveur HP System Insight Manager (SIM). Une sorte de Nagios amélioré pour serveur HP, avec anticipation des pannes matériel. Ce serveur SIM nous a permis par exemple de détecter qu&#39;une pile de cache RAID était …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  HP Proliant Support Pack sur RHEL 5
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2013-07-23T18:07:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Tue 23 July 2013
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/hpsim.html">#HPSIM</a>,               <a href="../../tag/hpsum.html">#hpsum</a>,               <a href="../../tag/insight-manager.html">#insight manager</a>,               <a href="../../tag/ksym.html">#ksym</a>,               <a href="../../tag/proliant-support-pack.html">#proliant support pack</a>,               <a href="../../tag/psp.html">#psp</a>,               <a href="../../tag/redhat.html">#redhat</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Dans le cadre de mon travail, je suis en train d'installer et de
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2013/07/hp-proliant-support-pack-sur-rhel-5.html" rel="bookmark" title="Permalink to HP Proliant Support Pack sur RHEL 5">
+          <time class="m-date" datetime="2013-07-23T18:07:00+02:00">
+            Jul <span class="m-date-day">23</span> 2013
+          </time>
+          HP Proliant Support Pack sur RHEL 5
+        </a></h1>
+        <p>Dans le cadre de mon travail, je suis en train d'installer et de
+        configurer un serveur HP System Insight Manager (SIM). Une sorte de
+        Nagios amélioré pour serveur HP, avec anticipation des pannes matériel.</p>
+        <p>Ce serveur SIM nous a permis par exemple de détecter qu'une pile de
+        cache RAID était …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Dans le cadre de mon travail, je suis en train d'installer et de
 configurer un serveur HP System Insight Manager (SIM). Une sorte de
 Nagios amélioré pour serveur HP, avec anticipation des pannes matériel.</p>
 <p>Ce serveur SIM nous a permis par exemple de détecter qu'une pile de
@@ -82,26 +66,22 @@ sauvegarde).</p>
 <p>Pour que le serveur HPSIM accède aux serveurs qu'il surveille, il faut
 installer un agent. Cet agent, c'est HP Proliant Support Pack. Une suite
 d'utilitaires et de pilotes pour serveur HP Proliant.</p>
-<p>J'ai donc téléchargé l'iso <a class="reference external" href="http://h18004.www1.hp.com/products/servers/service_packs/en/index.html">sur le site
-d'HP.&nbsp;</a>Celle
+<p>J'ai donc téléchargé l'iso <a href="http://h18004.www1.hp.com/products/servers/service_packs/en/index.html">sur le site
+d'HP. </a>Celle
 ci contient les utilitaires pour tous les OS supportés (Windows, RedHat,
 HP-UX). Une fois l'iso transférée sur le serveur, je la monte :</p>
-<pre class="literal-block">
-mkdir /media/iso
-mount -o loop /tmp/fichier.iso /media/iso
-</pre>
+<pre>mkdir /media/iso
+mount -o loop /tmp/fichier.iso /media/iso</pre>
 <p>Ensuite, c'est l'utilitaire HPSUM qui va s'occuper d'installer les
 différents modules et utilitaires.</p>
-<pre class="literal-block">
-cd /media/iso/hp/swpackages/
-./hpsum
-</pre>
+<pre>cd /media/iso/hp/swpackages/
+./hpsum</pre>
 <p>Cette commande utilise un serveur X.
-|  Pour info, la doc complète : <a class="reference external" href="http://bizsupport1.austin.hp.com/bc/docs/support/SupportManual/c03114114/c03114114.pdf">Guide de l'Utilisateur, HP Smart Update
+|  Pour info, la doc complète : <a href="http://bizsupport1.austin.hp.com/bc/docs/support/SupportManual/c03114114/c03114114.pdf">Guide de l'Utilisateur, HP Smart Update
 Manager</a></p>
 <p>En suivant les étapes une à une, les packages sont tous compilés et
 installés.</p>
-<div class="section" id="aie">
+<section id="aie">
 <h2>Aïe</h2>
 <p>Malheureusement, parfois, tout ne tourne pas rond et dans mon cas,
 certains paquets n'ont pas pu être compilés. Les logs montrent un obscur
@@ -109,35 +89,31 @@ message de problème de dépendance avec ksym.</p>
 <p>Pour résoudre ce problème et terminer l'installation des paquets, voici
 la procédure ;</p>
 <p>Installation des sources :</p>
-<pre class="literal-block">
-cd /media/iso/hp/swpackages/
+<pre>cd /media/iso/hp/swpackages/
 rpm -ivh &lt;paquet&gt;.src.rpm
 rpmbuild -bb /usr/src/redhat/SPECS/&lt;paquet&gt;.spec
-rpm -ivh --nodeps /usr/src/redhat/RPMS/&lt;arch&gt;/&lt;paquet&gt;.rpm
-</pre>
+rpm -ivh --nodeps /usr/src/redhat/RPMS/&lt;arch&gt;/&lt;paquet&gt;.rpm</pre>
 <p>On vérifie que le module a bien été installé :</p>
-<dl class="docutils">
+<dl>
 <dt>::</dt>
 <dd>modinfo &lt;nomdumondule&gt;</dd>
 </dl>
 <p>On charge le module :</p>
-<dl class="docutils">
+<dl>
 <dt>::</dt>
 <dd>modprobe &lt;nomdumodule&gt;</dd>
 </dl>
 <p>Ce qui donne, avec le paquet qla4xxx qui me concernait :</p>
-<pre class="literal-block">
-rpm -ivh hp-qla4xxx-&lt;version&gt;.src.rpm
+<pre>rpm -ivh hp-qla4xxx-&lt;version&gt;.src.rpm
 rpmbuild -bb /usr/src/redhat/SPECS/hp-qla4xxx.spec
 rpm -ivh --nodeps /usr/src/redhat/RPMS/x86_64/kmod-hp-qla4xxx-&lt;version&gt;-x86_64.rpm
-modprobe qla4xxx
-</pre>
-</div>
-<div class="section" id="explication">
+modprobe qla4xxx</pre>
+</section>
+<section id="explication">
 <h2>Explication</h2>
 <p>Les RPM utilisent les dépendances de KMP (Kernel Module Packaging) pour
 s'assurer que les binaires RPM puissent être installés. Red Hat
-maintient une liste blanche de&nbsp;<em>kernel symbols</em> (ksym donc) que les
+maintient une liste blanche de <em>kernel symbols</em> (ksym donc) que les
 RPM utilisent. Certains de ses symboles peuvent être dans le kernel mais
 pas dans la liste blanche. Le résultat est que certains RPM, qui y font
 référence, ne peuvent pas être installés.</p>
@@ -147,28 +123,35 @@ l'installation des binaires.</p>
 pas dans la liste blanche ;</p>
 <p>ksym(kobject_uevent_env) ksym(iscsi2_session_chkready)
 ksym(pci_get_domain_bus_and_slot)</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2013-07-23T18:07:00+02:00">Tue 23 July 2013</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

@@ -1,129 +1,119 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Ajouter Duckduckgo comme moteur de recherche dans SailfishOS | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google comme moteur de recherche et il n'y a pas d'interface pour ajouter de nouveaux moteurs de recherche. Je vous propose ici une méthode pour ajouter un nouveau moteur de recherche dans cette liste. Ici ce sera Duckduckgo La manipulation …">
-
-
+  <meta charset="UTF-8" />
+  <title>Ajouter Duckduckgo comme moteur de recherche dans SailfishOS | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/tech.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Tech" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Ajouter Duckduckgo comme moteur de recherche dans SailfishOS" />
+  <meta name="twitter:title" content="Ajouter Duckduckgo comme moteur de recherche dans SailfishOS" />
+  <meta property="og:url" content="https://blog.devarieux.net/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html" />
+  <meta property="og:description" content="Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google comme moteur de recherche et il n&#39;y a pas d&#39;interface pour ajouter de nouveaux moteurs de recherche. Je vous propose ici une méthode pour ajouter un nouveau moteur de recherche dans cette liste. Ici ce sera Duckduckgo La manipulation …" />
+  <meta name="twitter:description" content="Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google comme moteur de recherche et il n&#39;y a pas d&#39;interface pour ajouter de nouveaux moteurs de recherche. Je vous propose ici une méthode pour ajouter un nouveau moteur de recherche dans cette liste. Ici ce sera Duckduckgo La manipulation …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Ajouter Duckduckgo comme moteur de recherche dans SailfishOS
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2015-08-20T22:10:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Thu 20 August 2015
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/jolla.html">jolla</a>
-        </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2015/08/ajouter-duckduckgo-comme-moteur-de-recherche-dans-sailfishos.html" rel="bookmark" title="Permalink to Ajouter Duckduckgo comme moteur de recherche dans SailfishOS">
+          <time class="m-date" datetime="2015-08-20T22:10:00+02:00">
+            Aug <span class="m-date-day">20</span> 2015
+          </time>
+          Ajouter Duckduckgo comme moteur de recherche dans SailfishOS
+        </a></h1>
+        <p>Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
+        comme moteur de recherche et il n'y a pas d'interface pour ajouter de
+        nouveaux moteurs de recherche.</p>
+        <p>Je vous propose ici une méthode pour ajouter un nouveau moteur de
+        recherche dans cette liste. Ici ce sera
+        <a href="https://duckduckgo.com/">Duckduckgo</a></p>
+        <p>La manipulation …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Par défaut, le navigateur de SailfishOS propose Bing, Yahoo ou Google
 comme moteur de recherche et il n'y a pas d'interface pour ajouter de
 nouveaux moteurs de recherche.</p>
 <p>Je vous propose ici une méthode pour ajouter un nouveau moteur de
 recherche dans cette liste. Ici ce sera
-<a class="reference external" href="https://duckduckgo.com/">Duckduckgo</a></p>
+<a href="https://duckduckgo.com/">Duckduckgo</a></p>
 <p>La manipulation consiste à ajouter un fichier de description du moteur
 de recherche dans le répertoire adéquat.</p>
 <p>La première étape est d'activer le mode développeur et de se connecter
 en SSH à son Jolla. Si vous ne savez pas comment vous y prendre, vous
-pouvez <a class="reference external" href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/">suivre ce
+pouvez <a href="http://blog.devarieux.net/2015/03/se-connecter-en-ssh-a-son-jolla/">suivre ce
 tuto</a></p>
 <p>Une fois connecté en SSH, se connecter en root :</p>
-<pre class="literal-block">
-[nemo&#64;Jolla ~]$ devel-su
-</pre>
+<pre>[nemo&#64;Jolla ~]$ devel-su</pre>
 <p>Se rendre dans /usr/lib/mozembedlite/chrome/embedlite/content/</p>
-<pre class="literal-block">
-[root&#64;Jolla nemo]# cd /usr/lib/mozembedlite/chrome/embedlite/content/
-</pre>
+<pre>[root&#64;Jolla nemo]# cd /usr/lib/mozembedlite/chrome/embedlite/content/</pre>
 <p>Créer un fichier duckduckgo.xml</p>
-<pre class="literal-block">
-[root&#64;Jolla nemo]# vi duckduckgo.xml
-</pre>
+<pre>[root&#64;Jolla nemo]# vi duckduckgo.xml</pre>
 <p>Coller le contenu de ce fichier :
-<a class="reference external" href="http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml">duckduckgo.xml</a></p>
+<a href="http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml">duckduckgo.xml</a></p>
 <p>Ou plus simplement</p>
-<pre class="literal-block">
-[root&#64;Jolla content]# curl &nbsp;http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml -o duckduckgo.xml
-</pre>
+<pre>[root&#64;Jolla content]# curl  http://blog.devarieux.net/wp-content/uploads/2015/08/duckduckgo.xml -o duckduckgo.xml</pre>
 <p>Il ne reste plus qu'à fermer se rendre sur le téléphone, fermer
 l'application 'Réglages', la relancer, se rendre dans 'Application' &gt;
 'Navigateur' et choisir le moteur de recherche Duckduckgo.</p>
 <p>Enjoy!</p>
-<p><a class="reference external" href="/images/20150820220621.jpg"><img alt="20150820220621" src="/images/20150820220621-169x300.jpg" /></a></p>
-
-    </div>
-  </article>
+<div class="m-image">
+<a href="/images/20150820220621.jpg"><img src="../../images/20150820220621-169x300.jpg" /></a>
+</div>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2015-08-20T22:10:00+02:00">Thu 20 August 2015</time> in <a href="https://blog.devarieux.net/category/tech.html">Tech</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

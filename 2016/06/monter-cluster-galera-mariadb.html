@@ -1,77 +1,61 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Pas à pas - monter un cluster Galera Mariadb | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2016/06/monter-cluster-galera-mariadb.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb pour remplacer notre cluster Mysql, je pensais trouver facilement de la documentation en ligne. On trouve en effet beaucoup d'articles de blogs expliquant comment créer son cluster Galera malheureusement cette techno évolue vite et les articles sont …">
-
-
+  <meta charset="UTF-8" />
+  <title>Pas à pas - monter un cluster Galera Mariadb | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/sysadmin.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Sysadmin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Pas à pas - monter un cluster Galera Mariadb" />
+  <meta name="twitter:title" content="Pas à pas - monter un cluster Galera Mariadb" />
+  <meta property="og:url" content="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html" />
+  <meta property="og:description" content="Lorsque je me suis mis dans l&#39;idée de monter un cluster Galera Mariadb pour remplacer notre cluster Mysql, je pensais trouver facilement de la documentation en ligne. On trouve en effet beaucoup d&#39;articles de blogs expliquant comment créer son cluster Galera malheureusement cette techno évolue vite et les articles sont …" />
+  <meta name="twitter:description" content="Lorsque je me suis mis dans l&#39;idée de monter un cluster Galera Mariadb pour remplacer notre cluster Mysql, je pensais trouver facilement de la documentation en ligne. On trouve en effet beaucoup d&#39;articles de blogs expliquant comment créer son cluster Galera malheureusement cette techno évolue vite et les articles sont …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Pas à pas - monter un cluster Galera Mariadb
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2016-06-20T22:40:00+02:00">
-          <i class="fa fa-clock-o"></i>
-          Mon 20 June 2016
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/sysadmin.html">sysadmin</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/bdd.html">#bdd</a>,               <a href="../../tag/cluster.html">#cluster</a>,               <a href="../../tag/galera.html">#galera</a>,               <a href="../../tag/linux.html">#Linux</a>,               <a href="../../tag/mariadb.html">#mariadb</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html" rel="bookmark" title="Permalink to Pas à pas - monter un cluster Galera Mariadb">
+          <time class="m-date" datetime="2016-06-20T22:40:00+02:00">
+            Jun <span class="m-date-day">20</span> 2016
+          </time>
+          Pas à pas - monter un cluster Galera Mariadb
+        </a></h1>
+        <p>Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
+        pour remplacer notre cluster Mysql, je pensais trouver facilement de la
+        documentation en ligne. On trouve en effet beaucoup d'articles de blogs
+        expliquant comment créer son cluster Galera malheureusement cette techno
+        évolue vite et les articles sont …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Lorsque je me suis mis dans l'idée de monter un cluster Galera Mariadb
 pour remplacer notre cluster Mysql, je pensais trouver facilement de la
 documentation en ligne. On trouve en effet beaucoup d'articles de blogs
 expliquant comment créer son cluster Galera malheureusement cette techno
@@ -91,37 +75,34 @@ cluster de nœuds actifs/actifs. Chaque nœud est capable de recevoir des
 <p>Pour réaliser le cluster, j'ai utilisé 4 serveurs Centos 7 : 3 nœuds
 mariadb (il faut un chiffre impair pour respecter le quorum) et un
 serveur haproxy en frontal en mode répartition de charge (leastconn) qui
-fait office de passerelle&nbsp;d'accès. Les machines s'appellent
+fait office de passerelle d'accès. Les machines s'appellent
 respectivement mariadb01, mariadb02, mariadb03 et mariadb-proxy.</p>
 <p>Cet article s'attache à la mise en oeuvre du cluster en lui même. Un
-second article détaillera <a class="reference external" href="http://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy/">le déploiement
+second article détaillera <a href="http://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy/">le déploiement
 d'haproxy</a>.</p>
-<div class="section" id="configuration-du-noeud-mariadb01">
+<section id="configuration-du-noeud-mariadb01">
 <h2>Configuration du nœud mariadb01</h2>
 <p>On commence par récupérer le repo mariadb pour CentOS
-ici&nbsp;<a class="reference external" href="https://downloads.mariadb.org/mariadb/repositories/">https://downloads.mariadb.org/mariadb/repositories/</a> ce qui devrait
+ici <a class="m-link-wrap" href="https://downloads.mariadb.org/mariadb/repositories/">https://downloads.mariadb.org/mariadb/repositories/</a> ce qui devrait
 vous donner quelque chose comme ça:</p>
-<pre class="code literal-block">
-# Put this file in /etc/yum.repos.d/
+<pre class="code"># Put this file in /etc/yum.repos.d/
 # MariaDB 10.1 CentOS repository list - created 2016-06-20 19:31 UTC
 # http://downloads.mariadb.org/mariadb/repositories/
 [mariadb]
 name = MariaDB
 baseurl = http://yum.mariadb.org/10.1/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1
-</pre>
+gpgcheck=1</pre>
 <p>On peut ensuite installer les paquets nécessaires</p>
-<div class="line-block">
-<div class="line"><tt class="docutils literal">yum <span class="pre">-y</span> install <span class="pre">MariaDB-server</span> <span class="pre">MariaDB-client</span> galera rsync xinetd</tt></div>
-<div class="line-block">
-<div class="line">On édite ensuite le fichier de configuration de galera</div>
-<div class="line"><tt class="docutils literal">vim /etc/my.cnf.d/server.conf</tt></div>
-<div class="line">Et dans la zone du fichier dédiée à galera:</div>
-</div>
-</div>
-<pre class="literal-block">
-[galera]
+<p>
+<code>yum -y install MariaDB-server MariaDB-client galera rsync xinetd</code><br />
+<p>
+On édite ensuite le fichier de configuration de galera<br />
+<code>vim /etc/my.cnf.d/server.conf</code><br />
+Et dans la zone du fichier dédiée à galera:<br />
+</p>
+</p>
+<pre>[galera]
 # Mandatory settings
 wsrep_on=ON
 wsrep_provider='/lib64/galera/libgalera_smm.so'
@@ -132,22 +113,18 @@ wsrep_sst_method=rsync
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
-bind-address=0.0.0.0
-</pre>
+bind-address=0.0.0.0</pre>
 <p>On ne donne aucune adresse pour le moment au cluster. On laisse la
 valeur par défaut gcomm://. On reviendra sur cette partie plus tard.</p>
 <p>Avant de démarrer le premier nœud du cluster, on lance la sécurisation
-de l'instance mariadb avec la commande&nbsp;mysql_secure_installation.</p>
+de l'instance mariadb avec la commande mysql_secure_installation.</p>
 <p>Une fois cette étape effectuée, on peut démarrer le cluster. Cette
 commande ne doit être lancée qu'une seule fois et seulement sur le
 premier noeud configuré.</p>
-<pre class="literal-block">
-galera_new_cluster
-</pre>
+<pre>galera_new_cluster</pre>
 <p>On se connecte ensuite sur l'instance mysql pour vérifier que le cluster
 est bien opérationnel:</p>
-<pre class="literal-block">
-[root&#64;mariadb01 ~]# mysql -u root -p
+<pre>[root&#64;mariadb01 ~]# mysql -u root -p
 Enter password:
 Welcome to the MariaDB monitor. Commands end with ; or \g.
 Your MariaDB connection id is 18705
@@ -166,17 +143,15 @@ MariaDB [(none)]&gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', '
 | wsrep_connected      |    ON   |
 | wsrep_ready          |    ON   |
 +----------------------+---------+
-4 rows in set (0.01 sec)
-</pre>
+4 rows in set (0.01 sec)</pre>
 <p>Et voilà notre cluster Galera composée de 1 nœud pour le moment :)</p>
-</div>
-<div class="section" id="configuration-de-mariadb02-et-mariadb03">
+</section>
+<section id="configuration-de-mariadb02-et-mariadb03">
 <h2>Configuration de mariadb02 et mariadb03</h2>
 <p>On reprend les mêmes étapes que pour mariadb01 en adaptant le fichier de
 configuration. On n'oublie pas de lancer mysql_secure_installation.</p>
 <p>Le fichier de conf de mariadb02 :</p>
-<pre class="literal-block">
-[galera]
+<pre>[galera]
 # Mandatory settings
 wsrep_on=ON
 wsrep_provider='/lib64/galera/libgalera_smm.so'
@@ -187,12 +162,10 @@ wsrep_sst_method=rsync
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
-bind-address=0.0.0.0
-</pre>
+bind-address=0.0.0.0</pre>
 <p>On peut lancer le service mariadb de façon classique et vérifier que le
 cluster est opérationnel :</p>
-<pre class="literal-block">
-[root&#64;mariadb02 ~]# systemctl start mariadb
+<pre>[root&#64;mariadb02 ~]# systemctl start mariadb
 [root&#64;mariadb02 ~]# mysql -u root -p
 Enter password:
 Welcome to the MariaDB monitor. Commands end with ; or \g.
@@ -212,12 +185,10 @@ MariaDB [(none)]&gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', '
 | wsrep_connected      |    ON   |
 | wsrep_ready          |    ON   |
 +----------------------+---------+
-4 rows in set (0.01 sec)
-</pre>
+4 rows in set (0.01 sec)</pre>
 <p>On a bien 2 nœuds dans notre cluster, passons à mariadb03</p>
 <p>Le fichier de conf de mariadb03 :</p>
-<pre class="literal-block">
-[galera]
+<pre>[galera]
 # Mandatory settings
 wsrep_on=ON
 wsrep_provider='/lib64/galera/libgalera_smm.so'
@@ -228,11 +199,9 @@ wsrep_sst_method=rsync
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
-bind-address=0.0.0.0
-</pre>
+bind-address=0.0.0.0</pre>
 <p>Idem, on lance le service et on vérifie que tout est ok:</p>
-<pre class="literal-block">
-[root&#64;mariadb02 ~]# systemctl start mariadb
+<pre>[root&#64;mariadb02 ~]# systemctl start mariadb
 [root&#64;mariadb02 ~]# mysql -u root -p
 Enter password:
 Welcome to the MariaDB monitor. Commands end with ; or \g.
@@ -252,50 +221,50 @@ MariaDB [(none)]&gt; SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_ready', '
 | wsrep_connected      |    ON   |
 | wsrep_ready          |    ON   |
 +----------------------+---------+
-4 rows in set (0.01 sec)
-</pre>
+4 rows in set (0.01 sec)</pre>
 <p>Trois nœuds dans le cluster, c'est bon!</p>
-</div>
-<div class="section" id="configuration-finale">
+</section>
+<section id="configuration-finale">
 <h2>Configuration finale</h2>
 <p>On corrige maintenant les adresses de cluster sur les serveurs mariadb01
 et mariadb02 en y mettant la même valeur que dans le fichier de conf de
 mariadb03</p>
-<pre class="literal-block">
-wsrep_cluster_address='gcomm://mariadb01,mariadb02,mariadb03'
-</pre>
+<pre>wsrep_cluster_address='gcomm://mariadb01,mariadb02,mariadb03'</pre>
 <p>Puis on redémarrer les services</p>
-<pre class="literal-block">
-[root&#64;mariadb02 ~]# systemctl restart mariadb
-</pre>
-<pre class="literal-block">
-[root&#64;mariadb01 ~]# systemctl restart mariadb
-</pre>
+<pre>[root&#64;mariadb02 ~]# systemctl restart mariadb</pre>
+<pre>[root&#64;mariadb01 ~]# systemctl restart mariadb</pre>
 <p>C'est terminé.</p>
 <p>A ce stade, vous devez pouvoir vous connecter sur n'importe quel noeud,
 créer une base, elle sera dupliquée dans la foulée sur les autres nœuds.</p>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2016-06-20T22:40:00+02:00">Mon 20 June 2016</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

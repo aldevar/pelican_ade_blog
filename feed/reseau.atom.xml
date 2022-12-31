@@ -1,0 +1,1598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - Réseau</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/reseau.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2022-11-15T15:54:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>Pilotage de Caddy par API</title><link href="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" rel="alternate"></link><published>2022-11-15T15:54:00+01:00</published><updated>2022-11-15T15:54:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2022-11-15:/2022/11/meraki-ipsk-ise.html</id><summary type="html">&lt;p&gt;Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.&lt;/p&gt;
+&lt;p&gt;En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.&lt;/p&gt;
+&lt;p&gt;En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité ou en partie. L'avantage est que, si la configuration envoyée est valide, celle ci est chargée à chaud et sinon un code retour autre que 200 est renvoyé, précisant l'erreur rencontrée.&lt;/p&gt;
+&lt;p&gt;Attention au mode d'execution du service Caddy lorsqu'on commence à le configurer par API. Il est nécessaire d'utiliser le fichier de service décrit &lt;a href="https://caddyserver.com/docs/install#linux-service"&gt;dans la documentation&lt;/a&gt;. Sans cela, les modifications apportées seront perdues au prochain redémarrage du service.&lt;/p&gt;
+&lt;p&gt;L'API est disponible par defaut seulement sur la boucle locale, port 2019. On peut déjà commencer par visualiser la configuration avant de commencer à en pousser une nouvelle.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://localhost:2019/config/ | python3 -m json.tool
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Le pipe vers la commande python permet d'obtenir directement un affichage json en mode pretty print.&lt;/p&gt;
+&lt;section id="pousser-une-configuration-complete"&gt;
+&lt;h2&gt;Pousser une configuration complète&lt;/h2&gt;
+&lt;p&gt;La configuration à envoyer vers Caddy est préparée dans un fichier, qu'on va appeler &lt;code class="code"&gt;config.json&lt;/code&gt;. Ce fichier sera ensuite envoyé en tant que payload dans l'appel API.&lt;/p&gt;
+&lt;p&gt;Première configuration simple avec un reverse proxy.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;quot;apps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;srv0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;routes&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handle&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handler&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;reverse_proxy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;upstreams&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dial&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10.0.0.1:80&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Avec cette configuration, on a la génération du certificat TLS via Let's Encrypt ainsi que la redirection HTTP vers HTTPS. On pousse cette configuration avec la commande suivante :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl 127.0.0.1:2019/load -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d @config.json
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Passons maintenant à l'étape suivante. Nous allons ajouter plusieurs éléments de configuration&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;quot;admin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;127.0.0.1:2019&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;quot;apps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;srv0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;routes&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handle&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handler&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;reverse_proxy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;transport&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;upstreams&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dial&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10.0.0.1:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;match&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sub.domain.com&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls_connection_policies&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificate_selection&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;any_tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;companycert&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificates&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;load_files&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificate&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/etc/pki/tls/certs/companycert.crt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/etc/pki/tls/private/companycert.key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;companycert&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Qu'avons nous exactement?
+Premièrement, nous créons une route qui utilise un handle. Un handle est un processus de Caddy qui permet d'activer certaines fonctionnalités spécifiques. Ici nous utilisons le handle &lt;code class="code"&gt;reverse_proxy&lt;/code&gt; mais il y en a &lt;a href="https://caddyserver.com/docs/json/apps/http/servers/routes/handle/"&gt;bien d'autres&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Ensuite, avec la directive &lt;code class="code"&gt;&amp;quot;upstream&amp;quot; &amp;quot;dial&amp;quot;&lt;/code&gt;, on spécifie le serveur de backend à utiliser. En précisant &lt;code class="code"&gt;:443&lt;/code&gt;, on force le reverse proxy à se connecter au backend en HTTPS.&lt;/p&gt;
+&lt;p&gt;Puis la directive &lt;code class="code"&gt;&amp;quot;match&amp;quot; &amp;quot;host&amp;quot;&lt;/code&gt; permet de répondre aux requêtes destinées à &lt;code class="code"&gt;sub.domain.com&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On termine enfin avec la configuration TLS. D'une part, on indique la politique TLS du serveur &amp;quot;srv0&amp;quot;. La possibilitée d'utiliser des tags est assez pratique pour ne pas avoir à répéter les chemins des certificats lorsqu'on utilise plusieurs éléments &amp;quot;server&amp;quot; dans la même configuration. Il est même possible de spécifier plusieurs tags, correspondant à plusieurs certificats. Caddy choisira le certificat le plus adapté au SNI de destination.&lt;/p&gt;
+&lt;p&gt;De la même façon, on pousse la configuration complète vers Caddy.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl 127.0.0.1:2019/load -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d @config.json
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/section&gt;
+&lt;section id="mettre-a-jour-une-partie-de-la-configuration"&gt;
+&lt;h2&gt;Mettre à jour une partie de la configuration&lt;/h2&gt;
+&lt;p&gt;Pour mettre à jour ou remplacer une partie de la configuration, on va utiliser le chemin JSON qu'on souhaite mettre à jour et changer de verbe HTTP.&lt;/p&gt;
+&lt;dl&gt;
+&lt;dt&gt;POST /config/[chemin]&lt;/dt&gt;
+&lt;dd&gt;Configure ou remplace un objet. Si l'objet est une liste, l'élément est ajouté à la liste.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Voici par exemple comment ajouter l'écoute sur le port 80, ce qui désactive la redirection automatique de HTTP vers HTTPS&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:80&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;dl&gt;
+&lt;dt&gt;PUT /config/[chemin]&lt;/dt&gt;
+&lt;dd&gt;Créé un nouvel objet. Insert dans un liste&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Pour continuer sur l'exemple du port d'écoute, on peut ajouter le port d'écoute 80 de cette façon :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X PUT -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:80&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/0&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;dl&gt;
+&lt;dt&gt;PATCH /config/[chemin]&lt;/dt&gt;
+&lt;dd&gt;Remplace un objet ou une liste&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Dison qu'on souhaite remettre en place la redirection du port 80 vers 443. Cela est automatique lorsqu'on demande à Caddy d'écouter seulement sur le port 443. Cette commande va remplacer la liste &lt;code class="code"&gt;[&amp;quot;:80&amp;quot;, &amp;quot;:443&amp;quot;]&lt;/code&gt; par simplement &lt;code class="code"&gt;[&amp;quot;:443&amp;quot;]&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X PATCH -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:443&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Voilà pour un tour rapide de l'utilisation de l'API de Caddy. Dans un prochain article j'expliquerai comment compiler Caddy avec des plugins et comment générer un certificat wildcard pour un domaine hébergé chez OVH, en remplissant le challenge DNS proposé par Let's Encrypt.&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki</title><link href="https://blog.devarieux.net/2021/03/meraki-umbrella-and-internal-dns.html" rel="alternate"></link><published>2021-03-02T22:20:00+01:00</published><updated>2021-03-02T22:20:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-03-02:/2021/03/meraki-umbrella-and-internal-dns.html</id><summary type="html">&lt;p&gt;Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS.&lt;/p&gt;
+&lt;p&gt;Les équipements Cisco Meraki peuvent nativement rediriger les …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS.&lt;/p&gt;
+&lt;p&gt;Les équipements Cisco Meraki peuvent nativement rediriger les requêtes DNS vers Cisco Umbrella. En interceptant les requêtes DNS et en les envoyant vers Umbrella, l'équipement wifi (MR) Meraki forge une réponse DNS renvoyé au client. Que ce passe-t-il lorsqu'une organisation utilise un DNS interne pour la résolution d'un nom de domaine local?&lt;/p&gt;
+&lt;p&gt;J'ai récemment été confronté à ce scénario et j'ai pu observer différents comportements.&lt;/p&gt;
+&lt;p&gt;Lorsque le domaine interne est un domaine &amp;quot;bidon&amp;quot;, comme par exemple &lt;code class="code"&gt;mycompany.local&lt;/code&gt;, les requêtes DNS ne sont pas interceptées et le client recoit directement une réponse du serveur local. Aucun problème à ce niveau là. Par contre, lorsque le domaine de base existe, même si l'entreprise utilise un sous domaine dédié, cela créé des comportements aberrants.&lt;/p&gt;
+&lt;p&gt;Prenons l'exemple d'une entreprise qui dipose du nom de domaine public &lt;code class="code"&gt;entreprise.com&lt;/code&gt;. Pour ses besoins internes, l'entreprise utilise le sous domaine &lt;code class="code"&gt;internal.entreprise.com&lt;/code&gt;. La configuration réseau de l'ensemble des postes et des serveurs de l'entreprise spécifie l'utilisation du serveur DNS interne &lt;code class="code"&gt;10.0.0.1&lt;/code&gt; qui sert spécifiquement ce domaine. Avec cette configuration, l'ensemble des requêtes DNS qui traversent l'équipement Meraki est intercepté et envoyé vers Umbrella. Comme le sous domaine n'existe pas publiqueme, on se retrouve avec une réponse vide ou &lt;code class="code"&gt;NXDOMAIN&lt;/code&gt; pour domaine non existant.&lt;/p&gt;
+&lt;p&gt;Personnellement, j'ai mis beaucoup de temps à comprendre ce qui se passait. Je recevais bien une réponse &lt;code class="code"&gt;NXDOMAIN&lt;/code&gt; mais les captures de paquets m'indiquaient clairement que les requêtes n'arrivaient pas jusqu'au serveur DNS local. Jusqu'à ce que je jette un oeil au Meraki MR.
+Afin d'empêcher Umbrella d'intercepter les requêtes DNS pour un domaine spécifique, il suffit de le préciser dans la configuration.
+Cela se passe dans Wireless - Firewall &amp;amp; traffic shaping. En choisissant le bon SSID dans le menu déroulant en haut de la page, il possible de définir une liste de domaines dont les requêtes DNS ne seront pas routées vers Cisco Umbrella.&lt;/p&gt;
+&lt;img alt="Whitelist Meraki Umbrella" class="m-image" src="/images/2021-03-02-22_12_36-Meraki-Umbrella.png" /&gt;
+</content><category term="Réseau"></category></entry><entry><title>Migrer des règles de NAT VyOS vers NSX-V</title><link href="https://blog.devarieux.net/2021/02/migrate-nat-vyos-nsxv.html" rel="alternate"></link><published>2021-02-10T09:22:00+01:00</published><updated>2021-02-10T09:22:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-10:/2021/02/migrate-nat-vyos-nsxv.html</id><summary type="html">&lt;p&gt;Il y a quelques temps, j'ai procédé une modification majeure de l'architecture BGP d'un hébergeur. Cette modification imposait de transposer les règles de NAT présentent sur les routeurs BGP VyOS vers les routeurs NSX-V, plus proche du coeur de réseau.
+Il y avait environ 400 règles de NAT à transposer …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Il y a quelques temps, j'ai procédé une modification majeure de l'architecture BGP d'un hébergeur. Cette modification imposait de transposer les règles de NAT présentent sur les routeurs BGP VyOS vers les routeurs NSX-V, plus proche du coeur de réseau.
+Il y avait environ 400 règles de NAT à transposer. Ceux qui ont déjà fait du NAT sur NSX savent que réaliser ce genre de manipulation manuellement n'est pas une sinécure. L'interface n'est clairement pas adaptée pour ce genre de tâche. Par contre, NSX dispose d'une API plutot bien documentée.
+De l'autre coté, VyOS. VyOS est un système d'exploitation réseau, basé sur Debian avec des commandes similaires à ce qu'on peut trouver sur un routeur.&lt;/p&gt;
+&lt;p&gt;En discutant avec &lt;a href="https://baturin.org/"&gt;Daniil Baturin&lt;/a&gt;, principal mainteneur de VyOS, sur la meilleur façon de procéder, celui ci m'a indiqué la &lt;a href="https://github.com/vyos/vyos-1x/blob/current/python/vyos/configtree.py"&gt;lib configtree&lt;/a&gt; qui permet de manipuler un fichier de configuration VyOS. Avec l'aide de cette lib, j'ai pu écrire ce script Python qui lit le fichier vyos.conf préalablement récupéré par mes soins et génére puis pousse les règles de NAT vers NSX-V.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;&lt;span class="normal"&gt;  1&lt;/span&gt;
+&lt;span class="normal"&gt;  2&lt;/span&gt;
+&lt;span class="normal"&gt;  3&lt;/span&gt;
+&lt;span class="normal"&gt;  4&lt;/span&gt;
+&lt;span class="normal"&gt;  5&lt;/span&gt;
+&lt;span class="normal"&gt;  6&lt;/span&gt;
+&lt;span class="normal"&gt;  7&lt;/span&gt;
+&lt;span class="normal"&gt;  8&lt;/span&gt;
+&lt;span class="normal"&gt;  9&lt;/span&gt;
+&lt;span class="normal"&gt; 10&lt;/span&gt;
+&lt;span class="normal"&gt; 11&lt;/span&gt;
+&lt;span class="normal"&gt; 12&lt;/span&gt;
+&lt;span class="normal"&gt; 13&lt;/span&gt;
+&lt;span class="normal"&gt; 14&lt;/span&gt;
+&lt;span class="normal"&gt; 15&lt;/span&gt;
+&lt;span class="normal"&gt; 16&lt;/span&gt;
+&lt;span class="normal"&gt; 17&lt;/span&gt;
+&lt;span class="normal"&gt; 18&lt;/span&gt;
+&lt;span class="normal"&gt; 19&lt;/span&gt;
+&lt;span class="normal"&gt; 20&lt;/span&gt;
+&lt;span class="normal"&gt; 21&lt;/span&gt;
+&lt;span class="normal"&gt; 22&lt;/span&gt;
+&lt;span class="normal"&gt; 23&lt;/span&gt;
+&lt;span class="normal"&gt; 24&lt;/span&gt;
+&lt;span class="normal"&gt; 25&lt;/span&gt;
+&lt;span class="normal"&gt; 26&lt;/span&gt;
+&lt;span class="normal"&gt; 27&lt;/span&gt;
+&lt;span class="normal"&gt; 28&lt;/span&gt;
+&lt;span class="normal"&gt; 29&lt;/span&gt;
+&lt;span class="normal"&gt; 30&lt;/span&gt;
+&lt;span class="normal"&gt; 31&lt;/span&gt;
+&lt;span class="normal"&gt; 32&lt;/span&gt;
+&lt;span class="normal"&gt; 33&lt;/span&gt;
+&lt;span class="normal"&gt; 34&lt;/span&gt;
+&lt;span class="normal"&gt; 35&lt;/span&gt;
+&lt;span class="normal"&gt; 36&lt;/span&gt;
+&lt;span class="normal"&gt; 37&lt;/span&gt;
+&lt;span class="normal"&gt; 38&lt;/span&gt;
+&lt;span class="normal"&gt; 39&lt;/span&gt;
+&lt;span class="normal"&gt; 40&lt;/span&gt;
+&lt;span class="normal"&gt; 41&lt;/span&gt;
+&lt;span class="normal"&gt; 42&lt;/span&gt;
+&lt;span class="normal"&gt; 43&lt;/span&gt;
+&lt;span class="normal"&gt; 44&lt;/span&gt;
+&lt;span class="normal"&gt; 45&lt;/span&gt;
+&lt;span class="normal"&gt; 46&lt;/span&gt;
+&lt;span class="normal"&gt; 47&lt;/span&gt;
+&lt;span class="normal"&gt; 48&lt;/span&gt;
+&lt;span class="normal"&gt; 49&lt;/span&gt;
+&lt;span class="normal"&gt; 50&lt;/span&gt;
+&lt;span class="normal"&gt; 51&lt;/span&gt;
+&lt;span class="normal"&gt; 52&lt;/span&gt;
+&lt;span class="normal"&gt; 53&lt;/span&gt;
+&lt;span class="normal"&gt; 54&lt;/span&gt;
+&lt;span class="normal"&gt; 55&lt;/span&gt;
+&lt;span class="normal"&gt; 56&lt;/span&gt;
+&lt;span class="normal"&gt; 57&lt;/span&gt;
+&lt;span class="normal"&gt; 58&lt;/span&gt;
+&lt;span class="normal"&gt; 59&lt;/span&gt;
+&lt;span class="normal"&gt; 60&lt;/span&gt;
+&lt;span class="normal"&gt; 61&lt;/span&gt;
+&lt;span class="normal"&gt; 62&lt;/span&gt;
+&lt;span class="normal"&gt; 63&lt;/span&gt;
+&lt;span class="normal"&gt; 64&lt;/span&gt;
+&lt;span class="normal"&gt; 65&lt;/span&gt;
+&lt;span class="normal"&gt; 66&lt;/span&gt;
+&lt;span class="normal"&gt; 67&lt;/span&gt;
+&lt;span class="normal"&gt; 68&lt;/span&gt;
+&lt;span class="normal"&gt; 69&lt;/span&gt;
+&lt;span class="normal"&gt; 70&lt;/span&gt;
+&lt;span class="normal"&gt; 71&lt;/span&gt;
+&lt;span class="normal"&gt; 72&lt;/span&gt;
+&lt;span class="normal"&gt; 73&lt;/span&gt;
+&lt;span class="normal"&gt; 74&lt;/span&gt;
+&lt;span class="normal"&gt; 75&lt;/span&gt;
+&lt;span class="normal"&gt; 76&lt;/span&gt;
+&lt;span class="normal"&gt; 77&lt;/span&gt;
+&lt;span class="normal"&gt; 78&lt;/span&gt;
+&lt;span class="normal"&gt; 79&lt;/span&gt;
+&lt;span class="normal"&gt; 80&lt;/span&gt;
+&lt;span class="normal"&gt; 81&lt;/span&gt;
+&lt;span class="normal"&gt; 82&lt;/span&gt;
+&lt;span class="normal"&gt; 83&lt;/span&gt;
+&lt;span class="normal"&gt; 84&lt;/span&gt;
+&lt;span class="normal"&gt; 85&lt;/span&gt;
+&lt;span class="normal"&gt; 86&lt;/span&gt;
+&lt;span class="normal"&gt; 87&lt;/span&gt;
+&lt;span class="normal"&gt; 88&lt;/span&gt;
+&lt;span class="normal"&gt; 89&lt;/span&gt;
+&lt;span class="normal"&gt; 90&lt;/span&gt;
+&lt;span class="normal"&gt; 91&lt;/span&gt;
+&lt;span class="normal"&gt; 92&lt;/span&gt;
+&lt;span class="normal"&gt; 93&lt;/span&gt;
+&lt;span class="normal"&gt; 94&lt;/span&gt;
+&lt;span class="normal"&gt; 95&lt;/span&gt;
+&lt;span class="normal"&gt; 96&lt;/span&gt;
+&lt;span class="normal"&gt; 97&lt;/span&gt;
+&lt;span class="normal"&gt; 98&lt;/span&gt;
+&lt;span class="normal"&gt; 99&lt;/span&gt;
+&lt;span class="normal"&gt;100&lt;/span&gt;
+&lt;span class="normal"&gt;101&lt;/span&gt;
+&lt;span class="normal"&gt;102&lt;/span&gt;
+&lt;span class="normal"&gt;103&lt;/span&gt;
+&lt;span class="normal"&gt;104&lt;/span&gt;
+&lt;span class="normal"&gt;105&lt;/span&gt;
+&lt;span class="normal"&gt;106&lt;/span&gt;
+&lt;span class="normal"&gt;107&lt;/span&gt;
+&lt;span class="normal"&gt;108&lt;/span&gt;
+&lt;span class="normal"&gt;109&lt;/span&gt;
+&lt;span class="normal"&gt;110&lt;/span&gt;
+&lt;span class="normal"&gt;111&lt;/span&gt;
+&lt;span class="normal"&gt;112&lt;/span&gt;
+&lt;span class="normal"&gt;113&lt;/span&gt;
+&lt;span class="normal"&gt;114&lt;/span&gt;
+&lt;span class="normal"&gt;115&lt;/span&gt;
+&lt;span class="normal"&gt;116&lt;/span&gt;
+&lt;span class="normal"&gt;117&lt;/span&gt;
+&lt;span class="normal"&gt;118&lt;/span&gt;
+&lt;span class="normal"&gt;119&lt;/span&gt;
+&lt;span class="normal"&gt;120&lt;/span&gt;
+&lt;span class="normal"&gt;121&lt;/span&gt;
+&lt;span class="normal"&gt;122&lt;/span&gt;
+&lt;span class="normal"&gt;123&lt;/span&gt;
+&lt;span class="normal"&gt;124&lt;/span&gt;
+&lt;span class="normal"&gt;125&lt;/span&gt;
+&lt;span class="normal"&gt;126&lt;/span&gt;
+&lt;span class="normal"&gt;127&lt;/span&gt;
+&lt;span class="normal"&gt;128&lt;/span&gt;
+&lt;span class="normal"&gt;129&lt;/span&gt;
+&lt;span class="normal"&gt;130&lt;/span&gt;
+&lt;span class="normal"&gt;131&lt;/span&gt;
+&lt;span class="normal"&gt;132&lt;/span&gt;
+&lt;span class="normal"&gt;133&lt;/span&gt;
+&lt;span class="normal"&gt;134&lt;/span&gt;
+&lt;span class="normal"&gt;135&lt;/span&gt;
+&lt;span class="normal"&gt;136&lt;/span&gt;
+&lt;span class="normal"&gt;137&lt;/span&gt;
+&lt;span class="normal"&gt;138&lt;/span&gt;
+&lt;span class="normal"&gt;139&lt;/span&gt;
+&lt;span class="normal"&gt;140&lt;/span&gt;
+&lt;span class="normal"&gt;141&lt;/span&gt;
+&lt;span class="normal"&gt;142&lt;/span&gt;
+&lt;span class="normal"&gt;143&lt;/span&gt;
+&lt;span class="normal"&gt;144&lt;/span&gt;
+&lt;span class="normal"&gt;145&lt;/span&gt;
+&lt;span class="normal"&gt;146&lt;/span&gt;
+&lt;span class="normal"&gt;147&lt;/span&gt;
+&lt;span class="normal"&gt;148&lt;/span&gt;
+&lt;span class="normal"&gt;149&lt;/span&gt;
+&lt;span class="normal"&gt;150&lt;/span&gt;
+&lt;span class="normal"&gt;151&lt;/span&gt;
+&lt;span class="normal"&gt;152&lt;/span&gt;
+&lt;span class="normal"&gt;153&lt;/span&gt;
+&lt;span class="normal"&gt;154&lt;/span&gt;
+&lt;span class="normal"&gt;155&lt;/span&gt;
+&lt;span class="normal"&gt;156&lt;/span&gt;
+&lt;span class="normal"&gt;157&lt;/span&gt;
+&lt;span class="normal"&gt;158&lt;/span&gt;
+&lt;span class="normal"&gt;159&lt;/span&gt;
+&lt;span class="normal"&gt;160&lt;/span&gt;
+&lt;span class="normal"&gt;161&lt;/span&gt;
+&lt;span class="normal"&gt;162&lt;/span&gt;
+&lt;span class="normal"&gt;163&lt;/span&gt;
+&lt;span class="normal"&gt;164&lt;/span&gt;
+&lt;span class="normal"&gt;165&lt;/span&gt;
+&lt;span class="normal"&gt;166&lt;/span&gt;
+&lt;span class="normal"&gt;167&lt;/span&gt;
+&lt;span class="normal"&gt;168&lt;/span&gt;
+&lt;span class="normal"&gt;169&lt;/span&gt;
+&lt;span class="normal"&gt;170&lt;/span&gt;
+&lt;span class="normal"&gt;171&lt;/span&gt;
+&lt;span class="normal"&gt;172&lt;/span&gt;
+&lt;span class="normal"&gt;173&lt;/span&gt;
+&lt;span class="normal"&gt;174&lt;/span&gt;
+&lt;span class="normal"&gt;175&lt;/span&gt;
+&lt;span class="normal"&gt;176&lt;/span&gt;
+&lt;span class="normal"&gt;177&lt;/span&gt;
+&lt;span class="normal"&gt;178&lt;/span&gt;
+&lt;span class="normal"&gt;179&lt;/span&gt;
+&lt;span class="normal"&gt;180&lt;/span&gt;
+&lt;span class="normal"&gt;181&lt;/span&gt;
+&lt;span class="normal"&gt;182&lt;/span&gt;
+&lt;span class="normal"&gt;183&lt;/span&gt;
+&lt;span class="normal"&gt;184&lt;/span&gt;
+&lt;span class="normal"&gt;185&lt;/span&gt;
+&lt;span class="normal"&gt;186&lt;/span&gt;
+&lt;span class="normal"&gt;187&lt;/span&gt;
+&lt;span class="normal"&gt;188&lt;/span&gt;
+&lt;span class="normal"&gt;189&lt;/span&gt;
+&lt;span class="normal"&gt;190&lt;/span&gt;
+&lt;span class="normal"&gt;191&lt;/span&gt;
+&lt;span class="normal"&gt;192&lt;/span&gt;
+&lt;span class="normal"&gt;193&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;vyos.configtree&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;requests&lt;/span&gt;
+  &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;requests.auth&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPBasicAuth&lt;/span&gt;
+
+  &lt;span class="c1"&gt;# Set variables for edg_id and nsxmanager&lt;/span&gt;
+  &lt;span class="n"&gt;edge_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;edge-XXX&amp;#39;&lt;/span&gt;
+  &lt;span class="n"&gt;nsx_manager&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;nsxmanager.localdomain&amp;#39;&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_nat_dest_rule&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+      &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;      From VyOS config section &amp;quot;nat destination rule X&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;      Return the DNAT rule X as dict&lt;/span&gt;
+&lt;span class="sd"&gt;      &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="n"&gt;rule&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dstaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;srcaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;inbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;inbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;inbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translateaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_nat_source_rule&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+      &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;      From VyOS config section &amp;quot;nat source rule X&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;      Return the SNAT rule X as dict&lt;/span&gt;
+&lt;span class="sd"&gt;      &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="n"&gt;rule&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;srcaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dstaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;outbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;outbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;outbound-interface&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+          &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translateaddr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;translation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_dstnat_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;natdst&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+      &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;      From all VyOS DNAT rules, create a XML payload that can be sent to NSX&lt;/span&gt;
+&lt;span class="sd"&gt;      &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="n"&gt;start_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;natRules&amp;gt;&amp;quot;&lt;/span&gt;
+      &lt;span class="n"&gt;end_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;/natRules&amp;gt;&amp;quot;&lt;/span&gt;
+      &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+      &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;natdst&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+          &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;natRule&amp;gt;&amp;lt;action&amp;gt;dnat&amp;lt;/action&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;originalAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/originalAddress&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;translatedAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{1}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/translatedAddress&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;loggingEnabled&amp;gt;false&amp;lt;/loggingEnabled&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;originalPort&amp;gt;any&amp;lt;/originalPort&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;translatedPort&amp;gt;any&amp;lt;/translatedPort&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dstaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;translateaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;description&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;descr_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;description&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/description&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;description&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+              &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;descr_payload&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;protocol&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                  &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;any&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;
+              &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                  &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;protocol&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+          &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;any&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;
+          &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;proto_payload&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;srcaddr&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;src_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;dnatMatchSourceAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/dnatMatchSourceAddress&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;srcaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+              &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;src_payload&lt;/span&gt;
+
+          &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;/natRule&amp;gt;&amp;quot;&lt;/span&gt;
+
+      &lt;span class="n"&gt;payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;start_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;end_payload&lt;/span&gt;
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;payload&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_srcnat_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;natsrc&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+      &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;      From all VyOS SNAT rules, create a XML payload that can be sent to NSX&lt;/span&gt;
+&lt;span class="sd"&gt;      &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+      &lt;span class="n"&gt;start_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;natRules&amp;gt;&amp;quot;&lt;/span&gt;
+      &lt;span class="n"&gt;end_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;/natRules&amp;gt;&amp;quot;&lt;/span&gt;
+      &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+      &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;natsrc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+          &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;natRule&amp;gt;&amp;lt;action&amp;gt;snat&amp;lt;/action&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;originalAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/originalAddress&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;translatedAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{1}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/translatedAddress&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;loggingEnabled&amp;gt;false&amp;lt;/loggingEnabled&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;originalPort&amp;gt;any&amp;lt;/originalPort&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="s2"&gt;                          &amp;lt;translatedPort&amp;gt;any&amp;lt;/translatedPort&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;srcaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;translateaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;description&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;descr_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;description&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/description&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;description&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+              &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;descr_payload&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;protocol&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;all&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                  &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;any&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;
+              &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                  &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;protocol&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+          &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;proto_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;protocol&amp;gt;any&amp;lt;/protocol&amp;gt;&amp;quot;&lt;/span&gt;
+          &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;proto_payload&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dstaddr&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+              &lt;span class="n"&gt;src_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;snatMatchDestinationAddress&amp;gt;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;lt;/snatMatchDestinationAddress&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rule&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dstaddr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+              &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;src_payload&lt;/span&gt;
+
+          &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;base_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;lt;/natRule&amp;gt;&amp;quot;&lt;/span&gt;
+
+      &lt;span class="n"&gt;payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;start_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;mid_payload&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;end_payload&lt;/span&gt;
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;payload&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+      &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;vyos.conf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="n"&gt;config_string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+      &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;vyos&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;configtree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ConfigTree&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config_string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# We start with DNAT rules&lt;/span&gt;
+      &lt;span class="n"&gt;destrulesid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list_nodes&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;nat&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;rule&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="n"&gt;natdest_all&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;destruleid&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;destrulesid&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;          We build a huge DNAT dict where keys are rules id and items are dict of rule parameter :&lt;/span&gt;
+&lt;span class="sd"&gt;          &amp;#39;1&amp;#39;: {&amp;#39;dstaddr&amp;#39;: &amp;#39;1.2.3.4&amp;#39;,&lt;/span&gt;
+&lt;span class="sd"&gt;                &amp;#39;outbound-interface&amp;#39;: &amp;#39;eth1&amp;#39;,&lt;/span&gt;
+&lt;span class="sd"&gt;                &amp;#39;log&amp;#39;: &amp;#39;enable&amp;#39;,&lt;/span&gt;
+&lt;span class="sd"&gt;                &amp;#39;protocol&amp;#39;: &amp;#39;all&amp;#39;,&lt;/span&gt;
+&lt;span class="sd"&gt;                &amp;#39;translateaddr&amp;#39;: &amp;#39;10.1.2.3&amp;#39;}&lt;/span&gt;
+&lt;span class="sd"&gt;          &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+          &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;nat&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;destination&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;rule &lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;destruleid&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+          &lt;span class="n"&gt;natdest&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_nat_dest_rule&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+          &lt;span class="n"&gt;natdest_all&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;destruleid&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;natdest&lt;/span&gt;
+      &lt;span class="c1"&gt;#print(natdest_all)&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# Continue with SNAT rules&lt;/span&gt;
+      &lt;span class="n"&gt;srcrulesid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;list_nodes&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;nat&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;rule&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+      &lt;span class="n"&gt;natsrc_all&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;srcruleid&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;srcrulesid&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+          &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;          Same as the DNAT dict&lt;/span&gt;
+&lt;span class="sd"&gt;          &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+          &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;nat&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;source&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;rule &lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;srcruleid&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+          &lt;span class="n"&gt;srcdest&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_nat_source_rule&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+          &lt;span class="n"&gt;natsrc_all&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;srcruleid&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;srcdest&lt;/span&gt;
+      &lt;span class="c1"&gt;#print(natsrc_all)&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# We now have two huge dictionnaries with DNAT and SNAT rules from VyOS&lt;/span&gt;
+      &lt;span class="c1"&gt;# We are going to process them and POST them to NSX :crossed_fingers:&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# Replace edge-XXX with the right edge-id&lt;/span&gt;
+      &lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;https://&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt;/api/4.0/edges/&lt;/span&gt;&lt;span class="si"&gt;{1}&lt;/span&gt;&lt;span class="s2"&gt;/nat/config/rules&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nsx_manager&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;edge_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;headers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="s1"&gt;&amp;#39;Accept&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;application/xml&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+      &lt;span class="s1"&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;application/xml&amp;#39;&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
+
+      &lt;span class="n"&gt;dstnat_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;create_dstnat_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;natdest_all&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;srcnat_payload&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;create_srcnat_payload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;natsrc_all&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# This script is ment to be be run only once&lt;/span&gt;
+      &lt;span class="c1"&gt;# Write your Vsphere login and password here&lt;/span&gt;
+      &lt;span class="c1"&gt;# Don&amp;#39;t commit your login and passord to git!!!!!!!!!&lt;/span&gt;
+      &lt;span class="n"&gt;username&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;user&amp;#39;&lt;/span&gt;
+      &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# POST DNAT rules&lt;/span&gt;
+      &lt;span class="c1"&gt;# This request append the rules to the existing ones&lt;/span&gt;
+      &lt;span class="c1"&gt;#print(dstnat_payload)&lt;/span&gt;
+      &lt;span class="n"&gt;dstresponse&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dstnat_payload&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;auth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;HTTPBasicAuth&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;verify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dstresponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dstresponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+      &lt;span class="c1"&gt;# POST SNAT rules&lt;/span&gt;
+      &lt;span class="c1"&gt;# This request append the rules to the existing ones&lt;/span&gt;
+      &lt;span class="c1"&gt;#print(srcnat_payload)&lt;/span&gt;
+      &lt;span class="n"&gt;srcresponse&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;srcnat_payload&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;auth&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;HTTPBasicAuth&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;verify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;srcresponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;headers&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;srcresponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;
+</content><category term="Réseau"></category></entry><entry><title>GNS3 - Créer son premier Lab</title><link href="https://blog.devarieux.net/2015/08/gns3-creer-son-premier-lab.html" rel="alternate"></link><published>2015-08-26T10:03:00+02:00</published><updated>2015-08-26T10:03:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-08-26:/2015/08/gns3-creer-son-premier-lab.html</id><summary type="html">&lt;section id="premier-lancement"&gt;
+&lt;h2&gt;Premier Lancement&lt;/h2&gt;
+&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="http://images/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau/"&gt;un précédent
+article&lt;/a&gt;,
+nous allons maintenant voir comment créer un Lab et faire un petit
+exercice simple de configuration de routes statiques. La première chose
+est d'ajouter un nouveau routeur dans la configuration de GNS3. Ici, ce
+sera un …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="premier-lancement"&gt;
+&lt;h2&gt;Premier Lancement&lt;/h2&gt;
+&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="http://images/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau/"&gt;un précédent
+article&lt;/a&gt;,
+nous allons maintenant voir comment créer un Lab et faire un petit
+exercice simple de configuration de routes statiques. La première chose
+est d'ajouter un nouveau routeur dans la configuration de GNS3. Ici, ce
+sera un c2691, qui est un vieux routeur possédant 4 emplacements. Si
+vous me demandez gentiment, je peux peut-être vous fournir l'image IOS
+pour ce modèle.&lt;/p&gt;
+&lt;p&gt;Au premier lancement de GNS3, il vous est proposé de créer un projet, ce
+que nous allons faire tout de suite en enregistrant ce projet sous le
+nom FirstLab.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Une fois le projet créé, on va ajouter un routeur dans la configuration de GNS3.
+Pour cela, on se rend dans Edit &amp;gt; Preferences.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Je vous laisse parcourir les options afin que vous puissiez comprendre un peu mieux le logiciel. Si vous avez des VM VirtualBox, GNS3 les trouvera et vous les listera dans le menu VirtualBox.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+&lt;section id="ajout-d-un-routeur"&gt;
+&lt;h2&gt;Ajout d'un routeur&lt;/h2&gt;
+&lt;p&gt;Pour ajouter un routeur Cisco, on se rend dans Dynamips &amp;gt; IOS Router et
+on clique sur New. Il suffit ensuite de suivre les indications et de
+fournir l'image IOS du routeur qu'on souhaite voir apparaître.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png|"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Pour la valeur de Idle-PC, ne recopiez pas bêtement ce qui est écrit dans cette fenêtre. Ce chiffre correspond seulement à ma machine. Cliquez sur le bouton Idle-Pc finder et GNS3 trouvera la valeur de lui même. Cela peut prendre un peu de temps à calculer.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Voilà, nous avons notrevrouteur c2691. On peut maintenant fermer la fenêtre de configuration et commencer notre projet.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="le-lab"&gt;
+&lt;h2&gt;Le Lab&lt;/h2&gt;
+&lt;p&gt;Nous allons mettre en place un Lab très basique de routage statique
+entre 2 routeurs. Un premier routeur situé à Rennes aura une interface
+Loopback ayant pour IP 2.2.2.2/24, et un second routeur à Paris aura une
+interface Loopback ayant 1.1.1.1/24 pour IP.&lt;/p&gt;
+&lt;p&gt;Sur chacun de ces 2 routeurs, nous allons ajouter une carte ayant 4
+ports séries. Nous utiliserons 2 de ces ports. Le port Serial1/0 de
+Rennes sera branché au port Serial1/0 de Paris et le port Serial1/1 de
+Rennes sera branché sur le port Serial1/1 de Paris.&lt;/p&gt;
+&lt;p&gt;Les configurations IP seront les suivantes :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rennes Serial1/0 : 192.168.1.1/24&lt;/li&gt;
+&lt;li&gt;Rennes Serial1/1 : 192.168.2.1/24&lt;/li&gt;
+&lt;li&gt;Paris Serial1/0 : 192.168.1.2/24&lt;/li&gt;
+&lt;li&gt;Paris Serial1/1 : 192.168.2.2/24&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Et pour rappel, les interfaces Loopback&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rennes Loopback0 : 2.2.2.2/24&lt;/li&gt;
+&lt;li&gt;Paris Loopback0 : 1.1.1.1/24&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Une fois tout cela mis en place, le but sera de réussir à pinger l'IP
+1.1.1.1 depuis Rennes et pinger l'IP 2.2.2.2 depuis Paris en mettant en
+place des routes statiques.&lt;/p&gt;
+&lt;p&gt;Pour la mise en place du Lab, suivez le guide...&lt;/p&gt;
+&lt;p&gt;Cliquez sur &lt;em&gt;Browse Routers&lt;/em&gt; dans la colonne de gauche puis glissez 2
+fois le routeur c2691 dans le projet. Sur le routeur R1, faites un
+clique droit : &lt;em&gt;Configure&lt;/em&gt;&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Renommez le en &lt;strong&gt;Rennes&lt;/strong&gt; et dans l'onglet &lt;em&gt;slot&lt;/em&gt;, ajoutez lui une carte NM-4T dans le
+Slot 1. Faites de même pour le routeur R2 en le renommant &lt;strong&gt;Paris&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Une fois de retour sur le
+projet, cliquez sur '&lt;em&gt;Add a Link'&lt;/em&gt; dans la colonne de gauche et créer 2
+liens séries en cliquant dans un premier temps sur &lt;em&gt;Rennes &amp;gt; Serial 1/0&lt;/em&gt;
+puis &lt;em&gt;Paris &amp;gt; Serial 1/0&lt;/em&gt; pour le premier lien et &lt;em&gt;Rennes &amp;gt; Serial 1/1&lt;/em&gt;
+puis &lt;em&gt;Paris &amp;gt; Serial 1/1&lt;/em&gt; pour le second lien.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Vous devriez avoir quelque chose qui ressemble à ça :&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;J'ai moi même ajouté les
+notes sur les réseaux grâce aux notes que l'on peut insérer dans le
+projet.&lt;/p&gt;
+&lt;p&gt;Une fois que c'est terminé, cliquez sur le Play vert qui se trouve en
+haut de l'interface afin de démarrer les routeurs.&lt;/p&gt;
+&lt;p&gt;Nous allons enfin pouvoir ouvrir notre première console Cisco. Pour
+cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Pour préparer le lab, voici les
+commandes à taper dans la console de Rennes :&lt;/p&gt;
+&lt;p&gt;IOS supporte la tabulation et les raccourcis. Par exemple, pour taper
+&lt;code&gt;configure terminal&lt;/code&gt;, je peux taper &lt;code&gt;conf&amp;lt;tab&amp;gt; t&amp;lt;tab&amp;gt;&lt;/code&gt; ou tout
+simplement &lt;code&gt;conf t&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;Rennes#enable                    //active le mode privilège
+Rennes#conf t                    //configure terminal
+Rennes(config)#int loopback0     //configurer l'interface Loopback0
+Rennes(config-ig)#ip add 2.2.2.2 255.255.255.0
+Rennes(config-if)#no shut        //monter l'interface (état up)
+Rennes(config-if)#exit
+Rennes(config)#int Serial1/0
+Rennes(config-if)#ip add 192.168.1.1 255.255.255.0
+Rennes(config-if)#no shut
+Rennes(config-if)#exit
+Rennes(config)#int Serial1/1
+Rennes(config-if)#ip add 192.168.2.1 255.255.255.0
+Rennes(config-if)#no shut
+Rennes(config-if)#exit
+Rennes(config)#&lt;/pre&gt;
+&lt;p&gt;Même manipulation sur le routeur de Paris :&lt;/p&gt;
+&lt;pre&gt;Paris#enable
+Paris#conf t
+Paris(config)#int loopback0
+Paris(config-ig)#ip add 1.1.1.1 255.255.255.0
+Paris(config-if)#no shut
+Paris(config-if)#exit
+Paris(config)#int Serial1/0
+Paris(config-if)#ip add 192.168.1.2 255.255.255.0
+Paris(config-if)#no shut
+Paris(config-if)#exit
+Paris(config)#int Serial1/1
+Paris(config-if)#ip add 192.168.2.2 255.255.255.0
+Paris(config-if)#no shut
+Paris(config-if)#exit
+Paris(config)#&lt;/pre&gt;
+&lt;p&gt;Afin de voir l'état de vos interfaces, vous pouvez taper la commande
+suivantes : &lt;code&gt;do show ip int brief&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;Rennes(config)#do show ip int brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES unset  administratively down down
+FastEthernet0/1            unassigned      YES unset  administratively down down
+Serial1/0                  192.168.1.1     YES manual up                    up
+Serial1/1                  192.168.2.1     YES manual up                    up
+Serial1/2                  unassigned      YES unset  administratively down down
+Serial1/3                  unassigned      YES unset  administratively down down
+Loopback0                  2.2.2.2         YES manual up                    up&lt;/pre&gt;
+&lt;p&gt;Arriver ici, le but est de pinger l'interface Loopback de Rennes depuis
+Paris en passant par le réseau 192.168.1.0 et l'interface Loopback de
+Paris depuis Rennes en passant par le réseau 192.168.2.0.&lt;/p&gt;
+&lt;p&gt;Pour arriver à cet objectif, nous allons dire au routeur de Paris que
+pour rejoindre le réseau 2.2.2.0/24 il doit passer par l'interface de
+Rennes 192.168.1.1 qu'il connait car il est directement branché dessus.&lt;/p&gt;
+&lt;p&gt;De la même manière, nous allons dire au routeur de Rennes qu'il soit
+passer par l'interface 192.168.2.2 de Paris pour joindre le réseau
+1.1.1.0/24.&lt;/p&gt;
+&lt;p&gt;Voici donc les commandes à taper en console&lt;/p&gt;
+&lt;pre&gt;Paris(config)#ip route 2.2.2.0 255.255.255.0 192.168.1.1
+Paris(config)#do ping 2.2.2.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2.2.2.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 112/243/288 ms
+Paris(config)#&lt;/pre&gt;
+&lt;p&gt;Le ping fonctionne!!&lt;/p&gt;
+&lt;p&gt;Depuis Rennes&lt;/p&gt;
+&lt;pre&gt;Rennes(config)#ip route 1.1.1.0 255.255.255.0 192.168.2.2
+Rennes(config)#do ping 1.1.1.1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 1.1.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 128/136/148 ms
+Rennes(config)#do show ip route        //pour voir les routes statiques
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+S       1.1.1.0 [1/0] via 192.168.2.2
+     2.0.0.0/24 is subnetted, 1 subnets
+C       2.2.2.0 is directly connected, Loopback0
+C    192.168.1.0/24 is directly connected, Serial1/0
+C    192.168.2.0/24 is directly connected, Serial1/1&lt;/pre&gt;
+&lt;p&gt;Voilà pour la prise en main de GNS3 et la configuration basique de 2
+routeurs. Vous n'avez plus qu'à créer vos propres labs, ajouter des VM
+et tenter de les faire communiquer par exemple.&lt;/p&gt;
+&lt;p&gt;Je vous proposerais peut être moi même de nouveaux labs d'ici quelques
+temps&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>Prise en main de GNS3 pour la simulation réseau</title><link href="https://blog.devarieux.net/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html" rel="alternate"></link><published>2015-08-19T21:57:00+02:00</published><updated>2015-08-19T21:57:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-08-19:/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html</id><summary type="html">&lt;p&gt;Comme moi, vous connaissez peut être l'utilitaire &lt;a href="https://www.netacad.com/about-networking-academy/packet-tracer"&gt;Packet Tracer de
+Cisco&lt;/a&gt;
+qui permet de simuler un réseau Cisco et d'y faire quelques exercices.
+C'est un très bon outil pour les étudiants mais relativement peu
+exploitable en entreprise car il ne simule que du Cisco et ne sais pas
+simuler autre …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme moi, vous connaissez peut être l'utilitaire &lt;a href="https://www.netacad.com/about-networking-academy/packet-tracer"&gt;Packet Tracer de
+Cisco&lt;/a&gt;
+qui permet de simuler un réseau Cisco et d'y faire quelques exercices.
+C'est un très bon outil pour les étudiants mais relativement peu
+exploitable en entreprise car il ne simule que du Cisco et ne sais pas
+simuler autre chose que des hôtes très basiques. Impossible d'y simuler
+un serveur pfsense par exemple.&lt;/p&gt;
+&lt;p&gt;J'ai récemment fait la découverte de GNS3 qui est un logiciel assez
+similaire mais vous vous en doutez bien plus complet et qui possède la
+capacité de simuler un réseau de production. Vous pouvez créer des
+projets avec switchs et routeurs mais également ajouter des VMs que vous
+aurez pris le soin de créer avec VirtualBox ou Qemu. Wireshark est
+intégré afin de capturer des paquets réseau comme on le souhaite.&lt;/p&gt;
+&lt;p&gt;GNS3 a vu le jour suite à l'apparition de Dynamips, un émulateur de l'OS
+de Cisco : IOS (à ne pas confondre avec l'iOS d'Apple). Dynamips est un
+outil qui se manipule en ligne de commande et qui demande un solide
+bagage technique. GNS3 a alors été développé pour faciliter cette
+configuration et apporter beaucoup d'autres fonctionnalités qui ne sont
+pas présentes dans Dynamips comme par exemple le support de Cisco PIX et
+ASA, ainsi que de Juniper avec JunOS.&lt;/p&gt;
+&lt;p&gt;Avant de commencer, il faut noter que la seule façon de simuler un vrai
+environnement IOS est de posséder une image d'IOS. Dynamips et GNS3 ne
+contiennent pas ces images pour d'évidents problèmes de droits, tout
+comme VirtualBox ne vous propose pas d'image Windows. Il y a plusieurs
+façon légales de se procurer ces images (par exemple si vous possédez un
+switch ou un routeur Cisco) et d'autres moins légales (trouvable
+facilement).&lt;/p&gt;
+&lt;p&gt;Pour récupérer la dernière version de GNS3 (v1.3.9 aujourd'hui), vous
+devez vous inscrire &lt;a href="http://www.gns3.com/"&gt;sur leur site&lt;/a&gt; et
+télécharger le paquet qu'il vous faut. L'appli est multiplateforme,
+compatible Windows, Linux et Mac. L'installeur va installer pour vous
+tous les outils nécessaire pour la virtualisation et la capture de
+paquets.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Sous Windows, l'installation
+est assez classique. Après avoir lancé l'installeur, la fenêtre de setup
+apparaît, il suffit alors de suivre les indications jusqu'à arriver à
+cette fenêtre :&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Il est préférable de laisser tout cocher, ainsi si des logiciels ont besoin de mise à jour, elles seront faites. En cliquant sur Next, l'installeur va lancer
+l'installation de winPcap.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;On laisse cocher le lancement automatique du driver au démarrage.&lt;/p&gt;
+&lt;p&gt;Ensuite, l'installeur télécharge et installe Wireshark&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;WinPcap est déjà installé donc on décoche l'option&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;On décoche 'Run Wireshark',on ne va pas en avoir besoin tout de suite.&lt;/p&gt;
+&lt;p&gt;L'installation se poursuit avec cette fois SolarWinds Response Time
+Viewer qui est une application d'analyse de capture Wireshark&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Ici, vous pouvez mettre ce que vous voulez, l'adresse n'est pas vérifiée&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;L'application se lance automatiquement. Je vous invite à en
+faire un tour rapide avant de la fermer&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;SolarWinds vous propose une licence gratuite pour son
+software. Je n'ai pas testé comment acquérir cette licence et je ne sais
+pas sous quelle condition elle s'acquière.&lt;/p&gt;
+&lt;p&gt;Voilà pour la description et l'installation de GNS3. La prochaine fois,
+on verra comment le configurer et y créer de nouveau routeur, switchs et
+VM.&lt;/p&gt;
+</content><category term="Réseau"></category></entry><entry><title>Trop de requêtes ARP - Régler le timeout de la table ARP</title><link href="https://blog.devarieux.net/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html" rel="alternate"></link><published>2015-01-21T20:18:00+01:00</published><updated>2015-01-21T20:18:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-01-21:/2015/01/trop-de-requetes-arp-regler-le-timeout-de-la-table-arp.html</id><summary type="html">&lt;p&gt;Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
+chez SoYouStart.&lt;/p&gt;
+&lt;p&gt;Le serveur étant assez puissant, nous avons décidé d'y installer un
+hyperviseur Proxmox qui hébergera des VM CentOS&lt;/p&gt;
+&lt;p&gt;Avant de mettre en place les applications dont j'ai besoin sur ce
+serveur, je l'ai installé et laissé tourner quelques …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pour des besoins spécifiques, nous avons fait l'acquisition d'un serveur
+chez SoYouStart.&lt;/p&gt;
+&lt;p&gt;Le serveur étant assez puissant, nous avons décidé d'y installer un
+hyperviseur Proxmox qui hébergera des VM CentOS&lt;/p&gt;
+&lt;p&gt;Avant de mettre en place les applications dont j'ai besoin sur ce
+serveur, je l'ai installé et laissé tourner quelques temps pour
+m'assurer de sa stabilité. Et le premier dimanche suivant l'installe,
+voici le mail que je reçois, venant d'un bot de chez OVH et concernant
+une des VM :&lt;/p&gt;
+&lt;pre&gt;Bonjour,
+
+Nous avons constaté que votre serveur diffuse inutilement un nombre important de requêtes sur le
+réseau via son IP failover XX.XX.XX.XX, ceci est dû à une mauvaise configuration de celle-ci.
+Nous vous avons demandé dans un mail précédant de bien vouloir reconfigurer votre IP failover,
+constatant que le problème persiste, nous nous permettons de réitérer cette demande.
+Si le problème n'est pas résolu dans un délais de 24 heures, nous nous verrons dans l'obligation de
+bloquer votre IP.
+
+Dans ce cas, il vous sera possible de la débloquer dans votre manager une fois la reconfiguration
+faite.
+
+Ceci est le dernier avertissement avant le blocage de votre IP !
+-------  EXTRAIT DES REQUETES  -------
+
+Thu Jan 8 06:47:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:47:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:48:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:49:55 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+Thu Jan 8 06:50:25 2015 : arp who-has IP.DE.LA.GW tell XX.XX.XX.XX
+
+-------   FIN DE L'EXTRAIT   -------&lt;/pre&gt;
+&lt;p&gt;Une requête toutes les 30 secondes, c'est en effet beaucoup.&lt;/p&gt;
+&lt;p&gt;J'ai longtemps cherché d'où pouvait venir le problème. J'ai commencer
+par changer de modèle de carte réseau dans Proxmox (E1000, VirtIO,
+Vmxnet3) sans succès. J'ai reconfiguré et rereconfiguré le réseau en
+ajoutant ou retirant des options dans le fichier ifcfg-eth0, rien à
+faire, toujours autant de requêtes ARP.&lt;/p&gt;
+&lt;p&gt;En faisant tout ça, je me rendais bien compte d'une aberration dans les
+opérations que je mettais en œuvre : je travaillais sur du niveau 3 (IP)
+alors que j'avais un problème qui se situait entre la couche 2 et la
+couche 3 (ARP).&lt;/p&gt;
+&lt;p&gt;Après moult recherches, j'ai fini par trouver où étaient les fichiers
+qui pourraient m'aider.&lt;/p&gt;
+&lt;p&gt;Voici les fichiers concernés, avec leurs valeurs par défaut.&lt;/p&gt;
+&lt;pre&gt;/proc/sys/net/ipv4/neigh/default/anycast_delay:100
+/proc/sys/net/ipv4/neigh/default/app_solicit:0
+/proc/sys/net/ipv4/neigh/default/base_reachable_time:30
+/proc/sys/net/ipv4/neigh/default/base_reachable_time_ms:1200
+/proc/sys/net/ipv4/neigh/default/delay_first_probe_time:5
+/proc/sys/net/ipv4/neigh/default/gc_interval:30
+/proc/sys/net/ipv4/neigh/default/gc_stale_time:60
+/proc/sys/net/ipv4/neigh/default/gc_thresh1:128
+/proc/sys/net/ipv4/neigh/default/gc_thresh2:512
+/proc/sys/net/ipv4/neigh/default/gc_thresh3:1024
+/proc/sys/net/ipv4/neigh/default/locktime:100
+/proc/sys/net/ipv4/neigh/default/mcast_solicit:3
+/proc/sys/net/ipv4/neigh/default/proxy_delay:80
+/proc/sys/net/ipv4/neigh/default/proxy_qlen:64
+/proc/sys/net/ipv4/neigh/default/retrans_time:100
+/proc/sys/net/ipv4/neigh/default/ucast_solicit:3
+/proc/sys/net/ipv4/neigh/default/unres_qlen:3&lt;/pre&gt;
+&lt;p&gt;Ici, les fichiers qui nous intéressent sont base_reachable_time (ou
+base_reachable_time_ms) et gc_stale_time.&lt;/p&gt;
+&lt;p&gt;Le fichier gc_stale_time définit la fréquence à laquelle l'état
+'stale' (obsolète) des entrées de la table ARP sera vérifié. Le défaut
+est à 60 secondes. Le fichier base_reachable_time quant à lui définit
+la durée durant laquelle une entrée de la table ARP est considérée
+valide. La durée de validité de cette entrée sera un chiffre choisi au
+hasard entre (base_reachable_time/2) et (3*base_reachable_time/2).
+La valeur par défaut est de 30 secondes.&lt;/p&gt;
+&lt;p&gt;Un simple echo du chiffre souhaité dans le fichier suffit. CentOS permet
+d'avoir ces valeurs en dure et persistante après un redémarrage (les
+autres distributions aussi sans doute, mais je ne sais par quel moyen).&lt;/p&gt;
+&lt;p&gt;Pour CentOS donc, dans le fichier /etc/sysctl.conf, ajouter ces lignes :&lt;/p&gt;
+&lt;pre&gt;##### Pour limiter le nombre de requête ARP ##########
+##### Equivalent a 30 minutes ###########
+net.ipv4.neigh.default.base_reachable_time_ms = 1200000
+net.ipv4.neigh.default.gc_stale_time = 3600&lt;/pre&gt;
+&lt;p&gt;Ces valeurs vont donner une durée de validité des entrées de la table
+ARP entre 15 et 45 minutes.&lt;/p&gt;
+</content><category term="Réseau"></category></entry><entry><title>QRQVB : Protocole TCP</title><link href="https://blog.devarieux.net/2010/02/qrqvb-protocole-tcp.html" rel="alternate"></link><published>2010-02-02T07:00:00+01:00</published><updated>2010-02-02T07:00:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2010-02-02:/2010/02/qrqvb-protocole-tcp.html</id><summary type="html">&lt;p&gt;Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission
+Control Protocol, Protocole de Contrôle de Transmission).  Comme son
+petit frère UDP, TCP se situe en couche 4 du &lt;a href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=232"&gt;modèle
+OSI&lt;/a&gt;.&lt;/p&gt;
+&lt;section id="caracteristique-de-tcp"&gt;
+&lt;h2&gt;Caractéristique de TCP&lt;/h2&gt;
+&lt;p&gt;TCP est bien plus compliqué qu’UDP examiné au &lt;a href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=493"&gt;chapitre
+précédent&lt;/a&gt;.
+Il apporte en contrepartie des …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;p&gt;Nouvelle QRQVB et pas des moindres, le protocole TCP (Transmission
+Control Protocol, Protocole de Contrôle de Transmission).  Comme son
+petit frère UDP, TCP se situe en couche 4 du &lt;a href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=232"&gt;modèle
+OSI&lt;/a&gt;.&lt;/p&gt;
+&lt;section id="caracteristique-de-tcp"&gt;
+&lt;h2&gt;Caractéristique de TCP&lt;/h2&gt;
+&lt;p&gt;TCP est bien plus compliqué qu’UDP examiné au &lt;a href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=493"&gt;chapitre
+précédent&lt;/a&gt;.
+Il apporte en contrepartie des services beaucoup plus élaborés.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TCP contient un mécanisme pour assurer &lt;strong&gt;le bon acheminement des
+données&lt;/strong&gt;. Cette possibilité est absolument indispensable dès lors
+que les applications doivent transmettre de gros volumes de données
+de façon fiable. Cette fonction est assurée par un mécanisme
+d’acquittement (ou accusé de réception). Les paquets de données sont
+acquittés de bout en bout et non de point à point. C’est à dire que
+ce sont les machines sources et machines de destinations qui
+s’occupent de cela et non les routeurs qui se situent entre les 2.&lt;/li&gt;
+&lt;li&gt;Le protocole TCP permet l’établissement d’un &lt;strong&gt;circuit virtuel&lt;/strong&gt;
+entre les 2 machines qui échangent de l’information (Voir a ce propos
+le &lt;a href="https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=528#comment-757"&gt;commentaire de
+Guizmo.7&lt;/a&gt;).
+On dit aussi que TCP  fonctionne en &lt;strong&gt;mode connecté&lt;/strong&gt; (par opposition
+à UDP qui est en mode non connecté). En pratique, l’une des 2 machine
+doit effectuer un appel que l’autre doit accepter. S’en suit une
+discutions afin d’établir certains paramètres de communication. Une
+fois les préliminaires terminés, les protocoles informent les
+applications respectives que la connexion est établie et que le
+transfert peut débuter. Durant le transfert, le dialogue entre les
+protocoles continue, pour vérifier le bon acheminement des données.&lt;/li&gt;
+&lt;li&gt;TCP a la capacité de &lt;strong&gt;mémoriser les données&lt;/strong&gt;. Les paquets pouvant
+prendre chacun un chemin différent pour arriver à destination, il
+arrive que ceux ci n’arrivent pas dans le bon ordre. Grâce à cette
+capacité de mémorisation, TCP garde les paquets un certains temps et
+les reconstitue lorsqu’ils sont tous arrivés afin de présenter les
+données à l’application.&lt;/li&gt;
+&lt;li&gt;TCP simule une connexion en &lt;strong&gt;« full duplex »&lt;/strong&gt;. Pour chacune des 2
+machines en connexion, l’opération qui consiste à lire des données
+peut s’effectuer indépendamment de celle qui consiste à en écrire.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;section id="entete-tcp"&gt;
+&lt;h2&gt;Entête TCP&lt;/h2&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/enteteTCP1.png"&gt;&lt;img src="https://blog.devarieux.net/images/enteteTCP1.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;L’entête TCP est codé sur 20 octets hors options.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Port Source (16 bits): Port utilisé par l’application sur la machine
+source.&lt;/li&gt;
+&lt;li&gt;Port Destination (16 bits): Port de destination.&lt;/li&gt;
+&lt;li&gt;Numéro d’ordre (32 bits): Correspond au numéro du paquet. Cette
+valeur permet de situer à quel endroit du flux de données le paquet,
+qui est arrivé, doit se situer par rapport aux autres paquets.&lt;/li&gt;
+&lt;li&gt;Numéro d’accusé de réception (32 bits): Acquittement pour les paquets
+reçus. Cette valeur signale le prochain numéro de paquet attendu. Par
+exemple, si il vaut 1500, cela signifie que tous les datagrammes
+&amp;lt;1500 ont été reçus&lt;/li&gt;
+&lt;li&gt;Offset (4 bits): Le champ Offset est codé sur 4 bits et définit le
+nombre de mots de 32 bits dans l’entête TCP. Ce champ indique donc où
+les données commencent.&lt;/li&gt;
+&lt;li&gt;Réservé (6 bits): Champ inutilisé actuellement. Il était à l’origine
+prévu pour l’avenir. On peut dire aujourd’hui que ce champ restera
+vide.&lt;/li&gt;
+&lt;li&gt;Drapeaux (flags) (6×1 bit): Les drapeaux représentent des
+informations supplémentaires :
+URG: si ce drapeau est à 1 le paquet doit être traité de façon
+urgente.
+ACK: si ce drapeau est à 1 le paquet est un accusé de réception.
+PSH (PUSH): si ce drapeau est à 1, le paquet fonctionne suivant la
+méthode PUSH.
+RST: si ce drapeau est à 1, la connexion est réinitialisée.
+SYN: Le Flag TCP SYN indique une demande d’établissement de
+connexion.
+FIN: si ce drapeau est à 1 la connexion s’interrompt.&lt;/li&gt;
+&lt;li&gt;Fenêtre (16 bits): Champ permettant de connaître le nombre d’octets
+que le récepteur souhaite recevoir sans envoyer d’accusé de
+réception.&lt;/li&gt;
+&lt;li&gt;Somme de contrôle (Checksum ou CRC): La somme de contrôle est
+réalisée en faisant la somme des champs de données de l’en-tête, afin
+de pouvoir vérifier l’intégrité de l’en-tête&lt;/li&gt;
+&lt;li&gt;Pointeur d’urgence (16 bits): Indique le numéro d’ordre à partir
+duquel l’information devient urgente.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;section id="etablissement-dune-connexion"&gt;
+&lt;h2&gt;Établissement d’une connexion&lt;/h2&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/ConnectionTCP.png"&gt;&lt;img src="https://blog.devarieux.net/images/ConnectionTCP.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Une ouverture de connexion TCP s’effectue en 3 temps.&lt;/p&gt;
+&lt;p&gt;L’émetteur du premier paquet doit avoir connaissance du couple
+&lt;strong&gt;`IP &amp;lt;https://web.archive.org/web/20110919035256/http://blog.aldevar.fr/?p=293&amp;gt;`__
+: Port&lt;/strong&gt; de l’application de la machine réceptrice (par exemple, on
+contact un serveur HTTP sur le port 80 qui lui est dédié). L’émetteur de
+ce premier paquet est à l’origine de l’établissement du circuit virtuel.
+C’est une attitude qualifiée de « &lt;strong&gt;cliente&lt;/strong&gt;« .&lt;/p&gt;
+&lt;p&gt;Le récepteur du premier paquet accepte l’établissement de la connexion,
+ce qui suppose qu’il était prêt à le faire avant que le client en prenne
+l’initiative. C’est une attitude de « &lt;strong&gt;serveur&lt;/strong&gt;« .&lt;/p&gt;
+&lt;p&gt;Le client envoie un segment comportant le drapeau SYN à 1. Le serveur
+répond avec sa propre séquence (SYN = 1) mais il doit aussi acquitter le
+paquet précédent, ce qu’il fait avec ACK. Le client répond alors avec un
+acquittement de la séquence du serveur (ACK = 1).&lt;/p&gt;
+&lt;p&gt;Une fois achevée cette phase appelée « Three-way handshake », les 2
+applications sont en mesure d’échanger des données.&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>QRQVB : Les paquets UDP</title><link href="https://blog.devarieux.net/2009/12/qrqvb-les-paquets-udp.html" rel="alternate"></link><published>2009-12-29T11:23:00+01:00</published><updated>2009-12-29T11:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2009-12-29:/2009/12/qrqvb-les-paquets-udp.html</id><summary type="html">&lt;p&gt;Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau
+donc. Je comptais me lancer dans la description des paquets TCP, mais je
+pense qu’il est plus intéressant de se pencher d’abord sur UDP avant
+d’appréhender TCP.&lt;/p&gt;
+&lt;p&gt;UDP (Pour &lt;em&gt;User Datagram Protocol&lt;/em&gt;) se situe dans …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Suite de la Question Réseau Qui Va Bien, nouveau billet purement réseau
+donc. Je comptais me lancer dans la description des paquets TCP, mais je
+pense qu’il est plus intéressant de se pencher d’abord sur UDP avant
+d’appréhender TCP.&lt;/p&gt;
+&lt;p&gt;UDP (Pour &lt;em&gt;User Datagram Protocol&lt;/em&gt;) se situe dans la couche 4 du &lt;a href="http://blog.devarieux.net/2009/08/qrqvb-le-modele-osi/"&gt;modèle
+OSI&lt;/a&gt; (couche
+transport). Pour rappel, au niveau de la couche 3 (IP), &lt;a href="http://blog.devarieux.net/2009/09/qrqvb-datagramme-ip/"&gt;les
+datagrammes&lt;/a&gt;
+sont routés d’une machine à une autre en fonction des adresses IP (en
+fait, le routage se fait en fonction de l’adresse réseau, voir &lt;a href="http://blog.devarieux.net/2009/09/309/"&gt;QRQVB :
+L’adresse IP&lt;/a&gt;). Lors de cette
+opération de routage, aucune distinction n’est faite entre les
+différents services pour lesquels ces paquets peuvent être destinés. Que
+ce soit pour une connexion SSH (port 22) ou HTTP (port 80) ou autre, les
+datagrammes IP sont tous indifféremment mélangés.&lt;/p&gt;
+&lt;p&gt;La couche 4 du modèle OSI ajoute un mécanisme qui permet
+l’identification du service  concerné. Plusieurs programmes de plusieurs
+utilisateurs pouvant simultanément circuler sur le réseau, il est
+indispensable de faire un tri entre les applications. Ici, l’idée est
+d’associer la destination du paquet à une fonction. L’identification de
+cette fonction ce fait à l’aide d’un chiffre nommé &lt;strong&gt;Port&lt;/strong&gt;.&lt;/p&gt;
+&lt;section id="en-tete-udp"&gt;
+&lt;h2&gt;En tête UDP&lt;/h2&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/encaps.png"&gt;&lt;img src="https://blog.devarieux.net/images/encaps.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Lors de l’étude des &lt;a href="qrqvb-datagramme-ip.html"&gt;datagramme
+IP&lt;/a&gt;, nous
+avions vu le contenu de l’entête du paquet (partie verte). Ici, nous
+allons observer le contenu de l’entête du message (partie jaune) lorsque
+l’on traite un p&amp;gt;aquet UDP.&lt;/p&gt;
+&lt;p&gt;Le paquet UDP est composé de 8 octets.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/entete.png"&gt;&lt;img src="https://blog.devarieux.net/images/entete.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Les 2 premiers octets contiennent le port source&lt;/strong&gt;. Codé sur 16 bits
+donc. C’est le numéro de port de l’émetteur du paquet. C’est aussi le
+numéro de port sur lequel le destinataire doit envoyer sa réponse.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Les octets 3 et 4 stockent le port de destination.&lt;/strong&gt; C’est sur ce port
+que sera remis le paquet lors de sa livraison à la machine ciblée.&lt;/p&gt;
+&lt;p&gt;Le port étant un entier positif de 16 bits, on en déduit que les bornes
+sont 0 – 65535 (2^16). Cependant, le port 0 n’est pas exploitable.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Les octets 5 et 6 contiennent la longueur de l’entête UDP&lt;/strong&gt; et du
+message. Sa longueur minimal est 8 (entête UDP avec 0 données à
+transporter) et sa longueur maximal 2^16 = 65535 (64ko).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Les 2 derniers octets contiennent le cheksum&lt;/strong&gt;. C’est la somme de
+contrôle de l’entête UDP et des données qui suivent.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="ports-reserves"&gt;
+&lt;h2&gt;Ports réservés&lt;/h2&gt;
+&lt;p&gt;Toute machine qui utilise la pile TCP/IP se doit de connaitre un
+certains nombre de services bien connus, aussi appelé « well known port
+number » pour pouvoir dialoguer avec les autres machines sur internet.
+Sur une machines Unix, cette liste est placée dans le fichier
+&lt;strong&gt;*/etc/services*&lt;/strong&gt; et se doit d’être lisible par tous les utilisateurs
+et toutes les applications. Voici un extrait du contenu de ce fichier :&lt;/p&gt;
+&lt;pre&gt;Nom             Port/Protocol     Commentaire
+
+netstat        15/tcp
+ qotd       17/tcp      quote
+ msp        18/tcp      # message send protocol
+ msp        18/udp
+ chargen    19/tcp      ttytst source
+ chargen    19/udp      ttytst source
+ ftp-data   20/tcp
+ ftp        21/tcp
+ fsp        21/udp      fspd
+ ssh        22/tcp      # SSH Remote Login Protocol
+ ssh        22/udp
+ telnet     23/tcp
+ smtp       25/tcp      mail
+ time       37/tcp      timserver
+ time       37/udp      timserver
+ rlp        39/udp      resource    # resource location
+ nameserver 42/tcp      name        # IEN 116
+ whois      43/tcp      nicname
+ tacacs     49/tcp              # Login Host Protocol (TACACS)
+ tacacs     49/udp
+ re-mail-ck 50/tcp              # Remote Mail Checking Protocol
+ re-mail-ck 50/udp
+ domain     53/tcp              # name-domain server
+ domain     53/udp
+ mtp        57/tcp              # deprecated
+ tacacs-ds  65/tcp              # TACACS-Database Service
+ tacacs-ds  65/udp
+ bootps     67/tcp              # BOOTP server
+ bootps     67/udp
+ bootpc     68/tcp              # BOOTP client
+ bootpc     68/udp
+ tftp       69/udp
+ gopher     70/tcp              # Internet Gopher
+ gopher     70/udp
+ rje        77/tcp      netrjs
+ finger     79/tcp
+ www        80/tcp      http        # WorldWideWeb HTTP
+ www        80/udp              # HyperText Transfer Protocol&lt;/pre&gt;
+&lt;p&gt;Les ports 1 à 1023 sont réservés aux « well known ports ». Ils ne
+peuvent être utilisés que par des applications qui s’exécutent avec des
+droits privilégiés (root). Les autres ports peuvent être utilisés
+librement sans privilège particulier et sont en général employés par les
+applications clientes. Par exemple, sur ma machine, en ce moment, mon
+client IRC utilise le port 59175 pour communiquer avec le serveur irc
+holmes.freenode.net.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="mode-non-connecte"&gt;
+&lt;h2&gt;Mode non connecté&lt;/h2&gt;
+&lt;p&gt;Contrairement à TCP, UDP est conçu pour permettre un échange de données
+entre 2 applications sans échange préliminaire. UDP est utilisé si les
+données à transmettre n’ont pas besoin d’être fragmentées en plusieurs
+paquet. La paquet est ainsi envoyé sans s’assurer qu’il arrive bien à
+destination. UDP est appelé mode de transport non connecté par
+opposition à TCP. Plus particulièrement, les paquets a destination d’une
+application UDP sont conservés dans une pile de type FIFO. Si
+l’application destinatrice ne les “consomme” pas assez rapidement, les
+plus anciens paquets risquent d’être écrasés par les plus récents… Un
+risque supplémentaire de perte de données.&lt;/p&gt;
+&lt;p&gt;Nous verrons comment TCP peut palier à ce problème dans la prochaine
+QRQVB&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>QRQVB : L'adresse IP</title><link href="https://blog.devarieux.net/2009/09/qrqvb-adresse-ip.html" rel="alternate"></link><published>2009-09-16T19:12:00+02:00</published><updated>2009-09-16T19:12:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2009-09-16:/2009/09/qrqvb-adresse-ip.html</id><summary type="html">&lt;section id="definition"&gt;
+&lt;h2&gt;Définition :&lt;/h2&gt;
+&lt;p&gt;Une adresse IP identifie de manière unique une machine ainsi que le
+réseau sur lequel elle est située. Chaque adresse est une série de 4
+octets dont une partie correspond à l’&lt;strong&gt;identificateur du réseau&lt;/strong&gt; et
+l’autre partie à l’&lt;strong&gt;identificateur de la machine&lt;/strong&gt;.
+|  Exemple d’adresse IP …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="definition"&gt;
+&lt;h2&gt;Définition :&lt;/h2&gt;
+&lt;p&gt;Une adresse IP identifie de manière unique une machine ainsi que le
+réseau sur lequel elle est située. Chaque adresse est une série de 4
+octets dont une partie correspond à l’&lt;strong&gt;identificateur du réseau&lt;/strong&gt; et
+l’autre partie à l’&lt;strong&gt;identificateur de la machine&lt;/strong&gt;.
+|  Exemple d’adresse IP : 172.19.174.125.&lt;/p&gt;
+&lt;p&gt;Concrètement, qu’est ce que cela signifie? En fait, puisque les machines
+ne savent traiter qu’avec des nombres binaires (0 ou 1) l’adresse est
+codée en binaire sur 4 octets. Sachant qu’un octet correspond à 8 bits,
+cela nous donne, pour chaque octet 256 possibilités (2^8) pour une
+valeur comprise en 0 et 255.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="allons-un-peu-plus-loin"&gt;
+&lt;h2&gt;Allons un peu plus loin!&lt;/h2&gt;
+&lt;p&gt;C’est bien sympa d’avoir une adresse, encore faut-il qu’on puisse m’y
+contacter! On vient de voir dans la définition que l’adresse IP est
+divisée en 2 sous parties : &lt;strong&gt;l’identificateur de
+réseau&lt;/strong&gt; et &lt;strong&gt;l’identificateur d’hôte&lt;/strong&gt;. C’est là qu’intervient le
+masque de réseau. Alors puisque je ne suis pas fort en blablatage, je
+vais plutôt vous montrer un exemple.
+|  Voici une adresse IP : 192.168.1.15
+|  Voici un masque de réseau : 255.255.255.0&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/netmask1.png"&gt;&lt;img src="https://blog.devarieux.net/images/netmask1.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;En fait, pour être plus précis, les bits se situant dans la partie de
+l’identificateur réseau sont tous positionnés sur 1 et les bits de la
+partie hôte sur 0. En procédant à une opération de ET logique entre
+l’adresse IP et le masque de réseau, on trouve l’adresse réseau. Les
+opérations de ET logique suivent cette règle :&lt;/p&gt;
+&lt;pre&gt;0 ET 0 = 0
+0 Et 1 = 0
+1 ET 0 = 0
+1 ET 1 = 1&lt;/pre&gt;
+&lt;p&gt;Grâce à cette adresse réseau, un routeur pourra déterminer quel chemin
+doivent emprunter nos paquets IP. Pour bien comprendre ce système, nous
+allons jouer un peu avec le binaire, même si je sais que ça va en
+rebuter plus d’un :p&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/binaire.png"&gt;&lt;img src="https://blog.devarieux.net/images/binaire.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Ceci est important puisque c’est de cette manière qu’on va pouvoir
+déterminer le nombre maximal de machines qui peuvent appartenir à un
+réseau. Il faut également savoir que sur 1 réseau, 2 adresses sont
+réservées. L’adresse &lt;strong&gt;‘bits hôte à 0′&lt;/strong&gt; car c’est elle qui va définir
+justement l’adresse de notre réseau, comme on vient de le voir, et
+l’adresse &lt;strong&gt;‘bits hôte à 1′&lt;/strong&gt; car elle correspond à l’adresse de
+diffusion (broadcast). L’adresse de broadcast est nécessaire pour
+diffuser un message sur tout le réseau. Le message de ce genre le plus
+classique est la requête ARP. Celle ci permet à une machine de trouver
+une autre machine sur le réseau en l’appelant.&lt;/p&gt;
+&lt;p&gt;Voici un exemple de capture de trame avec wireshark :&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/arp2.png"&gt;&lt;img src="https://blog.devarieux.net/images/arp2.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Le premier paquet est donc une requête ARP. La machine source envoie ce
+message sur tout le réseau : ‘who has 192.168.1.51?  Tell 192.168.1.25′.
+La machine qui a pour IP 192.168.1.51 envoie donc sa réponse directement
+à 192.168.1.15 et lui dit que c’est l’adresse MAC 00:0a:78:9e:8a qui
+possède cette IP. Tout ça pour vous dire que l’adresse IP ‘bits hôte à
+1′ est donc réservée pour ce type de message.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="dimensionnement-de-reseau"&gt;
+&lt;h2&gt;Dimensionnement de réseau&lt;/h2&gt;
+&lt;p&gt;Puisque le masque de réseau détermine le nombre maximal de machines sur
+un réseau et que les adresses IP ne sont pas illimitées, on va pouvoir
+travailler sur le dimensionnement du réseau en modifiant le masque. En
+effet, &lt;strong&gt;il est possible d’emprunter des bits à la partie hôte pour
+les donner à la partie réseau&lt;/strong&gt;. Par exemple, le masque 255.255.255.0
+permet d’avoir 256-2 = 254 hôtes différents sur le même réseau. Hors,
+rares sont ceux qui disposent de 254 machines à interconnecter.&lt;/p&gt;
+&lt;p&gt;Admettons que mon réseau possède l’ip 192.168.1.0 (totalement au
+hasard!) de masque 255.255.255.0 . Je dispose de 5 machines à connecter
+sur ce réseau, jamais plus.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Si je garde 1bit dans la partie hôte, je vais disposer de 2^1 = 2
+hôtes possibles.  On vient de voir plus haut que 2 adresses sont
+reservées sur le réseau, (sisi, rapellez vous, juste au dessus!).
+Donc 2-2 = 0, ce qui me fait 0 hôte disponible.&lt;/li&gt;
+&lt;li&gt;Si je garde 2 bits pour ma partie hôte, il va me rester (2^2)-2 = 2
+hôtes possibles. Ce n’est toujours pas suffisant!!&lt;/li&gt;
+&lt;li&gt;Si je garde 3 bits pour la partie hôtes, j’obtiens (3^2)-2 = 6 hôtes
+possibles. Ouf!! j’ai assez de place pour caser mes machines. On va
+donc construire notre masque de réseau en gardant ces 3 bits sur 0,
+ce qui nous donne :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+11111111.11111111.11111111.11111    000&lt;br /&gt;
+&lt;p&gt;
+Partie réseau                                         Partie hôte&lt;br /&gt;
+Ce qui, transformé en décimal nous donne un masque : 255.255.255.248.&lt;br /&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;Ce qu’on vient de faire ici, c’est de créer des sous réseaux du réseau
+192.168.1.0. Plusieurs sous réseaux composé chacun de 8 adresses IP.&lt;/p&gt;
+&lt;pre&gt;Sous réseau 1 : de 192.168.1.0 à 192.168.1.7 (avec 192.168.1.0 adresse de sous réseau et 192.168.1.7 adresse de broadcast)
+Sous réseau 2 : de 192.168.1.8 (adresse du réseau) à 192.168.1.15 (adresse de broadcast)
+Sous réseau 3 : de 192.168.1.16(adresse du réseau) à 192.168.1.23 (adresse de broadcast)
+etc etc..
+dernier sous réseau : de 192.168.1.248 (adresse de réseau) à 192.168.1.255 (adresse de broadcast)&lt;/pre&gt;
+&lt;p&gt;Voilà donc ce qui se cache derrière les adresses IP. Plus mon sous
+réseau sera petit, moins j’aurais de broadcast sur ce réseau. Parce que
+mine ça papote pas mal la dedans et ça a tendance à broadcaster dans
+tous les sens. Malheureusement, le broadcast n’est pas gratuit. Il coûte
+de la bande passante. Et quand la bande passante sature, on commence à
+perdre des paquets.&lt;/p&gt;
+&lt;p&gt;C’est pour ça qu’il est important, en entreprise en tout cas, de bien
+calculer le dimensionnement de son réseau et l’adressage IP de
+l’entreprise, sans oublier de prévoir que si l’entreprise s’agrandit, il
+va falloir rajouter des hôtes sur certains sous réseaux et en plus
+ajouter un nouveau sous réseau à notre entreprise pour y connecter un
+nouveau bâtiment par exemple. Ça a vite tendance à tourner cacahuète si
+on fait pas attention.&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>QRQVB : Datagramme IP</title><link href="https://blog.devarieux.net/2009/09/qrqvb-datagramme-ip.html" rel="alternate"></link><published>2009-09-16T11:07:00+02:00</published><updated>2009-09-16T11:07:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2009-09-16:/2009/09/qrqvb-datagramme-ip.html</id><summary type="html">&lt;p&gt;Je vais tenter dans cet article de décortiquer un datagramme IP et
+notamment son en-tête. Nous allons commencer par l’observation des
+encapsulations des données suivant le &lt;a href="http://blog.devarieux.net/2009/08/qrqvb-le-modele-osi/"&gt;modèle
+OSI&lt;/a&gt; que nous
+avons étudié la dernière fois. Les données (couche application) sont
+encapsulées dans un message (couche 4, transport) qui est …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Je vais tenter dans cet article de décortiquer un datagramme IP et
+notamment son en-tête. Nous allons commencer par l’observation des
+encapsulations des données suivant le &lt;a href="http://blog.devarieux.net/2009/08/qrqvb-le-modele-osi/"&gt;modèle
+OSI&lt;/a&gt; que nous
+avons étudié la dernière fois. Les données (couche application) sont
+encapsulées dans un message (couche 4, transport) qui est lui même
+encapsulé dans un paquet (couche 3, réseau), lui même encapsulé dans une
+trame (couche 2, liaison). Rien ne vaut un bon dessin pour
+comprendre.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/encaps.png"&gt;&lt;img src="https://blog.devarieux.net/images/encaps.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Aujourd’hui, on va donc s’intéresser à ce que contient le petit carré
+vert lorsque le paquet est un paquet IP.&lt;/p&gt;
+&lt;p&gt;Cet en-tête est codé par défaut sur 20 octets. Nous allons donc nous
+appliquer à décrypter le contenu de chacun de ses octets. J’ai fait pour
+cela un schéma pas terrible mais qui me servira de support pour les
+explications :p.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/entete1.png"&gt;&lt;img src="https://blog.devarieux.net/images/entete1.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Le premier octet contient 2 informations.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;La première est la version du protocole utilisé, codée sur 4 bits.
+pour le protocole IPv4, on utilisera le code 0100 qui correspond
+au 4 décimal. Pour IPv6, c’est 0110 (6 décimal).&lt;/li&gt;
+&lt;li&gt;La seconde information, codée également sur 4 bits contient l’IHM.
+C’est la longueur, en mot de 32bits (4 octets), de l’en-tête du
+datagramme. Par défaut, ces bits sont positionnés sur 0101, ce qui
+correspond au 5 décimal, ce qui est logique pour un en-tête par
+défaut de 20 octets.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Le deuxième octet est le TOS (type of service)&lt;/strong&gt; et va définir la
+manière dont le datagramme doit être traité. Il se décompose lui
+aussi en 2 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3 bits pour la priorité à donner au datagramme (0 à 7)&lt;/li&gt;
+&lt;li&gt;4 bits qui définissent chacun une option activée ou pas (1 option
+activée, 0 option desactivée)&lt;ul&gt;
+&lt;li&gt;1er bit : D → Positionné sur 1 pour privilégier le délai
+d’acheminement&lt;/li&gt;
+&lt;li&gt;2ème bit : T → Positionné sur 1 pour privilégier le débit&lt;/li&gt;
+&lt;li&gt;3ème bit : R → Positionné sur 1 pour privilégier la fiabilité&lt;/li&gt;
+&lt;li&gt;4ème bit : C → Positionné sur 1 pour privilégier le coût&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;1 bit qui ne contient aucune information. Il est appelé MBZ pour
+Must Be Zero. comme son nom l’indique, ce bit doit être positionné
+sur 0.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Les 3ème et 4ème octets contiennent le champ Longueur Totale (Total
+Lenght)&lt;/strong&gt;. Codé sur 16 bits, il contient la taille, en octet, du
+datagramme complet (en-tête + données). On en déduit donc que la
+longueur totale du paquet ne peut dépasser 65535 octets. Grâce à
+cette valeur, on peut calculer la taille des données :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;longueur données = Longueur totale – (IHM x 4)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Les 5ème et 6ème octets contiennent le champ Identification&lt;/strong&gt;.
+Celui ci intervient lors du ré-assemblage des paquets pour
+reconstituer les données lorsque celles ci sont fragmentées.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Les 7ème et 8ème octets contiennent 2 informations.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3 bits correspondent au champ &lt;strong&gt;flag&lt;/strong&gt;. Il sert a déterminer
+l’état de fragmentation.&lt;ul&gt;
+&lt;li&gt;1er bit : Réservé, il doit être sur 0&lt;/li&gt;
+&lt;li&gt;2ème bit : Don’t Fragment. Indique si la fragmentation est
+autorisée.&lt;/li&gt;
+&lt;li&gt;3ème bit : More Fragment. Positionné sur 1 il signifie que ce
+datagramme n’est pas le dernier fragment.&lt;/li&gt;
+&lt;li&gt;13 bits correspondent au champ &lt;strong&gt;Position Fragment&lt;/strong&gt;. Ce champ
+indique la position du fragment par rapport au premier
+datagramme et interviendra lors de la reconstitution du
+message.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Le 9ème octet contient le TTL (Time to Live).&lt;/strong&gt; ‘Durée de vie’ en
+français. Il indique le nombre maximal de routeurs que peut traverser
+le datagramme. Il est initialisé par la station émettrice et
+décrémenté de 1 par chaque routeur qui reçoit le datagramme et le
+réexpédie. Si un routeur reçoit un datagramme dont le TTL est nul, il
+le détruit et renvoie à l’expéditeur un message ICMP. Le but de ce
+champ est d’éviter les paquets fantômes qui circuleraient en boucle
+sur le réseau sans atteindre leur destination.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Pour la petite histoire, c’est de cette manière que fonctionne
+l’application &lt;strong&gt;traceroute&lt;/strong&gt;. Lorsqu’on lance traceroute
+&lt;a href="http://www.devarieux.net"&gt;www.devarieux.net&lt;/a&gt;, traceroute envoie
+un ping vers www.devarieux.net avec un TTL de 1. Lorsque le premier
+routeur reçoit le paquet, il le détruit et renvoie à l’expediteur un
+message ICMP l’informant que le paquet a été détruit (time to live
+exceeded). Ce message ICMP contient dans son en-tête l’adresse IP du
+routeur. Suite à cela, traceroute recommence l’opération mais avec
+un TTL de 2 et ainsi de suite jusqu’à toucher www.aldevar.fr. Et
+c’est de cette manière qu’on obtient la route prise par notre
+paquet. Attention ceci dit car 2 paquets envoyés vers la même
+destination peuvent emprunter des routes différentes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Le 10ème octet sert à coder le protocole&lt;/strong&gt; qui se trouve dans les
+données qui suivent l’en-tête. Il est codé sur 8 bits. Les protocoles
+les plus communs sont ICMP (0000.0001), TCP (0000.0110) et UDP
+(0001.0001).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;11ème et 12ème octets : Le checksum&lt;/strong&gt;. C’est la somme de contrôle
+de l’en-tête du datagramme. Chaque machine qui reçoit le paquet doit
+recalculer ce checksum car la modification du TTL modifie celui ci.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Les octets 13 à 16 contiennent l’&lt;strong&gt;adresse IP de la machine
+émétrice&lt;/strong&gt;. C’est également l’adresse de réponse.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Et enfin les 4 derniers octets contiennent eux l’&lt;strong&gt;adresse IP de
+destination&lt;/strong&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;section id="capture-de-trame"&gt;
+&lt;h2&gt;Capture de trame&lt;/h2&gt;
+&lt;p&gt;Puisqu’il n’est pas particulièrement évident pour nous, simples mortels,
+de lire ces bits pour comprendre ce que contient le datagramme, on peut
+utiliser un logiciel de capture de trame tel que &lt;strong&gt;wireshark&lt;/strong&gt; en mode
+graphique ou &lt;strong&gt;tcpdump&lt;/strong&gt; en mode commande. Je vous laisse vous même
+découvrir ces applications. Je vais me contenter ici de montrer un
+screenshot d’une capture faite avec wireshark qui montre ce que ce
+logiciel peut nous dire sur le contenu de nos paquets.&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/trame01.png"&gt;&lt;img src="https://blog.devarieux.net/images/trame01.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Voici le type de paquet que nous avons capturé. C’est un
+simple ping entre 2 machines se situant sur des réseaux différents.
+Wireshark nous dit déjà que c’est un paquet ICMP. Voyons le détail de ce
+datagramme :&lt;/p&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/trame02.png"&gt;&lt;img src="https://blog.devarieux.net/images/trame02.png" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;En dépliant le contenu de l’en-tête IP, voici ce que wireshark peut nous
+dire :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nous sommes en IPv4.&lt;/li&gt;
+&lt;li&gt;Le header fait 20 octets (bytes et non bits).&lt;/li&gt;
+&lt;li&gt;La longueur total du datagramme est de 60 octets. On en conclue donc
+que nous avons 40 octets de données.&lt;/li&gt;
+&lt;li&gt;Le message n’est pas fragmenté.&lt;/li&gt;
+&lt;li&gt;Le TTL est de 128 ce qui signifie qu’après avoir traversé 128
+routeurs, le paquet sera détruit.&lt;/li&gt;
+&lt;li&gt;Le protocole contenu dans les data est ICMP&lt;/li&gt;
+&lt;li&gt;Le checksum est correct.&lt;/li&gt;
+&lt;li&gt;Enfin, à la fin, les IP de départ et de destination.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Voilà, c’est terminé pour l’analyse de paquet de niveau 3. La prochaine
+fois, j’essaierai d’expliquer le contenu d’un en-tête  de niveau 4
+(couche transport : UDP, TCP etc…) ou de niveau 2 (couche liaison, trame
+ethernet). Si vous trouvez que cet article manque de précision n’hésitez
+pas à m’en faire part.&lt;/p&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry><entry><title>QRQVB : Le modèle OSI</title><link href="https://blog.devarieux.net/2009/08/qrqvb-le-modele-osi.html" rel="alternate"></link><published>2009-08-17T18:30:00+02:00</published><updated>2009-08-17T18:30:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2009-08-17:/2009/08/qrqvb-le-modele-osi.html</id><summary type="html">&lt;p&gt;Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous
+propose de (re)découvrir avec moi, quelques notions fondamentales de
+réseau. Ces articles s'adressent en particulier à ceux qui souhaitent
+comprendre les mécanismes d'Internet et/ou du routage en WAN ou en LAN.
+J'essaierai d'être le plus clair …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans cette nouvelle catégorie (la Question Réseau Qui Va Bien), je vous
+propose de (re)découvrir avec moi, quelques notions fondamentales de
+réseau. Ces articles s'adressent en particulier à ceux qui souhaitent
+comprendre les mécanismes d'Internet et/ou du routage en WAN ou en LAN.
+J'essaierai d'être le plus clair possible. Si vous trouvez des erreurs,
+non-sens dans ces articles, je suis ouvert à toutes critiques,
+corrections. Et pour inaugurer cette catégorie, commençons donc par le
+modèle OSI, qui est la base pour une bonne compréhension des mécanismes
+des réseaux informatiques.&lt;/p&gt;
+&lt;section id="definition"&gt;
+&lt;h2&gt;Définition&lt;/h2&gt;
+&lt;p&gt;Le modèle OSI est une norme définie par l'ISO pour permettre
+l'interconnexion des systèmes. Il propose un modèle d'architecture
+réseau afin de s'assurer que tous les systèmes interconnectés puissent
+communiquer entre eux quel que soit le constructeur du matériel. Les
+constructeurs informatiques ont proposé des architectures réseaux
+propres à leurs équipements. Par exemple, IBM a proposé SNA, DEC a
+proposé DNA... Ces architectures ont toutes le même défaut : du fait de
+leur caractère propriétaire, il n'est pas facile des les interconnecter,
+à moins d'un accord entre constructeurs. Le modèle OSI ne précise pas
+vraiment les services et protocoles à utiliser pour chaque couches. Il
+décrit plutôt ce que doivent faire ces couches. Je sais que ça ne parait
+pas très clair pour le moment, mais ça va le devenir.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="schema-du-modele"&gt;
+&lt;h2&gt;Schéma du modèle&lt;/h2&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="images/modele_OSI.gif"&gt;&lt;img src="https://blog.devarieux.net/images/modele_OSI.gif" /&gt;&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Le modèle OSI est donc représenté en 7 couches distinctes. J'ai ici
+représenté 2 machines (Système A et Système B) pour bien montrer que
+lors de la communication de 2 hôtes, chaque couche 'discute' directement
+avec la couche équivalente de l'hôte d'en face.&lt;/p&gt;
+&lt;section id="couche-physique"&gt;
+&lt;h3&gt;1°) Couche Physique&lt;/h3&gt;
+&lt;p&gt;La couche physique s'occupe de la transmission des bits de façon brute
+sur un canal de communication. Plus clairement, elle est typiquement
+représentée par votre carte réseau et sa prise ethernet (et non pas le
+protocole ethernet!!). La couche phyique discute directement avec l'hôte
+suivant sur le réseau. C'est à dire que lors d'une communication sur
+internet, cette couche ne s'occupe de l'envoie des données que vers la
+machine suivante, en général un routeur. La couche physique traite
+exclusivement avec des bits 0 et 1 et normalise l'écriture de ces bits
+(une tension de 5V corespond à un 1, -5V un 0).&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-liaison"&gt;
+&lt;h3&gt;2°) Couche Liaison&lt;/h3&gt;
+&lt;p&gt;La couche de liaison (ou liaison de donnée) est un liant entre les 2
+couches physiques des hôtes en communications. Elle fractionne les
+données en trames et tente d'exempter la couche physique des erreurs de
+transmissions. Elle doit être capable de renvoyer une trame lorsqu'il y
+a un problème sur la ligne et intègre également un système de gestion de
+flux pour éviter les engorgements. Par exemple une carte 100Mb/s relié à
+une carte 1Gb/S doivent pouvoir communiquer sans que la carte 100Mb/s
+recoive 10x trop de données. L'unité d'information de cette couche est
+donc la trame qui est composé de quelques centaines d'octets.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-reseau"&gt;
+&lt;h3&gt;3°) Couche Réseau&lt;/h3&gt;
+&lt;p&gt;La couche réseau construit la liaison de bout en bout lors de la
+communication de 2 hôtes. C'est la seule couche directement concernée
+par la topologie du réseau. Elle va trouver la route parmis les routeurs
+pour atteindre l'hôte cible. Lors d'un envoie de données, 2 paquets
+différents peuvent emprunter des routes différentes suivant
+l'architecture du réseau et ses point d'engorgement. C'est la dernière
+couche supportée par TOUTES les machines du réseau (hôtes, switchs,
+routeurs, serveurs). Son unité d'information est le paquet.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-transport"&gt;
+&lt;h3&gt;4°) Couche Transport&lt;/h3&gt;
+&lt;p&gt;Cette couche est responsable du bon acheminement des messages complets
+au destinataire. Le rôle principal de la couche transport est de prendre
+les messages de la couche session, de les découper s'il le faut en
+unités plus petites et de les passer à la couche réseau et inversement
+du coté du recepteur. Comme on l'a vu dans la couche réseau, 2 paquets
+d'un même message peuvent prendre des routes différentes et donc arriver
+dans le désordre. Le rôle de la couche transport est donc de remettre
+ces paquets dans l'ordre. Elle peut aussi gérer le multiplexage lors de
+communications multiples entre 2 mêmes hôtes (par exemple une connexion
+http et ftp sur le même canal). Son unité d'information est le message.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-session"&gt;
+&lt;h3&gt;5°) Couche Session&lt;/h3&gt;
+&lt;p&gt;Le service principale de la couche session est la synchronisation des
+communications. Qui veut parler? Qui parle? Elle permet aussi de prendre
+des 'snapshots' des flots de données pour pouvoir reprendre le dialogue
+là où il en était avant une coupure du canal de communication.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-presentation"&gt;
+&lt;h3&gt;6°) Couche Présentation&lt;/h3&gt;
+&lt;p&gt;La couche présentation est chargée du codage des données de la couche
+application. En effet, toutes les couches plus basses transportent des
+octets sans chercher comprendre leur signification. Ici, elle va
+s'occuper d'encoder du texte, des images, de la video, de la voix etc...
+en données transportables, c'est à dire en octet.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="couche-application"&gt;
+&lt;h3&gt;7°) Couche Application&lt;/h3&gt;
+&lt;p&gt;Cette couche est le point de contact entre l'utilisateur et le réseau.
+Elle lui apporte l'interface lui permettant de communiquer avec celui ci
+(messagerie, http, ftp etc...).&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="exemples-de-protocoles"&gt;
+&lt;h2&gt;Exemples de protocoles&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Physique → biphase, bipolaire simple&lt;/li&gt;
+&lt;li&gt;Liaison → ATM, Ethernet, PPP, TokenRing, Fiber Distributed Date
+Interface (FDDI)&lt;/li&gt;
+&lt;li&gt;Réseau → IP, IPX, ICMP&lt;/li&gt;
+&lt;li&gt;Transport → TCP, UDP (pour les plus connus)&lt;/li&gt;
+&lt;li&gt;Session → SIP, Appletalk&lt;/li&gt;
+&lt;li&gt;Présentation → ASCII, Unicode, ASN.1, Videotex&lt;/li&gt;
+&lt;li&gt;Application → HTTP, SMTP, POP, FTP, DNS, SNMP&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</content><category term="Réseau"></category></entry></feed>

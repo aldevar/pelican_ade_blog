@@ -1,138 +1,118 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Authentification Wifi iPSK avec Cisco ISE | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2022/12/ise-ipsk.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key …">
-
-
+  <meta charset="UTF-8" />
+  <title>Authentification Wifi iPSK avec Cisco ISE | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2022/12/ise-ipsk.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/cyber.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Cyber" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Authentification Wifi iPSK avec Cisco ISE" />
+  <meta name="twitter:title" content="Authentification Wifi iPSK avec Cisco ISE" />
+  <meta property="og:url" content="https://blog.devarieux.net/2022/12/ise-ipsk.html" />
+  <meta property="og:description" content="Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key …" />
+  <meta name="twitter:description" content="Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Authentification Wifi iPSK avec Cisco ISE
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2022-12-12T08:55:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Mon 12 December 2022
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/tech.html">Tech</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/ise.html">#ISE</a>,               <a href="../../tag/wifi.html">#wifi</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/security.html">#security</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key), justement grace au rôle qu'elles peuvent avoir dans l'attribution de l'identité de l'équipement, permettant de le placer dans le VLAN adequat.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2022/12/ise-ipsk.html" rel="bookmark" title="Permalink to Authentification Wifi iPSK avec Cisco ISE">
+          <time class="m-date" datetime="2022-12-12T08:55:00+01:00">
+            Dec <span class="m-date-day">12</span> 2022
+          </time>
+          Authentification Wifi iPSK avec Cisco ISE
+        </a></h1>
+        <p>Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Je vais décrire dans cet article comment configurer Cisco ISE pour authentifier des équipements Wifi sur un réseau en utilisant le protocole RADIUS. Notamment, en fonctions de la PSK utiliser par un client Wifi, nous pourrons lui attribuer un VLAN spécifique. Ces PSK sont nommés iPSK (identity Pre Shared Key), justement grace au rôle qu'elles peuvent avoir dans l'attribution de l'identité de l'équipement, permettant de le placer dans le VLAN adequat.</p>
 <p>Cisco ISE (Identity Service Engine) est une appliance proposant un grand nombre de fonctionnalités de sécurité. Il peut authentifier les utilisateurs sur le réseau (Wifi, câble ou VPN), il gère le contrôle d'accès, les politiques de groupe et peut également faire du device posturing (s'assurer qu'un équipement est à jour et que son anti-virus est activé avant de lui donner accès au réseau). Les fonctionnalités sont assez complètes et son utilisation demande une certaine expertise.</p>
 <p>Pour cet article, le réseau Wifi sur lequel on s'appuit est un réseau Meraki mais je ne doute pas que le fonctionnement doit être grandement similaire avec d'autres constructeurs.</p>
-<div class="section" id="configuration-meraki">
+<section id="configuration-meraki">
 <h2>Configuration Meraki</h2>
 <p>La configuration du SSID se fait dans le menu Wireless &gt; Access Control en choisissant le SSID cible dans le menu déroulant en haut de la page.</p>
-<div class="section" id="network-access">
+<section id="network-access">
 <h3>Network Access</h3>
 <p>Cette section permet de choisir le mode d'association des équipements. L'option à choisir ici est Identity PSK with Radius. Le chiffrement se fait en WPA2. Si vous avez plusieurs bornes, je vous invite à activer le mode 802.11r (fast-transition) qui améliore les performances lors du roaming.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK01.png" />
-</div>
-<div class="section" id="splash-page">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK01.png" style="width: 431px" />
+</section>
+<section id="splash-page">
 <h3>Splash Page</h3>
 <p>Nous n'utilisons pas de Splash Page sur ce SSID. Une fois associé et authentifié, l'accès au réseau se fait directement.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK02.png" />
-</div>
-<div class="section" id="configuration-radius">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK02.png" style="width: 429px" />
+</section>
+<section id="configuration-radius">
 <h3>Configuration Radius</h3>
 <p>Lors du choix IPSK with Radius dans la section 'Network Access', une nouvelle section dédiée à la configuration Radius apparaît.
 On entre les adresses des serveurs Radius, ports et secrets. RADIUS testing est désactivé et le support de CoA est activé. Les serveurs Radius accounting sont activés et paramétrés.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK03.png" />
-</div>
-<div class="section" id="assignement-de-l-ip">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK03.png" style="width: 429px" />
+</section>
+<section id="assignement-de-l-ip">
 <h3>Assignement de l'IP</h3>
 <p>L'assignement de l'adresse IP de l'équipement se fait en mode Bridge. Les équipements se retrouvent sur le VLAN qui leur est assigné et peuvent recevoir une IP en DHCP via, par exemple, le serveur Cisco ISE.
 Le VLAN tagging est activé avec un VLAN par défaut (ici XXX).</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK04.png" />
-</div>
-</div>
-<div class="section" id="configuration-cisco-ise">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK04.png" style="width: 329px" />
+</section>
+</section>
+<section id="configuration-cisco-ise">
 <h2>Configuration Cisco ISE</h2>
 <p>Voici le flux de données lors d'une authentification iPSK sur un serveur Cisco ISE. Cette image est directement extraite de la documentation officielle Meraki.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK05.png" />
-<div class="section" id="ajout-des-ap-et-assignation-a-un-groupe">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK05.png" style="width: 303px" />
+<section id="ajout-des-ap-et-assignation-a-un-groupe">
 <h3>Ajout des AP et assignation à un groupe</h3>
 <p>Sur ISE, aller dans Administration &gt; Network Ressources &gt; Network Devices et cliquer sur Add</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK06.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK06.png" style="width: 72px" />
 <p>Remplir les champs pour l'AP à intégrer : Nom de l'AP et adresse IP.</p>
 <p>Créer une nouvelle <cite>Location</cite> du nom du lieu où sont placées les AP (par exemple Headquarter ou Agence_Rennes) et un <cite>device type</cite> MR. Ce device type permettra d'y placer l'ensemble des AP de type Meraki MR.
 La localisation &quot;Headquarters&quot; va permettre de faire correspondre l'authentification des clients avec la bonne Policy Set (jeu de politique), que l'on verra plus tard.</p>
 <p>Cocher Radius Authentication Settings et paramétrer un secret pour ce serveur Radius. Ce secret est celui utilisé dans la configuration Radius du SSID sur Meraki.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK07.png" />
-</div>
-<div class="section" id="creer-une-policy-set">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK07.png" style="width: 321px" />
+</section>
+<section id="creer-une-policy-set">
 <h3>Créer une Policy Set</h3>
 <p>Créer une nouvelle Policy Set avec la condition <strong>Device&gt;Location</strong> et sélectionner la localisation Headquarter créée précédemment. Ajouter une seconde condition <strong>Radius &gt; Called-Station-ID Ends_With &quot;Nom_du_SSID&quot;</strong>.</p>
 <p>J'insiste sur le fait de bien mettre la condition &quot;Ends_With&quot; et nom &quot;Equals&quot; car lors de l'authentification Radius, le nom du SSID envoyé par MEraki sera précédé d'autres informations. En mettant &quot;Equals&quot; l'authentification ne peut pas fonctionner.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK08.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK08.png" style="width: 436px" />
 <p>Sauvegarder puis se rendre dans la policy en utilisant la flèche à l'extrémité droite. Aller dans <strong>Authentication Policy</strong> et paramétrer la règle comme ci-dessous. S'assurer que le menu déroulant est bien positionné sur <strong>Internal Endpoints</strong> et que l'option <strong>If User not found Continue</strong> est bien sélectionnée. Cette option permet de continuer à vérifier l'authentification d’un équipement qui ne serait pas valide sur cette policy.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK09.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK09.png" style="width: 212px" />
 <p>Se rendre ensuite dans <strong>Authorization Policy</strong>. Sur la règle par défaut, supprimer <em>Deny Access</em> et cliquer sur l'icône + pour créer un nouveau profil avec les paramètres ci-dessous.
 Dans <strong>Advanced Attributes</strong>, sélectionner <strong>Radius:Tunnel-Password</strong>. Entrer la PSK utilisée par défaut sur ce SSID puis sauvegarder.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK10.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK10.png" style="width: 303px" />
 <p>Sélectionner ce profil dans la règle par défaut puis sauvegarder.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK11.png" />
-</div>
-<div class="section" id="creer-un-identity-group">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK11.png" style="width: 420px" />
+</section>
+<section id="creer-un-identity-group">
 <h3>Créer un Identity Group</h3>
 <p>Aller dans <strong>Work Center &gt; Guest Access &gt; Id Group</strong>.
 Cliquer sur <strong>Add</strong> pour ajouter un nouveau groupe qui contiendra les équipements autorisé à s'authentifier sur le réseau Wifi.</p>
-</div>
-<div class="section" id="creer-une-policy-set-pour-chaque-psk">
+</section>
+<section id="creer-une-policy-set-pour-chaque-psk">
 <h3>Créer une Policy Set pour chaque PSK</h3>
 <p>A partir de maintenant, nous pouvons créer une Policy Set pour chaque groupe d'équipement qui utilisera sa propre iPSK. Chaque iPSK identifiera un type d'équipement et le VLAN sur lequel il sera placé.</p>
 <p>Ici, nous allons créer la policy set pour le VLAN de bureautique (VLAN 84).
@@ -141,44 +121,51 @@ Les champs importants sont :
 - Nom du profil
 - Common Tasks &gt; VLAN &gt; 84
 - Advances Attributes Settings &gt; Radius:Tunnel-Password ⇒ Entrer la PSK pour les équipements de bureautique (PC portable en général).</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK12.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK12.png" style="width: 252px" />
 <p>Aller ensuite dans <strong>Policy &gt; Policy Sets</strong> et éditer la Policy Set créée précédemment. Dans la section <strong>Authorization Rules</strong> ajouter une nouvelle règle au-dessus de la règle par défaut.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK13.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK13.png" style="width: 246px" />
 <p>Nommer cette règle et lui appliquer la condition suivante, en choissant le groupe créé dans la section <strong>Créer un Identity Group</strong> :</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK14.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK14.png" style="width: 430px" />
 <p>Appliquer ensuite le profil d'autorisation PSK1 créé en juste au-dessus et sauvegarder.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK15.png" />
-</div>
-<div class="section" id="ajouter-des-euipements-au-groupe">
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK15.png" style="width: 426px" />
+</section>
+<section id="ajouter-des-euipements-au-groupe">
 <h3>Ajouter des éuipements au groupe</h3>
 <p>Aller dans <strong>Context Visibility &gt; Endpoints</strong>.
 Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer précédement.</p>
-<img alt="" class="align-center" src="/images/2022-12-12-ISEiPSK16.png" />
+<img class="m-image" src="../../images/2022-12-12-ISEiPSK16.png" style="width: 432px" />
 <p>Cette technique d'authentification permet donc de placer les équipements/utilisateurs sur des VLANs différents en fonction de la PSK utilisée, sans créer un SSID différent pour chaque VLAN.</p>
 <p>En effet, il est déconseillé de diffuser plus de 5 SSID par AP ou par zone afin de limiter les interférences et optimiser la qualité du signal, notamment lorsqu'on souhaite y faire transiter de la voix et/ou faire du roaming. Grâce à iPSK, nous pouvons segmenter les utilisateurs dans différents VLAN en limitant le nombre de SSID diffusé.</p>
+</section>
+</section>
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2022-12-12T08:55:00+01:00">Mon 12 December 2022</time> in <a href="https://blog.devarieux.net/category/cyber.html">Cyber</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
 </div>
-</div>
-
-    </div>
-  </article>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>

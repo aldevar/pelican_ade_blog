@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Aldevar - Le Blog - None</title><link href="https://blog.devarieux.net/" rel="alternate"></link><link href="https://blog.devarieux.net/feed/none.atom.xml" rel="self"></link><id>https://blog.devarieux.net/</id><updated>2017-11-03T22:45:00+01:00</updated><subtitle>Yet Another Blog</subtitle><entry><title>HyperText Acte 1</title><link href="https://blog.devarieux.net/2017/11/hypertexte-acte-1.html" rel="alternate"></link><published>2017-11-03T22:45:00+01:00</published><updated>2017-11-03T22:45:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2017-11-03:/2017/11/hypertexte-acte-1.html</id><summary type="html">&lt;p&gt;Voici une collection de liens trouvés ou partagés dernièrement. Je les penses suffisamment utiles pour vous les partager à mon tour.&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Bienvenue dans Hypertexte Acte 1. Vous trouverez ici des articles en général plutôt techniques et majoritairement en anglais sur différents sujets dont l'administration système, le réseau, la virtualisation ou encore le savoir être en entreprise (soft skill).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[EN] Un article de Quinn Norton sur l'état de l'art en developpement. Il compare le developpement des applications actuelles à des constructions de ponts. La comparaison souffre de quelques biais mais l'article vaut vraiment le coup d'être lu : &lt;a href="https://www.emptywheel.net/2017/09/14/software-is-a-long-con/"&gt;SOFTWARE IS A LONG CON&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[EN] Suite à la sortie des CPU dédiés serveurs &lt;code&gt;Intel Xeon Scalable&lt;/code&gt;, FRANK DENNEMAN passe en revu les nouveautés apportées par ces CPU en terme de virtualisation de l'execution. Un article incontournable si vous administrez des clusters de virtualisation : &lt;a href="http://frankdenneman.nl/2017/09/26/vsphere-focused-guide-intel-xeon-scalable-family/"&gt;A vSphere Focused Guide to the Intel Xeon Scalable Family&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[FR] Un podcast, en français, consacré au DevOps. Deux épisodes publiés à ce jour: &lt;a href="https://soundcloud.com/devobs"&gt;DevObs&lt;/a&gt;. Mon seul regret est qu'il n'y a pas de flux RSS pour ajouter simplement ce podcast dans une appli dédiée.&lt;/li&gt;
+&lt;li&gt;[EN] Linux : Auditer la suppression des fichiers avec Auditd. Permet de 'trouver le coupable' si on ne sait pas comment des fichiers disparaissent du filesystem : &lt;a href="http://run.tournament.org.il/audit-delete-commands-in-linux/"&gt;Audit delete commands in Linux&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Lors de la migration de ce blog en statique via Pelican, je me suis lancé à la recherche d'une solution d'analyse de traffic. Je souhaitais une solution non intrusive (sans code à charger par le navigateur), un peu du style awstat. Je suis tombé sur le &lt;a href="http://goaccess.io"&gt;projet Goaccess&lt;/a&gt;, que je ne connaissais pas et qui rempli admirablement bien son rôle en faisant de l'analyse des logs apache en temps réel.&lt;/li&gt;
+&lt;li&gt;[FR] La semaine prochaine, du 7/11 au 9/11 aura lieu l'évenement européen de Nutanix: le .NEXT Europe à Nice. Je participerai à une discussion le 8/11 à 13h afin de faire un retour d'experience sur la mise en oeuvre de cette solution dans mon entreprise. Nutanix a récemment sortie la version 5 d'AOS qui propose un grand nombre de nouvelles fonctionnalités. C'est pourquoi sur VirtualementVotre, on n'hésite plus à poser la question : &lt;a href="http://www.virtualementvotre.ch/blog/2017/10/30/pourquoi-nutanix-ahv-est-une-reelle-option/"&gt;Pourquoi Nutanix AHV est une réelle option ?&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;[FR] Un looooong article expliquant &lt;a href="https://medium.com/&amp;#64;djo/obsession-service-client-captain-train-cb0b91467fd9"&gt;l’obsession du service client chez Captain Train&lt;/a&gt;. Vraiment passionant et instructif.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;C'est ici que ça se termine. N'hésitez pas à revenir dans quelques temps pour le prochain numéro d'hypertexte. En attendant, n'hésitez pas à me &lt;a href="https://twitter.com/landvarx"&gt;contacter sur twitter&lt;/a&gt; si vous avez un lien qui aurait sa place dans un futur article.&lt;/p&gt;
+</content><category term="None"></category></entry><entry><title>Migration du Blog sur Pelican</title><link href="https://blog.devarieux.net/2017/11/migration-blog-pelican.html" rel="alternate"></link><published>2017-11-02T22:45:00+01:00</published><updated>2017-11-02T22:45:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2017-11-02:/2017/11/migration-blog-pelican.html</id><summary type="html">&lt;p&gt;Migration du blog sur Pelican, generateur de site static en Python.&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Après avoir passé plusieurs années avec Wordpress, j'ai décidé de passé le blog en static sur &lt;a href="https://blog.getpelican.com"&gt;Pelican&lt;/a&gt;. Les raisons de ce choix sont multpiples :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Wordpress est très vulnérable aux attaques et demande un grand niveau d'attention pour que le blog reste en sécurité. Notamment pour ce qui concerne les plugins.&lt;/li&gt;
+&lt;li&gt;Wordpress est très puissant, peut être trop puissant pour un simple blog.&lt;/li&gt;
+&lt;li&gt;J'avais besoin de nouveauté et de simplicité.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Dorénavant, les articles seront rédigés en reStructuredText puis compilés par Pelican afin de générer ce site statique. Dans l'opération, les commentaires ont disparu.&lt;/p&gt;
+</content><category term="None"></category></entry><entry><title>Debian abandonne la Linux Standard Base</title><link href="https://blog.devarieux.net/2015/10/debian-abandonne-la-linux-standard-base.html" rel="alternate"></link><published>2015-10-20T21:56:00+02:00</published><updated>2015-10-20T21:56:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-10-20:/2015/10/debian-abandonne-la-linux-standard-base.html</id><summary type="html">&lt;p&gt;&lt;a href="https://lwn.net/Articles/658809/"&gt;LWN a annoncé&lt;/a&gt; il y a déjà
+quelques jours que la communauté Debian abandonnait le support de la
+&lt;a href="http://refspecs.linuxfoundation.org/lsb.shtml"&gt;Linux Standard Base&lt;/a&gt;
+(LSB). La LSB tente de se définir comme un standard de compatibilité des
+différentes distributions. En suivant ces règles, chaque binaire devrait
+simplement fonctionner sur chaque distribution, que ce …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://lwn.net/Articles/658809/"&gt;LWN a annoncé&lt;/a&gt; il y a déjà
+quelques jours que la communauté Debian abandonnait le support de la
+&lt;a href="http://refspecs.linuxfoundation.org/lsb.shtml"&gt;Linux Standard Base&lt;/a&gt;
+(LSB). La LSB tente de se définir comme un standard de compatibilité des
+différentes distributions. En suivant ces règles, chaque binaire devrait
+simplement fonctionner sur chaque distribution, que ce soit Debian, RHEL
+ou SLES.&lt;/p&gt;
+&lt;p&gt;Difficile d'en vouloir aux mainteneurs Debian. La LSB est très vaste et
+&lt;a href="https://www.linuxbase.org/lsb-cert/productdir.php?by_lsb"&gt;très peu
+d'applications&lt;/a&gt;ont
+reçu la certification LSB. Ajoutez à cela que le gestionnaire de paquet
+RPM est celui qui a été choisi et vous avez un standard dont les specs
+vont à l'encontre de ce que propose Debian.&lt;/p&gt;
+&lt;p&gt;Le fait que Debian stoppe les efforts pour rester compatible avec LSB ne
+signifie pas forcement qu'elle va devenir incompatible avec les autres
+distributions. Debian prévoie de rester compatible avec le standard de
+hiérarchie des systèmes de fichiers (&lt;a href="http://www.linuxfoundation.org/collaborate/workgroups/lsb/fhs"&gt;Filesystem Hierarchy
+Standard&lt;/a&gt;),
+un des éléments de LSB qui défini où doivent se trouver certains
+fichiers et répertoires. C'est en effet un des standard majeur pour
+conserver un semblant de compatibilité entre distributions.&lt;/p&gt;
+&lt;p&gt;Sur le court terme, cela ressemble à un non événement. A plus long
+terme, on peut se demander ce qu'il va advenir de l'écosystème Linux.
+Créer une distribution et la maintenir est déjà une tâche
+particulièrement difficile.Imaginez alors ce que cela doit être de
+coordonner des standards a travers plusieurs distributions ...&lt;/p&gt;
+&lt;p&gt;Parmi les distributions majeures, nous avons typiquement 2 camps:
+Debian/Ubuntu et Fedora/RHEL. Ces 2 camps ont réussi à ne pas trop
+s'éloigner l'un de l'autre et on peut penser que systemd avait commencé
+ce processus de coordination. Les normes sont importantes, mais
+seulement dans la mesure où elles sont respectées. Jusqu'ici GNU/Linux a
+évité le problème &lt;a href="https://xkcd.com/927/"&gt;des normes concurrentes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Cela va-t-il rester le cas?&lt;/p&gt;
+</content><category term="None"></category></entry></feed>

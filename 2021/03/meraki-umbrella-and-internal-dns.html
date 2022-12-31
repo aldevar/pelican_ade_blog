@@ -1,106 +1,94 @@
-<!doctype html>
-<html lang="fr">
-
+<!DOCTYPE html>
+<html lang="fr" prefix="og: http://ogp.me/ns#">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <title>  Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki | Aldevar - Le Blog
-</title>
-  <link rel="canonical" href="../../2021/03/meraki-umbrella-and-internal-dns.html">
-
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.css">
-  <link rel="stylesheet" href="../../theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../theme/css/pygments/monokai.min.css">
-  <link rel="stylesheet" href="../../theme/css/theme.css">
-
-  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
-        href="https://blog.devarieux.net/feed/atom.xml">
-  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
-        href="https://blog.devarieux.net/feed/{slug}.atom.xml">  
-  <meta name="description" content="Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS. Les équipements Cisco Meraki peuvent nativement rediriger les …">
-
-
+  <meta charset="UTF-8" />
+  <title>Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki | Aldevar - Le Blog</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="https://blog.devarieux.net/static/m-dark.css" />
+  <link rel="canonical" href="https://blog.devarieux.net/2021/03/meraki-umbrella-and-internal-dns.html" />
+  <link href="https://blog.devarieux.net/feed/atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog" />
+  <link href="https://blog.devarieux.net/feed/reseau.atom.xml" type="application/atom+xml" rel="alternate" title="Aldevar - Le Blog | Réseau" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+  <meta property="og:site_name" content="Aldevar - Le Blog" />
+  <meta property="og:title" content="Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki" />
+  <meta name="twitter:title" content="Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki" />
+  <meta property="og:url" content="https://blog.devarieux.net/2021/03/meraki-umbrella-and-internal-dns.html" />
+  <meta property="og:description" content="Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS. Les équipements Cisco Meraki peuvent nativement rediriger les …" />
+  <meta name="twitter:description" content="Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS. Les équipements Cisco Meraki peuvent nativement rediriger les …" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:type" content="article" />
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-<div class="row">
-    <div class="col-sm-4">
-      <a href="../../">
-        <img class="img-fluid rounded" src=../../images/avat180.png width=100 height=100 alt="Aldevar - Le Blog">
-      </a>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="../../" id="m-navbar-brand" class="m-col-t-9 m-col-m-none m-left-m">ADX</a>
+      <a id="m-navbar-show" href="#navigation" title="Show navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <a id="m-navbar-hide" href="#" title="Hide navigation" class="m-col-t-3 m-hide-m m-text-right"></a>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="https://blog.devarieux.net/pages/about/">About</a></li>
+          </ol>
+        </div>
+      </div>
     </div>
-  <div class="col-sm-8">
-    <h1 class="title"><a href="../../">Aldevar - Le Blog</a></h1>
-      <p class="text-muted">Yet Another Blog</p>
-      <ul class="list-inline">
-            <li class="list-inline-item"><a href="../../pages/about.html">About</a></li>
-            <li class=" list-inline-item text-muted">|</li>
-          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/aldevar" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/landvarx" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/alain-devarieux" target="_blank"></a></li>
-          <li class="list-inline-item"><a class="fa fa-rss" href="../../feed/atom.xml" target="_blank"></a></li>
-      </ul>
   </div>
-</div>    </div>
-  </header>
-
-  <div class="main">
-    <div class="container">
-      <h1>  Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki
-</h1>
-      <hr>
-  <article class="article">
-    <header>
-      <ul class="list-inline">
-        <li class="list-inline-item text-muted" title="2021-03-02T22:20:00+01:00">
-          <i class="fa fa-clock-o"></i>
-          Tue 02 March 2021
-        </li>
-        <li class="list-inline-item">
-          <i class="fa fa-folder-open-o"></i>
-          <a href="../../category/network.html">network</a>
-        </li>
-          <li class="list-inline-item">
-            <i class="fa fa-files-o"></i>
-              <a href="../../tag/reseau.html">#reseau</a>,               <a href="../../tag/meraki.html">#meraki</a>,               <a href="../../tag/cisco.html">#cisco</a>,               <a href="../../tag/umbrella.html">#umbrella</a>,               <a href="../../tag/dns.html">#dns</a>          </li>
-      </ul>
-    </header>
-    <div class="content">
-      <p>Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS.</p>
+</nav></header>
+<main>
+<div class="m-container">
+  <div class="m-row">
+    <article class="m-col-m-10 m-nopadb">
+      <header>
+        <h1><a href="https://blog.devarieux.net/2021/03/meraki-umbrella-and-internal-dns.html" rel="bookmark" title="Permalink to Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki">
+          <time class="m-date" datetime="2021-03-02T22:20:00+01:00">
+            Mar <span class="m-date-day">02</span> 2021
+          </time>
+          Utilisation d'un DNS interne avec Umbrella sous Cisco Meraki
+        </a></h1>
+        <p>Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS.</p>
+        <p>Les équipements Cisco Meraki peuvent nativement rediriger les …</p>
+      </header>
+      <div class="m-clearfix-l"></div>
+<!-- content -->
+<p>Cisco Umbrella (anciennement Open DNS) est un DNS menteur qui permet de se protéger des sites malveillant et notamment des ransomwares. Le service évolue de plus en plus vers une offre SASE complète même si sa fonctionnalité première est la protection DNS.</p>
 <p>Les équipements Cisco Meraki peuvent nativement rediriger les requêtes DNS vers Cisco Umbrella. En interceptant les requêtes DNS et en les envoyant vers Umbrella, l'équipement wifi (MR) Meraki forge une réponse DNS renvoyé au client. Que ce passe-t-il lorsqu'une organisation utilise un DNS interne pour la résolution d'un nom de domaine local?</p>
 <p>J'ai récemment été confronté à ce scénario et j'ai pu observer différents comportements.</p>
-<p>Lorsque le domaine interne est un domaine &quot;bidon&quot;, comme par exemple <code>mycompany.local</code>, les requêtes DNS ne sont pas interceptées et le client recoit directement une réponse du serveur local. Aucun problème à ce niveau là. Par contre, lorsque le domaine de base existe, même si l'entreprise utilise un sous domaine dédié, cela créé des comportements aberrants.</p>
-<p>Prenons l'exemple d'une entreprise qui dipose du nom de domaine public <code>entreprise.com</code>. Pour ses besoins internes, l'entreprise utilise le sous domaine <code>internal.entreprise.com</code>. La configuration réseau de l'ensemble des postes et des serveurs de l'entreprise spécifie l'utilisation du serveur DNS interne <code>10.0.0.1</code> qui sert spécifiquement ce domaine. Avec cette configuration, l'ensemble des requêtes DNS qui traversent l'équipement Meraki est intercepté et envoyé vers Umbrella. Comme le sous domaine n'existe pas publiqueme, on se retrouve avec une réponse vide ou <code>NXDOMAIN</code> pour domaine non existant.</p>
-<p>Personnellement, j'ai mis beaucoup de temps à comprendre ce qui se passait. Je recevais bien une réponse <code>NXDOMAIN</code> mais les captures de paquets m'indiquaient clairement que les requêtes n'arrivaient pas jusqu'au serveur DNS local. Jusqu'à ce que je jette un oeil au Meraki MR.
+<p>Lorsque le domaine interne est un domaine &quot;bidon&quot;, comme par exemple <code class="code">mycompany.local</code>, les requêtes DNS ne sont pas interceptées et le client recoit directement une réponse du serveur local. Aucun problème à ce niveau là. Par contre, lorsque le domaine de base existe, même si l'entreprise utilise un sous domaine dédié, cela créé des comportements aberrants.</p>
+<p>Prenons l'exemple d'une entreprise qui dipose du nom de domaine public <code class="code">entreprise.com</code>. Pour ses besoins internes, l'entreprise utilise le sous domaine <code class="code">internal.entreprise.com</code>. La configuration réseau de l'ensemble des postes et des serveurs de l'entreprise spécifie l'utilisation du serveur DNS interne <code class="code">10.0.0.1</code> qui sert spécifiquement ce domaine. Avec cette configuration, l'ensemble des requêtes DNS qui traversent l'équipement Meraki est intercepté et envoyé vers Umbrella. Comme le sous domaine n'existe pas publiqueme, on se retrouve avec une réponse vide ou <code class="code">NXDOMAIN</code> pour domaine non existant.</p>
+<p>Personnellement, j'ai mis beaucoup de temps à comprendre ce qui se passait. Je recevais bien une réponse <code class="code">NXDOMAIN</code> mais les captures de paquets m'indiquaient clairement que les requêtes n'arrivaient pas jusqu'au serveur DNS local. Jusqu'à ce que je jette un oeil au Meraki MR.
 Afin d'empêcher Umbrella d'intercepter les requêtes DNS pour un domaine spécifique, il suffit de le préciser dans la configuration.
 Cela se passe dans Wireless - Firewall &amp; traffic shaping. En choisissant le bon SSID dans le menu déroulant en haut de la page, il possible de définir une liste de domaines dont les requêtes DNS ne seront pas routées vers Cisco Umbrella.</p>
-<img alt="Whitelist Meraki Umbrella" src="/images/2021-03-02-22_12_36-Meraki-Umbrella.png" />
-
-    </div>
-  </article>
+<img alt="Whitelist Meraki Umbrella" class="m-image" src="/images/2021-03-02-22_12_36-Meraki-Umbrella.png" />
+<!-- /content -->
+      <footer>
+        <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-03-02T22:20:00+01:00">Tue 02 March 2021</time> in <a href="https://blog.devarieux.net/category/reseau.html">Réseau</a>.</p>
+      </footer>
+    </article>
+    <nav class="m-navpanel m-col-m-2">
+      <h3>Categories</h3>
+      <ol class="m-block-bar-m">
+        <li><a href="https://blog.devarieux.net/category/cyber.html">Cyber</a></li>
+        <li><a href="https://blog.devarieux.net/category/humeur.html">Humeur</a></li>
+        <li><a href="https://blog.devarieux.net/category/none.html">None</a></li>
+        <li><a href="https://blog.devarieux.net/category/reseau.html">Réseau</a></li>
+        <li><a href="https://blog.devarieux.net/category/supervision.html">Supervision</a></li>
+        <li><a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a></li>
+        <li><a href="https://blog.devarieux.net/category/tech.html">Tech</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</main>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Aldevar - Le Blog. Powered by <a href="https://getpelican.com">Pelican</a> and <a href="https://mcss.mosra.cz">m.css</a>.</p>
+      </div>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-<div class="row">
-  <ul class="col-sm-6 list-inline">
-    <li class="list-inline-item"><a href="../../archives.html">Archives</a></li>
-    <li class="list-inline-item"><a href="../../categories.html">Categories</a></li>
-      <li class="list-inline-item"><a href="../../tags.html">Tags</a></li>
-  </ul>
-  <p class="col-sm-6 text-sm-right text-muted">
-    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
-    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
-  </p>
-</div>    </div>
-  </footer>
-
+</nav></footer>
 </body>
-
 </html>
