@@ -58,52 +58,74 @@
 <section id="network-access">
 <h3>Network Access</h3>
 <p>Cette section permet de choisir le mode d'association des équipements. L'option à choisir ici est Identity PSK with Radius. Le chiffrement se fait en WPA2. Si vous avez plusieurs bornes, je vous invite à activer le mode 802.11r (fast-transition) qui améliore les performances lors du roaming.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK01.png" style="width: 431px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK01.png"><img src="./images/2022-12-12-ISEiPSK01.png" style="width: 431px" /></a>
+</div>
 </section>
 <section id="splash-page">
 <h3>Splash Page</h3>
 <p>Nous n'utilisons pas de Splash Page sur ce SSID. Une fois associé et authentifié, l'accès au réseau se fait directement.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK02.png" style="width: 429px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK02.png"><img src="./images/2022-12-12-ISEiPSK02.png" style="width: 429px" /></a>
+</div>
 </section>
 <section id="configuration-radius">
 <h3>Configuration Radius</h3>
 <p>Lors du choix IPSK with Radius dans la section 'Network Access', une nouvelle section dédiée à la configuration Radius apparaît.
 On entre les adresses des serveurs Radius, ports et secrets. RADIUS testing est désactivé et le support de CoA est activé. Les serveurs Radius accounting sont activés et paramétrés.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK03.png" style="width: 429px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK03.png"><img src="./images/2022-12-12-ISEiPSK03.png" style="width: 429px" /></a>
+</div>
 </section>
 <section id="assignement-de-l-ip">
 <h3>Assignement de l'IP</h3>
 <p>L'assignement de l'adresse IP de l'équipement se fait en mode Bridge. Les équipements se retrouvent sur le VLAN qui leur est assigné et peuvent recevoir une IP en DHCP via, par exemple, le serveur Cisco ISE.
 Le VLAN tagging est activé avec un VLAN par défaut (ici XXX).</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK04.png" style="width: 329px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK04.png"><img src="./images/2022-12-12-ISEiPSK04.png" style="width: 329px" /></a>
+</div>
 </section>
 </section>
 <section id="configuration-cisco-ise">
 <h2>Configuration Cisco ISE</h2>
 <p>Voici le flux de données lors d'une authentification iPSK sur un serveur Cisco ISE. Cette image est directement extraite de la documentation officielle Meraki.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK05.png" style="width: 303px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK05.png"><img src="./images/2022-12-12-ISEiPSK05.png" style="width: 303px" /></a>
+</div>
 <section id="ajout-des-ap-et-assignation-a-un-groupe">
 <h3>Ajout des AP et assignation à un groupe</h3>
 <p>Sur ISE, aller dans Administration &gt; Network Ressources &gt; Network Devices et cliquer sur Add</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK06.png" style="width: 72px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK06.png"><img src="./images/2022-12-12-ISEiPSK06.png" style="width: 72px" /></a>
+</div>
 <p>Remplir les champs pour l'AP à intégrer : Nom de l'AP et adresse IP.</p>
 <p>Créer une nouvelle <cite>Location</cite> du nom du lieu où sont placées les AP (par exemple Headquarter ou Agence_Rennes) et un <cite>device type</cite> MR. Ce device type permettra d'y placer l'ensemble des AP de type Meraki MR.
 La localisation &quot;Headquarters&quot; va permettre de faire correspondre l'authentification des clients avec la bonne Policy Set (jeu de politique), que l'on verra plus tard.</p>
 <p>Cocher Radius Authentication Settings et paramétrer un secret pour ce serveur Radius. Ce secret est celui utilisé dans la configuration Radius du SSID sur Meraki.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK07.png" style="width: 321px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK07.png"><img src="./images/2022-12-12-ISEiPSK07.png" style="width: 321px" /></a>
+</div>
 </section>
 <section id="creer-une-policy-set">
 <h3>Créer une Policy Set</h3>
 <p>Créer une nouvelle Policy Set avec la condition <strong>Device&gt;Location</strong> et sélectionner la localisation Headquarter créée précédemment. Ajouter une seconde condition <strong>Radius &gt; Called-Station-ID Ends_With &quot;Nom_du_SSID&quot;</strong>.</p>
 <p>J'insiste sur le fait de bien mettre la condition &quot;Ends_With&quot; et nom &quot;Equals&quot; car lors de l'authentification Radius, le nom du SSID envoyé par MEraki sera précédé d'autres informations. En mettant &quot;Equals&quot; l'authentification ne peut pas fonctionner.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK08.png" style="width: 436px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK08.png"><img src="./images/2022-12-12-ISEiPSK08.png" style="width: 436px" /></a>
+</div>
 <p>Sauvegarder puis se rendre dans la policy en utilisant la flèche à l'extrémité droite. Aller dans <strong>Authentication Policy</strong> et paramétrer la règle comme ci-dessous. S'assurer que le menu déroulant est bien positionné sur <strong>Internal Endpoints</strong> et que l'option <strong>If User not found Continue</strong> est bien sélectionnée. Cette option permet de continuer à vérifier l'authentification d’un équipement qui ne serait pas valide sur cette policy.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK09.png" style="width: 212px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK09.png"><img src="./images/2022-12-12-ISEiPSK09.png" style="width: 212px" /></a>
+</div>
 <p>Se rendre ensuite dans <strong>Authorization Policy</strong>. Sur la règle par défaut, supprimer <em>Deny Access</em> et cliquer sur l'icône + pour créer un nouveau profil avec les paramètres ci-dessous.
 Dans <strong>Advanced Attributes</strong>, sélectionner <strong>Radius:Tunnel-Password</strong>. Entrer la PSK utilisée par défaut sur ce SSID puis sauvegarder.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK10.png" style="width: 303px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK10.png"><img src="./images/2022-12-12-ISEiPSK10.png" style="width: 303px" /></a>
+</div>
 <p>Sélectionner ce profil dans la règle par défaut puis sauvegarder.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK11.png" style="width: 420px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK11.png"><img src="./images/2022-12-12-ISEiPSK11.png" style="width: 420px" /></a>
+</div>
 </section>
 <section id="creer-un-identity-group">
 <h3>Créer un Identity Group</h3>
@@ -119,19 +141,29 @@ Les champs importants sont :
 - Nom du profil
 - Common Tasks &gt; VLAN &gt; 84
 - Advances Attributes Settings &gt; Radius:Tunnel-Password ⇒ Entrer la PSK pour les équipements de bureautique (PC portable en général).</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK12.png" style="width: 252px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK12.png"><img src="./images/2022-12-12-ISEiPSK12.png" style="width: 252px" /></a>
+</div>
 <p>Aller ensuite dans <strong>Policy &gt; Policy Sets</strong> et éditer la Policy Set créée précédemment. Dans la section <strong>Authorization Rules</strong> ajouter une nouvelle règle au-dessus de la règle par défaut.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK13.png" style="width: 246px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK13.png"><img src="./images/2022-12-12-ISEiPSK13.png" style="width: 246px" /></a>
+</div>
 <p>Nommer cette règle et lui appliquer la condition suivante, en choissant le groupe créé dans la section <strong>Créer un Identity Group</strong> :</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK14.png" style="width: 430px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK14.png"><img src="./images/2022-12-12-ISEiPSK14.png" style="width: 430px" /></a>
+</div>
 <p>Appliquer ensuite le profil d'autorisation PSK1 créé en juste au-dessus et sauvegarder.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK15.png" style="width: 426px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK15.png"><img src="./images/2022-12-12-ISEiPSK15.png" style="width: 426px" /></a>
+</div>
 </section>
 <section id="ajouter-des-euipements-au-groupe">
 <h3>Ajouter des éuipements au groupe</h3>
 <p>Aller dans <strong>Context Visibility &gt; Endpoints</strong>.
 Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer précédement.</p>
-<img class="m-image" src="./images/2022-12-12-ISEiPSK16.png" style="width: 432px" />
+<div class="m-image">
+<a href="/images/2022-12-12-ISEiPSK16.png"><img src="./images/2022-12-12-ISEiPSK16.png" style="width: 432px" /></a>
+</div>
 <p>Cette technique d'authentification permet donc de placer les équipements/utilisateurs sur des VLANs différents en fonction de la PSK utilisée, sans créer un SSID différent pour chaque VLAN.</p>
 <p>En effet, il est déconseillé de diffuser plus de 5 SSID par AP ou par zone afin de limiter les interférences et optimiser la qualité du signal, notamment lorsqu'on souhaite y faire transiter de la voix et/ou faire du roaming. Grâce à iPSK, nous pouvons segmenter les utilisateurs dans différents VLAN en limitant le nombre de SSID diffusé.</p>
 </section>
@@ -140,22 +172,6 @@ Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer 
         <footer>
           <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2022-12-12T08:55:00+01:00">Mon 12 December 2022</time> in <a href="https://blog.devarieux.net/category/cyber.html">Cyber</a>.</p>
         </footer>
-      </article>
-      <article>
-        <header>
-          <h1><a href="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" rel="bookmark" title="Permalink to Pilotage de Caddy par API">
-            <time class="m-date" datetime="2022-11-15T15:54:00+01:00">
-              Nov <span class="m-date-day">15</span> 2022
-            </time>
-            Pilotage de Caddy par API
-          </a></h1>
-          <p>Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.</p>
-          <p>En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité …</p>
-        </header>
-        <footer>
-          <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2022-11-15T15:54:00+01:00">Tue 15 November 2022</time> in <a href="https://blog.devarieux.net/category/reseau.html">Réseau</a>.</p>
-        </footer>
-        <div class="m-clearfix-l"></div>
       </article>
       <article>
         <header>
@@ -281,6 +297,21 @@ Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer 
         </header>
         <footer>
           <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-02-19T06:55:00+01:00">Fri 19 February 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
+        </footer>
+        <div class="m-clearfix-l"></div>
+      </article>
+      <article>
+        <header>
+          <h1><a href="https://blog.devarieux.net/2021/02/vpn-meraki-win10.html" rel="bookmark" title="Permalink to VPN Meraki et Windows 10">
+            <time class="m-date" datetime="2021-02-17T21:47:00+01:00">
+              Feb <span class="m-date-day">17</span> 2021
+            </time>
+            VPN Meraki et Windows 10
+          </a></h1>
+          <p>Un des avantages du VPN Meraki est qu'il ne nécessite pas de client de spécifique pour Windows. Le problème principal est que sa configuration nécessite quelques manipulations. Beaucoup de nos prestatiares rencontrent des difficultés pour s'y connecter et nous remontent régulièrement qu'ils ont des échecs de connexions avec le code …</p>
+        </header>
+        <footer>
+          <p>Posted by <a href="https://blog.devarieux.net/author/aldevar.html">Aldevar</a> on <time datetime="2021-02-17T21:47:00+01:00">Wed 17 February 2021</time> in <a href="https://blog.devarieux.net/category/sysadmin.html">Sysadmin</a>.</p>
         </footer>
         <div class="m-clearfix-l"></div>
       </article>

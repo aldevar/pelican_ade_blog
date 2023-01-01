@@ -8,52 +8,74 @@
 &lt;section id="network-access"&gt;
 &lt;h3&gt;Network Access&lt;/h3&gt;
 &lt;p&gt;Cette section permet de choisir le mode d'association des équipements. L'option à choisir ici est Identity PSK with Radius. Le chiffrement se fait en WPA2. Si vous avez plusieurs bornes, je vous invite à activer le mode 802.11r (fast-transition) qui améliore les performances lors du roaming.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK01.png" style="width: 431px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK01.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK01.png" style="width: 431px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="splash-page"&gt;
 &lt;h3&gt;Splash Page&lt;/h3&gt;
 &lt;p&gt;Nous n'utilisons pas de Splash Page sur ce SSID. Une fois associé et authentifié, l'accès au réseau se fait directement.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK02.png" style="width: 429px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK02.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK02.png" style="width: 429px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="configuration-radius"&gt;
 &lt;h3&gt;Configuration Radius&lt;/h3&gt;
 &lt;p&gt;Lors du choix IPSK with Radius dans la section 'Network Access', une nouvelle section dédiée à la configuration Radius apparaît.
 On entre les adresses des serveurs Radius, ports et secrets. RADIUS testing est désactivé et le support de CoA est activé. Les serveurs Radius accounting sont activés et paramétrés.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK03.png" style="width: 429px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK03.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK03.png" style="width: 429px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="assignement-de-l-ip"&gt;
 &lt;h3&gt;Assignement de l'IP&lt;/h3&gt;
 &lt;p&gt;L'assignement de l'adresse IP de l'équipement se fait en mode Bridge. Les équipements se retrouvent sur le VLAN qui leur est assigné et peuvent recevoir une IP en DHCP via, par exemple, le serveur Cisco ISE.
 Le VLAN tagging est activé avec un VLAN par défaut (ici XXX).&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK04.png" style="width: 329px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK04.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK04.png" style="width: 329px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;/section&gt;
 &lt;section id="configuration-cisco-ise"&gt;
 &lt;h2&gt;Configuration Cisco ISE&lt;/h2&gt;
 &lt;p&gt;Voici le flux de données lors d'une authentification iPSK sur un serveur Cisco ISE. Cette image est directement extraite de la documentation officielle Meraki.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK05.png" style="width: 303px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK05.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK05.png" style="width: 303px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;section id="ajout-des-ap-et-assignation-a-un-groupe"&gt;
 &lt;h3&gt;Ajout des AP et assignation à un groupe&lt;/h3&gt;
 &lt;p&gt;Sur ISE, aller dans Administration &amp;gt; Network Ressources &amp;gt; Network Devices et cliquer sur Add&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK06.png" style="width: 72px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK06.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK06.png" style="width: 72px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Remplir les champs pour l'AP à intégrer : Nom de l'AP et adresse IP.&lt;/p&gt;
 &lt;p&gt;Créer une nouvelle &lt;cite&gt;Location&lt;/cite&gt; du nom du lieu où sont placées les AP (par exemple Headquarter ou Agence_Rennes) et un &lt;cite&gt;device type&lt;/cite&gt; MR. Ce device type permettra d'y placer l'ensemble des AP de type Meraki MR.
 La localisation &amp;quot;Headquarters&amp;quot; va permettre de faire correspondre l'authentification des clients avec la bonne Policy Set (jeu de politique), que l'on verra plus tard.&lt;/p&gt;
 &lt;p&gt;Cocher Radius Authentication Settings et paramétrer un secret pour ce serveur Radius. Ce secret est celui utilisé dans la configuration Radius du SSID sur Meraki.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK07.png" style="width: 321px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK07.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK07.png" style="width: 321px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="creer-une-policy-set"&gt;
 &lt;h3&gt;Créer une Policy Set&lt;/h3&gt;
 &lt;p&gt;Créer une nouvelle Policy Set avec la condition &lt;strong&gt;Device&amp;gt;Location&lt;/strong&gt; et sélectionner la localisation Headquarter créée précédemment. Ajouter une seconde condition &lt;strong&gt;Radius &amp;gt; Called-Station-ID Ends_With &amp;quot;Nom_du_SSID&amp;quot;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;J'insiste sur le fait de bien mettre la condition &amp;quot;Ends_With&amp;quot; et nom &amp;quot;Equals&amp;quot; car lors de l'authentification Radius, le nom du SSID envoyé par MEraki sera précédé d'autres informations. En mettant &amp;quot;Equals&amp;quot; l'authentification ne peut pas fonctionner.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK08.png" style="width: 436px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK08.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK08.png" style="width: 436px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Sauvegarder puis se rendre dans la policy en utilisant la flèche à l'extrémité droite. Aller dans &lt;strong&gt;Authentication Policy&lt;/strong&gt; et paramétrer la règle comme ci-dessous. S'assurer que le menu déroulant est bien positionné sur &lt;strong&gt;Internal Endpoints&lt;/strong&gt; et que l'option &lt;strong&gt;If User not found Continue&lt;/strong&gt; est bien sélectionnée. Cette option permet de continuer à vérifier l'authentification d’un équipement qui ne serait pas valide sur cette policy.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK09.png" style="width: 212px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK09.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK09.png" style="width: 212px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Se rendre ensuite dans &lt;strong&gt;Authorization Policy&lt;/strong&gt;. Sur la règle par défaut, supprimer &lt;em&gt;Deny Access&lt;/em&gt; et cliquer sur l'icône + pour créer un nouveau profil avec les paramètres ci-dessous.
 Dans &lt;strong&gt;Advanced Attributes&lt;/strong&gt;, sélectionner &lt;strong&gt;Radius:Tunnel-Password&lt;/strong&gt;. Entrer la PSK utilisée par défaut sur ce SSID puis sauvegarder.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK10.png" style="width: 303px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK10.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK10.png" style="width: 303px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Sélectionner ce profil dans la règle par défaut puis sauvegarder.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK11.png" style="width: 420px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK11.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK11.png" style="width: 420px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="creer-un-identity-group"&gt;
 &lt;h3&gt;Créer un Identity Group&lt;/h3&gt;
@@ -69,168 +91,34 @@ Les champs importants sont :
 - Nom du profil
 - Common Tasks &amp;gt; VLAN &amp;gt; 84
 - Advances Attributes Settings &amp;gt; Radius:Tunnel-Password ⇒ Entrer la PSK pour les équipements de bureautique (PC portable en général).&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK12.png" style="width: 252px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK12.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK12.png" style="width: 252px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Aller ensuite dans &lt;strong&gt;Policy &amp;gt; Policy Sets&lt;/strong&gt; et éditer la Policy Set créée précédemment. Dans la section &lt;strong&gt;Authorization Rules&lt;/strong&gt; ajouter une nouvelle règle au-dessus de la règle par défaut.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK13.png" style="width: 246px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK13.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK13.png" style="width: 246px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Nommer cette règle et lui appliquer la condition suivante, en choissant le groupe créé dans la section &lt;strong&gt;Créer un Identity Group&lt;/strong&gt; :&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK14.png" style="width: 430px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK14.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK14.png" style="width: 430px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Appliquer ensuite le profil d'autorisation PSK1 créé en juste au-dessus et sauvegarder.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK15.png" style="width: 426px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK15.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK15.png" style="width: 426px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="ajouter-des-euipements-au-groupe"&gt;
 &lt;h3&gt;Ajouter des éuipements au groupe&lt;/h3&gt;
 &lt;p&gt;Aller dans &lt;strong&gt;Context Visibility &amp;gt; Endpoints&lt;/strong&gt;.
 Ajouter un nouvel équipement en prenant soin de l placer dans le groupe créer précédement.&lt;/p&gt;
-&lt;img class="m-image" src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK16.png" style="width: 432px" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/2022-12-12-ISEiPSK16.png"&gt;&lt;img src="https://blog.devarieux.net/images/2022-12-12-ISEiPSK16.png" style="width: 432px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;Cette technique d'authentification permet donc de placer les équipements/utilisateurs sur des VLANs différents en fonction de la PSK utilisée, sans créer un SSID différent pour chaque VLAN.&lt;/p&gt;
 &lt;p&gt;En effet, il est déconseillé de diffuser plus de 5 SSID par AP ou par zone afin de limiter les interférences et optimiser la qualité du signal, notamment lorsqu'on souhaite y faire transiter de la voix et/ou faire du roaming. Grâce à iPSK, nous pouvons segmenter les utilisateurs dans différents VLAN en limitant le nombre de SSID diffusé.&lt;/p&gt;
 &lt;/section&gt;
 &lt;/section&gt;
-</content><category term="Cyber"></category></entry><entry><title>Pilotage de Caddy par API</title><link href="https://blog.devarieux.net/2022/11/meraki-ipsk-ise.html" rel="alternate"></link><published>2022-11-15T15:54:00+01:00</published><updated>2022-11-15T15:54:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2022-11-15:/2022/11/meraki-ipsk-ise.html</id><summary type="html">&lt;p&gt;Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.&lt;/p&gt;
-&lt;p&gt;En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme promis dans l'article précédent sur Caddy, je vais parler de l'utilisation de l'API de Caddy. Un prochain article décrira comment générer un certificat wildcard pour un domaine hébergé chez OVH.&lt;/p&gt;
-&lt;p&gt;En plus de permettre de lire la configuration, l'API de Caddy permet aussi d'en pousser une nouvelle, en totalité ou en partie. L'avantage est que, si la configuration envoyée est valide, celle ci est chargée à chaud et sinon un code retour autre que 200 est renvoyé, précisant l'erreur rencontrée.&lt;/p&gt;
-&lt;p&gt;Attention au mode d'execution du service Caddy lorsqu'on commence à le configurer par API. Il est nécessaire d'utiliser le fichier de service décrit &lt;a href="https://caddyserver.com/docs/install#linux-service"&gt;dans la documentation&lt;/a&gt;. Sans cela, les modifications apportées seront perdues au prochain redémarrage du service.&lt;/p&gt;
-&lt;p&gt;L'API est disponible par defaut seulement sur la boucle locale, port 2019. On peut déjà commencer par visualiser la configuration avant de commencer à en pousser une nouvelle.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl http://localhost:2019/config/ | python3 -m json.tool
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Le pipe vers la commande python permet d'obtenir directement un affichage json en mode pretty print.&lt;/p&gt;
-&lt;section id="pousser-une-configuration-complete"&gt;
-&lt;h2&gt;Pousser une configuration complète&lt;/h2&gt;
-&lt;p&gt;La configuration à envoyer vers Caddy est préparée dans un fichier, qu'on va appeler &lt;code class="code"&gt;config.json&lt;/code&gt;. Ce fichier sera ensuite envoyé en tant que payload dans l'appel API.&lt;/p&gt;
-&lt;p&gt;Première configuration simple avec un reverse proxy.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;quot;apps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;srv0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;routes&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handle&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handler&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;reverse_proxy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;upstreams&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dial&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10.0.0.1:80&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Avec cette configuration, on a la génération du certificat TLS via Let's Encrypt ainsi que la redirection HTTP vers HTTPS. On pousse cette configuration avec la commande suivante :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl 127.0.0.1:2019/load -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d @config.json
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Passons maintenant à l'étape suivante. Nous allons ajouter plusieurs éléments de configuration&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;quot;admin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;127.0.0.1:2019&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;quot;apps&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;srv0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;routes&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handle&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handler&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;reverse_proxy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;transport&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;upstreams&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;dial&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10.0.0.1:443&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;match&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sub.domain.com&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls_connection_policies&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificate_selection&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;any_tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                                &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;companycert&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificates&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;load_files&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;certificate&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/etc/pki/tls/certs/companycert.crt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/etc/pki/tls/private/companycert.key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                        &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;companycert&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                    &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;                &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Qu'avons nous exactement?
-Premièrement, nous créons une route qui utilise un handle. Un handle est un processus de Caddy qui permet d'activer certaines fonctionnalités spécifiques. Ici nous utilisons le handle &lt;code class="code"&gt;reverse_proxy&lt;/code&gt; mais il y en a &lt;a href="https://caddyserver.com/docs/json/apps/http/servers/routes/handle/"&gt;bien d'autres&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Ensuite, avec la directive &lt;code class="code"&gt;&amp;quot;upstream&amp;quot; &amp;quot;dial&amp;quot;&lt;/code&gt;, on spécifie le serveur de backend à utiliser. En précisant &lt;code class="code"&gt;:443&lt;/code&gt;, on force le reverse proxy à se connecter au backend en HTTPS.&lt;/p&gt;
-&lt;p&gt;Puis la directive &lt;code class="code"&gt;&amp;quot;match&amp;quot; &amp;quot;host&amp;quot;&lt;/code&gt; permet de répondre aux requêtes destinées à &lt;code class="code"&gt;sub.domain.com&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;On termine enfin avec la configuration TLS. D'une part, on indique la politique TLS du serveur &amp;quot;srv0&amp;quot;. La possibilitée d'utiliser des tags est assez pratique pour ne pas avoir à répéter les chemins des certificats lorsqu'on utilise plusieurs éléments &amp;quot;server&amp;quot; dans la même configuration. Il est même possible de spécifier plusieurs tags, correspondant à plusieurs certificats. Caddy choisira le certificat le plus adapté au SNI de destination.&lt;/p&gt;
-&lt;p&gt;De la même façon, on pousse la configuration complète vers Caddy.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl 127.0.0.1:2019/load -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d @config.json
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/section&gt;
-&lt;section id="mettre-a-jour-une-partie-de-la-configuration"&gt;
-&lt;h2&gt;Mettre à jour une partie de la configuration&lt;/h2&gt;
-&lt;p&gt;Pour mettre à jour ou remplacer une partie de la configuration, on va utiliser le chemin JSON qu'on souhaite mettre à jour et changer de verbe HTTP.&lt;/p&gt;
-&lt;dl&gt;
-&lt;dt&gt;POST /config/[chemin]&lt;/dt&gt;
-&lt;dd&gt;Configure ou remplace un objet. Si l'objet est une liste, l'élément est ajouté à la liste.&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;p&gt;Voici par exemple comment ajouter l'écoute sur le port 80, ce qui désactive la redirection automatique de HTTP vers HTTPS&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:80&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;dl&gt;
-&lt;dt&gt;PUT /config/[chemin]&lt;/dt&gt;
-&lt;dd&gt;Créé un nouvel objet. Insert dans un liste&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;p&gt;Pour continuer sur l'exemple du port d'écoute, on peut ajouter le port d'écoute 80 de cette façon :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X PUT -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:80&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/0&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;dl&gt;
-&lt;dt&gt;PATCH /config/[chemin]&lt;/dt&gt;
-&lt;dd&gt;Remplace un objet ou une liste&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;p&gt;Dison qu'on souhaite remettre en place la redirection du port 80 vers 443. Cela est automatique lorsqu'on demande à Caddy d'écouter seulement sur le port 443. Cette commande va remplacer la liste &lt;code class="code"&gt;[&amp;quot;:80&amp;quot;, &amp;quot;:443&amp;quot;]&lt;/code&gt; par simplement &lt;code class="code"&gt;[&amp;quot;:443&amp;quot;]&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -X PATCH -H &amp;quot;Content-Type: application/json&amp;quot; -d &amp;#39;&amp;quot;:443&amp;quot;&amp;#39; &amp;quot;http://127.0.0.1:2019/config/apps/http/servers/srv0/listen/&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Voilà pour un tour rapide de l'utilisation de l'API de Caddy. Dans un prochain article j'expliquerai comment compiler Caddy avec des plugins et comment générer un certificat wildcard pour un domaine hébergé chez OVH, en remplissant le challenge DNS proposé par Let's Encrypt.&lt;/p&gt;
-&lt;/section&gt;
-</content><category term="Réseau"></category></entry><entry><title>Zabbix - Authentification SAML avec Keycloak et provider Google Auth</title><link href="https://blog.devarieux.net/2021/12/zabbix-saml-keycloak-google.html" rel="alternate"></link><published>2021-12-29T00:23:00+01:00</published><updated>2021-12-29T00:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-12-29:/2021/12/zabbix-saml-keycloak-google.html</id><summary type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
+</content><category term="Cyber"></category></entry><entry><title>Zabbix - Authentification SAML avec Keycloak et provider Google Auth</title><link href="https://blog.devarieux.net/2021/12/zabbix-saml-keycloak-google.html" rel="alternate"></link><published>2021-12-29T00:23:00+01:00</published><updated>2021-12-29T00:23:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-12-29:/2021/12/zabbix-saml-keycloak-google.html</id><summary type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
 De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
 &lt;p&gt;Cela fait plusieurs mois …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis Zabbix 5.0, l'application permet de configurer une authentification SSO SAML. Le protocol SAML est utilisé par des services tel que Microsoft ADFS et Azure AD ou encore Okta.
 De mon coté, j'utilise Keycloak pour mon intégration SSO. Un des providers utilisé est Google Auth.&lt;/p&gt;
@@ -266,7 +154,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;section id="configuration-de-keycloak"&gt;
 &lt;h2&gt;Configuration de Keycloak&lt;/h2&gt;
 &lt;p&gt;Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id &lt;code class="code"&gt;zabbix&lt;/code&gt; et pour protocol &lt;code class="code"&gt;SAML&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Creation du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix.png"&gt;&lt;img alt="Creation du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix.png" style="width: 535px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -278,7 +168,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;li&gt;Les paramètres devant être sur 'ON' sont : &lt;code&gt;Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Le Name ID Format est code : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Configuration du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Configuration.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix-Configuration.png"&gt;&lt;img alt="Configuration du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix-Configuration.png" style="width: 519px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -290,13 +182,17 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;li&gt;Friendly Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;SAML Attribute Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Mapper du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Mapper.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix-Mapper.png"&gt;&lt;img alt="Mapper du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix-Mapper.png" style="width: 524px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
 &lt;p&gt;Sauvegarder cette configuration.&lt;/p&gt;
 &lt;p&gt;Dernière étape de la configuration de Keycloak. Aller dans &lt;code class="code"&gt;Client Scopes&lt;/code&gt; et sélectionner &lt;code class="code"&gt;role_list&lt;/code&gt; et dans l'onglet Mapper, editer le mapper &lt;code class="code"&gt;role list&lt;/code&gt;. Activer &lt;code class="code"&gt;Single Role Attribute&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Client Scopes dans Keycloak" class="m-image" src="/images/Keycloak-Client-Scopes.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Scopes.png"&gt;&lt;img alt="Client Scopes dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Scopes.png" style="width: 525px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;br /&gt;
@@ -316,11 +212,15 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;p&gt;Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.&lt;/p&gt;
 &lt;p&gt;Dans Administration &amp;gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.&lt;/p&gt;
 &lt;p&gt;Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur &lt;strong&gt;Sign in with Single Sign-On (SAML)&lt;/strong&gt; puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.&lt;/p&gt;
-&lt;img alt="Page d'Authentification Zabbix avec option SAML" class="m-image" src="/images/Zabbix-Auth-SAML.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Zabbix-Auth-SAML.png"&gt;&lt;img alt="Page d'Authentification Zabbix avec option SAML" src="https://blog.devarieux.net/images/Zabbix-Auth-SAML.png" style="width: 200px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
-&lt;img alt="Page d'Authentification Keycloak avec option Google" class="m-image" src="/images/Keycloak-Auth-Google.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Auth-Google.png"&gt;&lt;img alt="Page d'Authentification Keycloak avec option Google" src="https://blog.devarieux.net/images/Keycloak-Auth-Google.png" style="width: 251px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -339,13 +239,13 @@ MIICmSF...........g20plgaFEwvQERGH=
 # dnf install strongswan
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.&lt;/p&gt;
-&lt;img alt="Configuration réseau" class="m-image" src="/images/F33-MerakiVPN01.png" /&gt;
+&lt;img alt="Configuration réseau" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN01.png" style="width: 397px" /&gt;
 &lt;p&gt;En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.&lt;/p&gt;
-&lt;img alt="Choix du type de VPN" class="m-image" src="/images/F33-MerakiVPN02.png" /&gt;
+&lt;img alt="Choix du type de VPN" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN02.png" style="width: 320px" /&gt;
 &lt;p&gt;On choisi le VPN L2TP puis on arrive sur la configuration du VPN&lt;/p&gt;
-&lt;img alt="Configuration du VPN L2TP" class="m-image" src="/images/F33-MerakiVPN03.png" /&gt;
+&lt;img alt="Configuration du VPN L2TP" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN03.png" style="width: 320px" /&gt;
 &lt;p&gt;Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur &lt;code class="code"&gt;IPsec Settings&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Configuration IPsec" class="m-image" src="/images/F33-MerakiVPN04.png" /&gt;
+&lt;img alt="Configuration IPsec" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN04.png" style="width: 174px" /&gt;
 &lt;p&gt;On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aes128-sha1-modp1024,3des-sha1-modp1024!
 &lt;/pre&gt;&lt;/div&gt;
@@ -353,7 +253,7 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ike string error: IKE DH algorithm &amp;#39;modp1024&amp;#39; is not supported
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur &lt;code class="code"&gt;PPP Settings&lt;/code&gt;. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.&lt;/p&gt;
-&lt;img alt="Configuration PPP" class="m-image" src="/images/F33-MerakiVPN05.png" /&gt;
+&lt;img alt="Configuration PPP" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN05.png" style="width: 170px" /&gt;
 &lt;p&gt;Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code class="code"&gt;journalctl -f&lt;/code&gt; dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.&lt;/li&gt;
@@ -529,7 +429,7 @@ Mcaddy[575954]: {&amp;quot;level&amp;quot;:&amp;quot;info&amp;quot;,&amp;quot;ts
 &lt;p&gt;Personnellement, j'ai mis beaucoup de temps à comprendre ce qui se passait. Je recevais bien une réponse &lt;code class="code"&gt;NXDOMAIN&lt;/code&gt; mais les captures de paquets m'indiquaient clairement que les requêtes n'arrivaient pas jusqu'au serveur DNS local. Jusqu'à ce que je jette un oeil au Meraki MR.
 Afin d'empêcher Umbrella d'intercepter les requêtes DNS pour un domaine spécifique, il suffit de le préciser dans la configuration.
 Cela se passe dans Wireless - Firewall &amp;amp; traffic shaping. En choisissant le bon SSID dans le menu déroulant en haut de la page, il possible de définir une liste de domaines dont les requêtes DNS ne seront pas routées vers Cisco Umbrella.&lt;/p&gt;
-&lt;img alt="Whitelist Meraki Umbrella" class="m-image" src="/images/2021-03-02-22_12_36-Meraki-Umbrella.png" /&gt;
+&lt;img alt="Whitelist Meraki Umbrella" class="m-image" src="https://blog.devarieux.net/images/2021-03-02-22_12_36-Meraki-Umbrella.png" style="width: 392px" /&gt;
 </content><category term="Réseau"></category></entry><entry><title>Zabbix et TimescaleDB 2 - Erreur Z3005</title><link href="https://blog.devarieux.net/2021/02/zabbix-timescaledb2.html" rel="alternate"></link><published>2021-02-23T21:45:00+01:00</published><updated>2021-02-23T21:45:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2021-02-23:/2021/02/zabbix-timescaledb2.html</id><summary type="html">&lt;p&gt;Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer.&lt;/p&gt;
 &lt;p&gt;TimescaleDB est une time serie database et est donc particulièrement adapaté pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Depuis que Zabbix supporte officiellement le plugin PostreSQL TimescaleDB, je n'utilise plus que ce mode d'installation pour les différentes instances que j'ai à déployer.&lt;/p&gt;
 &lt;p&gt;TimescaleDB est une time serie database et est donc particulièrement adapaté pour stocker des métriques de supervision. Le logiciel se présente comme un plugin à PostgreSQL et permet de transformer certaines tables d'une base en mode time series. Le gros avantage est que cela permet de stocker l'ensemble des informations dans un endroit unique, que ce soit la configuration du logiciel (utilisateurs, droits d'accès, paramètres...) et aussi les métriques récupérées par le système de supervision. En plus de cela, timescaleDB propose le partitionnemet automatique des tables ainsi que la compression des données ayant plus de 7 jours.&lt;/p&gt;
@@ -801,10 +701,10 @@ Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la c
 &lt;section id="configuration-du-client-vpn-l2tp"&gt;
 &lt;h2&gt;Configuration du client VPN L2TP&lt;/h2&gt;
 &lt;p&gt;Dans les paramètres VPN de Windows 10, ajouter un nouveau VPN et y entrer les informations de connexion. Jusque là, rien de bien compliqué.&lt;/p&gt;
-&lt;img alt="Windows 10 - Add VPN" class="m-image" src="/images/Meraki_VPN_WIN10_Settings.png" /&gt;
+&lt;img alt="Windows 10 - Add VPN" class="m-image" src="https://blog.devarieux.net/images/Meraki_VPN_WIN10_Settings.png" style="width: 254px" /&gt;
 &lt;p&gt;Ensuite, il faut se rendre dans les options d'adaptateurs (Change adapter options). Cela ouvre le Control Panel. Clique droit sur la connexion VPN concernée puis Propriété. Ici, dans l'onglet Securité, dans le second menu déroulant, il faut sélectionner &amp;quot;Require Encryption (Disconnect if server decline)&amp;quot;.
 Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.&lt;/p&gt;
-&lt;img alt="Windows 10 - VPN Properties" class="m-image" src="/images/Meraki_VPN_Win10_Properties01.png" /&gt;
+&lt;img alt="Windows 10 - VPN Properties" class="m-image" src="https://blog.devarieux.net/images/Meraki_VPN_Win10_Properties01.png" style="width: 239px" /&gt;
 &lt;p&gt;Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
 On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :&lt;/p&gt;
 &lt;pre class="code"&gt;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
@@ -1703,12 +1603,12 @@ commande.&lt;/p&gt;
 [root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpTlsSecurityLevel may&lt;/pre&gt;
 &lt;p&gt;C'est terminé, tous les domaines attachés au serveur passeront
 dorénavant vers ce relais SMTP.&lt;/p&gt;
-</content><category term="Sysadmin"></category></entry><entry><title>Galera Mariadb: Load balancing et Failover HAproxy</title><link href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" rel="alternate"></link><published>2016-06-21T21:47:00+02:00</published><updated>2016-06-21T21:47:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-06-21:/2016/06/galera-load-balancing-failover-haproxy.html</id><summary type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/"&gt;cluster Galera
+</content><category term="Sysadmin"></category></entry><entry><title>Galera Mariadb: Load balancing et Failover HAproxy</title><link href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" rel="alternate"></link><published>2016-06-21T21:47:00+02:00</published><updated>2016-06-21T21:47:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-06-21:/2016/06/galera-load-balancing-failover-haproxy.html</id><summary type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html"&gt;cluster Galera
 Mariadb&lt;/a&gt;,
 nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
 être un proxy mysql ou tout autre serveur HA.&lt;/p&gt;
 &lt;p&gt;Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie
-les paquets vers la machine ayant le moins de connexions …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/"&gt;cluster Galera
+les paquets vers la machine ayant le moins de connexions …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html"&gt;cluster Galera
 Mariadb&lt;/a&gt;,
 nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
 être un proxy mysql ou tout autre serveur HA.&lt;/p&gt;
@@ -1823,7 +1723,7 @@ serveur haproxy en frontal en mode répartition de charge (leastconn) qui
 fait office de passerelle d'accès. Les machines s'appellent
 respectivement mariadb01, mariadb02, mariadb03 et mariadb-proxy.&lt;/p&gt;
 &lt;p&gt;Cet article s'attache à la mise en oeuvre du cluster en lui même. Un
-second article détaillera &lt;a href="http://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy/"&gt;le déploiement
+second article détaillera &lt;a href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html"&gt;le déploiement
 d'haproxy&lt;/a&gt;.&lt;/p&gt;
 &lt;section id="configuration-du-noeud-mariadb01"&gt;
 &lt;h2&gt;Configuration du nœud mariadb01&lt;/h2&gt;
@@ -2255,13 +2155,13 @@ Auth SHA et Privacy AES.&lt;/p&gt;
 &lt;h2&gt;Prism Central&lt;/h2&gt;
 &lt;p&gt;La configuration de prism se fait de façon assez simple via l'interface
 de paramétrage SNMP.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Assurez-vous que le transport soit bien configuré en UDP, sur le port de
 votre choix (161 par défaut)&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Se rendre ensuite dans l'onglet Users et ajouter un nouvel utilisateur
 pour que zabbix puisse se connecter&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Profitez-en pour télécharger la MIB via le bouton Download MIB, nous
 allons en avoir besoin.&lt;/p&gt;
 &lt;p&gt;Cliquez sur Save. La configuration de prism est terminée&lt;/p&gt;
@@ -2301,7 +2201,7 @@ et le mot de passe AES.&lt;/p&gt;
 &lt;li&gt;{$NTX_SNMP_AUTH}&lt;/li&gt;
 &lt;li&gt;{$NTX_SNMP_PRIV}&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" class="m-image" src="images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Importez ensuite ce
 &lt;a href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml"&gt;Template&lt;/a&gt;
 dans Zabbix et appliquez le sur votre hôte Prism Central.&lt;/p&gt;
@@ -2529,14 +2429,14 @@ scie sauteuse mais faite attention de ne pas devenir un constructeur de
 scie sauteuse qui a oublié comment scier.&lt;/p&gt;
 </content><category term="Humeur"></category></entry><entry><title>GNS3 - Créer son premier Lab</title><link href="https://blog.devarieux.net/2015/08/gns3-creer-son-premier-lab.html" rel="alternate"></link><published>2015-08-26T10:03:00+02:00</published><updated>2015-08-26T10:03:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-08-26:/2015/08/gns3-creer-son-premier-lab.html</id><summary type="html">&lt;section id="premier-lancement"&gt;
 &lt;h2&gt;Premier Lancement&lt;/h2&gt;
-&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="http://images/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau/"&gt;un précédent
+&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="https://blog.devarieux.net/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html"&gt;un précédent
 article&lt;/a&gt;,
 nous allons maintenant voir comment créer un Lab et faire un petit
 exercice simple de configuration de routes statiques. La première chose
 est d'ajouter un nouveau routeur dans la configuration de GNS3. Ici, ce
 sera un …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="premier-lancement"&gt;
 &lt;h2&gt;Premier Lancement&lt;/h2&gt;
-&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="http://images/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau/"&gt;un précédent
+&lt;p&gt;Après avoir installé GNS3 et ses différents modules dans &lt;a href="https://blog.devarieux.net/2015/08/prise-en-main-de-gns3-pour-la-simulation-reseau.html"&gt;un précédent
 article&lt;/a&gt;,
 nous allons maintenant voir comment créer un Lab et faire un petit
 exercice simple de configuration de routes statiques. La première chose
@@ -2548,19 +2448,19 @@ pour ce modèle.&lt;/p&gt;
 que nous allons faire tout de suite en enregistrant ce projet sous le
 nom FirstLab.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img src="images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_47_47-Prise-en-main-de-GNS3-pour-la-simulation-réseau-À-La-Benne-Nightly.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_48_59-New-project.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_48_59-New-project.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Une fois le projet créé, on va ajouter un routeur dans la configuration de GNS3.
 Pour cela, on se rend dans Edit &amp;gt; Preferences.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_51_11-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_51_11-Preferences.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Je vous laisse parcourir les options afin que vous puissiez comprendre un peu mieux le logiciel. Si vous avez des VM VirtualBox, GNS3 les trouvera et vous les listera dans le menu VirtualBox.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_00_01-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_00_01-Preferences.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;/section&gt;
 &lt;section id="ajout-d-un-routeur"&gt;
@@ -2569,26 +2469,26 @@ Pour cela, on se rend dans Edit &amp;gt; Preferences.&lt;/p&gt;
 on clique sur New. Il suffit ensuite de suivre les indications et de
 fournir l'image IOS du routeur qu'on souhaite voir apparaître.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_55_51-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_55_51-Preferences.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_56_47-New-IOS-router-template.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_56_47-New-IOS-router-template.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_08-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_57_22-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_58_01-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png|"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png|"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_26-New-IOS-router-c2691-jk9s-mz.123-17.image_.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Pour la valeur de Idle-PC, ne recopiez pas bêtement ce qui est écrit dans cette fenêtre. Ce chiffre correspond seulement à ma machine. Cliquez sur le bouton Idle-Pc finder et GNS3 trouvera la valeur de lui même. Cela peut prendre un peu de temps à calculer.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-21_59_40-Preferences.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-21_59_40-Preferences.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Voilà, nous avons notrevrouteur c2691. On peut maintenant fermer la fenêtre de configuration et commencer notre projet.&lt;/p&gt;
 &lt;/section&gt;
@@ -2622,12 +2522,12 @@ place des routes statiques.&lt;/p&gt;
 fois le routeur c2691 dans le projet. Sur le routeur R1, faites un
 clique droit : &lt;em&gt;Configure&lt;/em&gt;&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_02_55-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Renommez le en &lt;strong&gt;Rennes&lt;/strong&gt; et dans l'onglet &lt;em&gt;slot&lt;/em&gt;, ajoutez lui une carte NM-4T dans le
 Slot 1. Faites de même pour le routeur R2 en le renommant &lt;strong&gt;Paris&lt;/strong&gt;.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_05_43-Node-configurator.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_05_43-Node-configurator.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Une fois de retour sur le
 projet, cliquez sur '&lt;em&gt;Add a Link'&lt;/em&gt; dans la colonne de gauche et créer 2
@@ -2635,11 +2535,11 @@ liens séries en cliquant dans un premier temps sur &lt;em&gt;Rennes &amp;gt; Se
 puis &lt;em&gt;Paris &amp;gt; Serial 1/0&lt;/em&gt; pour le premier lien et &lt;em&gt;Rennes &amp;gt; Serial 1/1&lt;/em&gt;
 puis &lt;em&gt;Paris &amp;gt; Serial 1/1&lt;/em&gt; pour le second lien.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_07_19-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Vous devriez avoir quelque chose qui ressemble à ça :&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_11_04-FirstLab.gns3_-—-GNS3.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;J'ai moi même ajouté les
 notes sur les réseaux grâce aux notes que l'on peut insérer dans le
@@ -2649,7 +2549,7 @@ haut de l'interface afin de démarrer les routeurs.&lt;/p&gt;
 &lt;p&gt;Nous allons enfin pouvoir ouvrir notre première console Cisco. Pour
 cela, clique droit sur un routeur &amp;gt; &lt;em&gt;Console&lt;/em&gt;&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-25-22_19_50-FirstLab.gns3-—-GNS3.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Pour préparer le lab, voici les
 commandes à taper dans la console de Rennes :&lt;/p&gt;
@@ -2768,7 +2668,6 @@ rendre au paragraphe 'Paramétrage d'ADB'.&lt;/p&gt;
 &lt;p&gt;La première étape est d'installer le market Aptoide si ce n'est pas déjà
 fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
 'Place de marché' tout en bas et installer le market Aptoide Appstore&lt;/p&gt;
-&lt;p&gt;[gallery size=&amp;quot;medium&amp;quot; columns=&amp;quot;2&amp;quot; link=&amp;quot;file&amp;quot; ids=&amp;quot;571,572&amp;quot;]&lt;/p&gt;
 &lt;/section&gt;
 &lt;section id="installation-de-firefox"&gt;
 &lt;h2&gt;Installation de Firefox&lt;/h2&gt;
@@ -2776,7 +2675,6 @@ fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
 l'application nouvellement installée et dans la zone de recherche, taper
 Firefox. Il faut ensuite trouver l'application &lt;strong&gt;Firefox Browser for
 Android&lt;/strong&gt; et l'installer.&lt;/p&gt;
-&lt;p&gt;[gallery link=&amp;quot;file&amp;quot; columns=&amp;quot;2&amp;quot; size=&amp;quot;medium&amp;quot; ids=&amp;quot;575,576,577,578&amp;quot;]&lt;/p&gt;
 &lt;/section&gt;
 &lt;section id="parametrage-d-adb"&gt;
 &lt;h2&gt;Paramétrage d'ADB&lt;/h2&gt;
@@ -3219,58 +3117,58 @@ compatible Windows, Linux et Mac. L'installeur va installer pour vous
 tous les outils nécessaire pour la virtualisation et la capture de
 paquets.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_30_55-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_30_55-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Sous Windows, l'installation
 est assez classique. Après avoir lancé l'installeur, la fenêtre de setup
 apparaît, il suffit alors de suivre les indications jusqu'à arriver à
 cette fenêtre :&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_33_08-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_08-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Il est préférable de laisser tout cocher, ainsi si des logiciels ont besoin de mise à jour, elles seront faites. En cliquant sur Next, l'installeur va lancer
 l'installation de winPcap.&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_29-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_42-WinPcap-4.1.3-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;On laisse cocher le lancement automatique du driver au démarrage.&lt;/p&gt;
 &lt;p&gt;Ensuite, l'installeur télécharge et installe Wireshark&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_33_59-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_33_59-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_14-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_39-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;WinPcap est déjà installé donc on décoche l'option&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_34_56-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_35_47-Wireshark-1.12.4-64-bit-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;On décoche 'Run Wireshark',on ne va pas en avoir besoin tout de suite.&lt;/p&gt;
 &lt;p&gt;L'installation se poursuit avec cette fois SolarWinds Response Time
 Viewer qui est une application d'analyse de capture Wireshark&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_37_13-SolarWinds-Registration.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_37_13-SolarWinds-Registration-300x168.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;Ici, vous pouvez mettre ce que vous voulez, l'adresse n'est pas vérifiée&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_38_54-SolarWinds-Response-Time-Viewer-for-Windows-300x213.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;L'application se lance automatiquement. Je vous invite à en
 faire un tour rapide avant de la fermer&lt;/p&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_40_09-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_09-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;div class="m-image"&gt;
-&lt;a href="images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
+&lt;a href="/images/2015-08-17-23_40_30-GNS3-1.3.9-Setup.png"&gt;&lt;img src="https://blog.devarieux.net/images/2015-08-17-23_40_30-GNS3-1.3.9-Setup-300x233.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
 &lt;p&gt;SolarWinds vous propose une licence gratuite pour son
 software. Je n'ai pas testé comment acquérir cette licence et je ne sais
@@ -3366,12 +3264,12 @@ root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
 &lt;div class="m-image"&gt;
 &lt;a href="/images/sshJolla.png"&gt;&lt;img src="https://blog.devarieux.net/images/sshJolla.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
-</content><category term="Tech"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+</content><category term="Tech"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="https://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla.html"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
 ci étaient absentes.&lt;/p&gt;
 &lt;p&gt;J'ai donc envoyé un mail au support Jolla pour savoir ce qu'il en était.
-Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="https://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla.html"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
 ci étaient absentes.&lt;/p&gt;
@@ -3441,7 +3339,6 @@ Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
 &lt;p&gt;Une fois cette légère déception passée, j'ai observé l'emballage d'un
 peu plus prêt. La boite est sympa, sobre. Le logo Jolla est écrit en
 argenté et entouré de lignes de code&lt;/p&gt;
-&lt;p&gt;[gallery columns=&amp;quot;2&amp;quot; ids=&amp;quot;417,418,422,424&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Le contenu est très basique : le smartphone, la batterie, un câble
 USB/micro USB et un bloc alim secteur sur lequel on peut branche le
 câble USB. Pas de pair d'écouteur, on a juste le strict minimum. Notons
@@ -3460,14 +3357,12 @@ rafraichissante, surtout après 5 années chez Androïd.&lt;/p&gt;
 &lt;p&gt;Lorsqu'un menu est disponible, une lumière vous indique que vous pouvez
 tirer l'écran pour faire apparaitre ce menu. La sélection d'une entrée
 du menu se fait en tirant plus ou moins.&lt;/p&gt;
-&lt;p&gt;[gallery ids=&amp;quot;431,427,426&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Lorsqu'on ferme une application en swipant de droite à gauche (pour la
 fermer réellement, c'est de haut en bas), celle ci se 'range' sur la
 page principale et reste tourner en tache de fond. SailfishOS est
 multitâche. Les applications qui ne sont pas fermées continues de se
 mettre à jour et ne sont pas gelées comme cela peut être le cas sur les
 autres plateforme. Vous pouvez avoir jusqu'à 9 applications en parallèle&lt;/p&gt;
-&lt;p&gt;[gallery ids=&amp;quot;428,429,430&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Au premier démarrage, SailfishOS vous propose de connecter vos comptes
 Google, Facebook et Twitter. Il regroupera ensuite toutes les
 notifications au même endroit, que vous pourrez retrouver en swipant du
@@ -3492,7 +3387,7 @@ Le système lumineux indiquant les actions possibles est très bien pensé
 et fait bien son boulot de guide.&lt;/p&gt;
 </content><category term="Tech"></category></entry><entry><title>Jolla - Le Smartphone Linux</title><link href="https://blog.devarieux.net/2015/02/jolla-le-smartphone-linux.html" rel="alternate"></link><published>2015-02-07T18:01:00+01:00</published><updated>2015-02-07T18:01:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-07:/2015/02/jolla-le-smartphone-linux.html</id><summary type="html">&lt;section id="flash-back"&gt;
 &lt;h2&gt;Flash Back&lt;/h2&gt;
-&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html"&gt;me passer des services
 de
 Google&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
@@ -3500,7 +3395,7 @@ stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
 &lt;a href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
 pour des …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="flash-back"&gt;
 &lt;h2&gt;Flash Back&lt;/h2&gt;
-&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html"&gt;me passer des services
 de
 Google&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
@@ -3922,14 +3817,14 @@ découvrir plusieurs solutions open source dont je ne connaissais pas
 l'existence. Un système de double notation permet de se rendre
 rapidement compte de la fiabilité des produits (note smile et note des
 utilisateurs).&lt;/p&gt;
-</content><category term="Sysadmin"></category></entry><entry><title>Owncloud et fail2ban derrière un reverse proxy</title><link href="https://blog.devarieux.net/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html" rel="alternate"></link><published>2013-12-05T18:32:00+01:00</published><updated>2013-12-05T18:32:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-12-05:/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html</id><summary type="html">&lt;p&gt;Dans le &lt;a href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+</content><category term="Sysadmin"></category></entry><entry><title>Owncloud et fail2ban derrière un reverse proxy</title><link href="https://blog.devarieux.net/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html" rel="alternate"></link><published>2013-12-05T18:32:00+01:00</published><updated>2013-12-05T18:32:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-12-05:/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html</id><summary type="html">&lt;p&gt;Dans le &lt;a href="https://blog.devarieux.net/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
 article&lt;/a&gt;,
 j'expliquais comment mettre en place fail2ban sur son serveur pour
 protéger son instance Owncloud lorsqu'elle est connectée sur un serveur
 Ldap.&lt;/p&gt;
 &lt;p&gt;En général, lorsqu'on utilise un serveur Ldap pour l'authentification,
 c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas
-si simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le &lt;a href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+si simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le &lt;a href="https://blog.devarieux.net/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
 article&lt;/a&gt;,
 j'expliquais comment mettre en place fail2ban sur son serveur pour
 protéger son instance Owncloud lorsqu'elle est connectée sur un serveur

@@ -87,7 +87,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 <section id="configuration-de-keycloak">
 <h2>Configuration de Keycloak</h2>
 <p>Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id <code class="code">zabbix</code> et pour protocol <code class="code">SAML</code>.</p>
-<img alt="Creation du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix.png" />
+<div class="m-image">
+<a href="/images/Keycloak-Client-Zabbix.png"><img alt="Creation du client Zabbix dans Keycloak" src="../../images/Keycloak-Client-Zabbix.png" style="width: 535px" /></a>
+</div>
 <p>
 <br />
 </p>
@@ -99,7 +101,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 <li>Les paramètres devant être sur 'ON' sont : <code>Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.</code></li>
 <li>Le Name ID Format est code : <code>email</code></li>
 </ul>
-<img alt="Configuration du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Configuration.png" />
+<div class="m-image">
+<a href="/images/Keycloak-Client-Zabbix-Configuration.png"><img alt="Configuration du client Zabbix dans Keycloak" src="../../images/Keycloak-Client-Zabbix-Configuration.png" style="width: 519px" /></a>
+</div>
 <p>
 <br />
 </p>
@@ -111,13 +115,17 @@ MIICmSF...........g20plgaFEwvQERGH=
 <li>Friendly Name : <code>email</code></li>
 <li>SAML Attribute Name : <code>email</code></li>
 </ul>
-<img alt="Mapper du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Mapper.png" />
+<div class="m-image">
+<a href="/images/Keycloak-Client-Zabbix-Mapper.png"><img alt="Mapper du client Zabbix dans Keycloak" src="../../images/Keycloak-Client-Zabbix-Mapper.png" style="width: 524px" /></a>
+</div>
 <p>
 <br />
 </p>
 <p>Sauvegarder cette configuration.</p>
 <p>Dernière étape de la configuration de Keycloak. Aller dans <code class="code">Client Scopes</code> et sélectionner <code class="code">role_list</code> et dans l'onglet Mapper, editer le mapper <code class="code">role list</code>. Activer <code class="code">Single Role Attribute</code>.</p>
-<img alt="Client Scopes dans Keycloak" class="m-image" src="/images/Keycloak-Client-Scopes.png" />
+<div class="m-image">
+<a href="/images/Keycloak-Client-Scopes.png"><img alt="Client Scopes dans Keycloak" src="../../images/Keycloak-Client-Scopes.png" style="width: 525px" /></a>
+</div>
 <p>
 <br />
 <br />
@@ -137,11 +145,15 @@ MIICmSF...........g20plgaFEwvQERGH=
 <p>Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.</p>
 <p>Dans Administration &gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.</p>
 <p>Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur <strong>Sign in with Single Sign-On (SAML)</strong> puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.</p>
-<img alt="Page d'Authentification Zabbix avec option SAML" class="m-image" src="/images/Zabbix-Auth-SAML.png" />
+<div class="m-image">
+<a href="/images/Zabbix-Auth-SAML.png"><img alt="Page d'Authentification Zabbix avec option SAML" src="../../images/Zabbix-Auth-SAML.png" style="width: 200px" /></a>
+</div>
 <p>
 <br />
 </p>
-<img alt="Page d'Authentification Keycloak avec option Google" class="m-image" src="/images/Keycloak-Auth-Google.png" />
+<div class="m-image">
+<a href="/images/Keycloak-Auth-Google.png"><img alt="Page d'Authentification Keycloak avec option Google" src="../../images/Keycloak-Auth-Google.png" style="width: 251px" /></a>
+</div>
 <p>
 <br />
 </p>

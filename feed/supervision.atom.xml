@@ -35,7 +35,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;section id="configuration-de-keycloak"&gt;
 &lt;h2&gt;Configuration de Keycloak&lt;/h2&gt;
 &lt;p&gt;Dans l'interface de Keycloak, sur votre realm, créer un client ayant pour id &lt;code class="code"&gt;zabbix&lt;/code&gt; et pour protocol &lt;code class="code"&gt;SAML&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Creation du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix.png"&gt;&lt;img alt="Creation du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix.png" style="width: 535px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -47,7 +49,9 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;li&gt;Les paramètres devant être sur 'ON' sont : &lt;code&gt;Include AuthnStatement, Sign Document, Force POST Binding, Front Channel Logout et Force Name ID Format.&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Le Name ID Format est code : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Configuration du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Configuration.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix-Configuration.png"&gt;&lt;img alt="Configuration du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix-Configuration.png" style="width: 519px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -59,13 +63,17 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;li&gt;Friendly Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;SAML Attribute Name : &lt;code&gt;email&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;img alt="Mapper du client Zabbix dans Keycloak" class="m-image" src="/images/Keycloak-Client-Zabbix-Mapper.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Zabbix-Mapper.png"&gt;&lt;img alt="Mapper du client Zabbix dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Zabbix-Mapper.png" style="width: 524px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
 &lt;p&gt;Sauvegarder cette configuration.&lt;/p&gt;
 &lt;p&gt;Dernière étape de la configuration de Keycloak. Aller dans &lt;code class="code"&gt;Client Scopes&lt;/code&gt; et sélectionner &lt;code class="code"&gt;role_list&lt;/code&gt; et dans l'onglet Mapper, editer le mapper &lt;code class="code"&gt;role list&lt;/code&gt;. Activer &lt;code class="code"&gt;Single Role Attribute&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Client Scopes dans Keycloak" class="m-image" src="/images/Keycloak-Client-Scopes.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Client-Scopes.png"&gt;&lt;img alt="Client Scopes dans Keycloak" src="https://blog.devarieux.net/images/Keycloak-Client-Scopes.png" style="width: 525px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;br /&gt;
@@ -85,11 +93,15 @@ MIICmSF...........g20plgaFEwvQERGH=
 &lt;p&gt;Il faut ensuite créer les utilisateurs dans Zabbix. En effet, comme pour l'authentification LDAP / Active Directory, Zabbix s'appuit sur ces services pour authentifier des utilisateurs existants. Il faut au préalable les ajouter dans la base des utilisateurs avec les droits associés à leur compte.&lt;/p&gt;
 &lt;p&gt;Dans Administration &amp;gt; Users, créer un compte ayant pour Alias l'adresse email de l'utilisateur. Il est nécessaire de lui mettre un mot de passe, même si celui ci ne sera pas utilisé.&lt;/p&gt;
 &lt;p&gt;Dans une nouvelle fenêtre en navigation privée, vous pouvez vous connecter sur Zabbix en cliquant d'abord sur &lt;strong&gt;Sign in with Single Sign-On (SAML)&lt;/strong&gt; puis sur la fenêtre Keycloak qui s'affiche, un bouton Google permet de finaliser l'authentification.&lt;/p&gt;
-&lt;img alt="Page d'Authentification Zabbix avec option SAML" class="m-image" src="/images/Zabbix-Auth-SAML.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Zabbix-Auth-SAML.png"&gt;&lt;img alt="Page d'Authentification Zabbix avec option SAML" src="https://blog.devarieux.net/images/Zabbix-Auth-SAML.png" style="width: 200px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
-&lt;img alt="Page d'Authentification Keycloak avec option Google" class="m-image" src="/images/Keycloak-Auth-Google.png" /&gt;
+&lt;div class="m-image"&gt;
+&lt;a href="/images/Keycloak-Auth-Google.png"&gt;&lt;img alt="Page d'Authentification Keycloak avec option Google" src="https://blog.devarieux.net/images/Keycloak-Auth-Google.png" style="width: 251px" /&gt;&lt;/a&gt;
+&lt;/div&gt;
 &lt;p&gt;
 &lt;br /&gt;
 &lt;/p&gt;
@@ -678,13 +690,13 @@ Auth SHA et Privacy AES.&lt;/p&gt;
 &lt;h2&gt;Prism Central&lt;/h2&gt;
 &lt;p&gt;La configuration de prism se fait de façon assez simple via l'interface
 de paramétrage SNMP.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_19-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_52_19-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Assurez-vous que le transport soit bien configuré en UDP, sur le port de
 votre choix (161 par défaut)&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_52_56-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_52_56-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Se rendre ensuite dans l'onglet Users et ajouter un nouvel utilisateur
 pour que zabbix puisse se connecter&lt;/p&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 09_53_41-Nutanix Web Console" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-09_53_41-Nutanix-Web-Console.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Profitez-en pour télécharger la MIB via le bouton Download MIB, nous
 allons en avoir besoin.&lt;/p&gt;
 &lt;p&gt;Cliquez sur Save. La configuration de prism est terminée&lt;/p&gt;
@@ -724,7 +736,7 @@ et le mot de passe AES.&lt;/p&gt;
 &lt;li&gt;{$NTX_SNMP_AUTH}&lt;/li&gt;
 &lt;li&gt;{$NTX_SNMP_PRIV}&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" class="m-image" src="images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="2016-03-18 11_06_42-Zabbix Appliance_ Configuration of hosts" class="m-image" src="https://blog.devarieux.net/images/2016-03-18-11_06_42-Zabbix-Appliance-Configuration-of-hosts.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Importez ensuite ce
 &lt;a href="http://blog.devarieux.net/wp-content/uploads/2016/03/Template_SNMP_Nutanix_Cluster.xml"&gt;Template&lt;/a&gt;
 dans Zabbix et appliquez le sur votre hôte Prism Central.&lt;/p&gt;

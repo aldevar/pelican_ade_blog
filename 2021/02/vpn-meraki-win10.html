@@ -56,10 +56,10 @@ Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la c
 <section id="configuration-du-client-vpn-l2tp">
 <h2>Configuration du client VPN L2TP</h2>
 <p>Dans les paramètres VPN de Windows 10, ajouter un nouveau VPN et y entrer les informations de connexion. Jusque là, rien de bien compliqué.</p>
-<img alt="Windows 10 - Add VPN" class="m-image" src="/images/Meraki_VPN_WIN10_Settings.png" />
+<img alt="Windows 10 - Add VPN" class="m-image" src="../../images/Meraki_VPN_WIN10_Settings.png" style="width: 254px" />
 <p>Ensuite, il faut se rendre dans les options d'adaptateurs (Change adapter options). Cela ouvre le Control Panel. Clique droit sur la connexion VPN concernée puis Propriété. Ici, dans l'onglet Securité, dans le second menu déroulant, il faut sélectionner &quot;Require Encryption (Disconnect if server decline)&quot;.
 Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.</p>
-<img alt="Windows 10 - VPN Properties" class="m-image" src="/images/Meraki_VPN_Win10_Properties01.png" />
+<img alt="Windows 10 - VPN Properties" class="m-image" src="../../images/Meraki_VPN_Win10_Properties01.png" style="width: 239px" />
 <p>Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
 On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :</p>
 <pre class="code">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent

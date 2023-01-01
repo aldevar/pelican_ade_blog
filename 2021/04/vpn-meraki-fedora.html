@@ -63,13 +63,13 @@
 # dnf install strongswan
 </pre></div>
 <p>Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.</p>
-<img alt="Configuration réseau" class="m-image" src="/images/F33-MerakiVPN01.png" />
+<img alt="Configuration réseau" class="m-image" src="../../images/F33-MerakiVPN01.png" style="width: 397px" />
 <p>En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.</p>
-<img alt="Choix du type de VPN" class="m-image" src="/images/F33-MerakiVPN02.png" />
+<img alt="Choix du type de VPN" class="m-image" src="../../images/F33-MerakiVPN02.png" style="width: 320px" />
 <p>On choisi le VPN L2TP puis on arrive sur la configuration du VPN</p>
-<img alt="Configuration du VPN L2TP" class="m-image" src="/images/F33-MerakiVPN03.png" />
+<img alt="Configuration du VPN L2TP" class="m-image" src="../../images/F33-MerakiVPN03.png" style="width: 320px" />
 <p>Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur <code class="code">IPsec Settings</code>.</p>
-<img alt="Configuration IPsec" class="m-image" src="/images/F33-MerakiVPN04.png" />
+<img alt="Configuration IPsec" class="m-image" src="../../images/F33-MerakiVPN04.png" style="width: 174px" />
 <p>On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :</p>
 <div class="highlight"><pre><span></span>aes128-sha1-modp1024,3des-sha1-modp1024!
 </pre></div>
@@ -77,7 +77,7 @@
 <div class="highlight"><pre><span></span>ike string error: IKE DH algorithm &#39;modp1024&#39; is not supported
 </pre></div>
 <p>On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur <code class="code">PPP Settings</code>. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.</p>
-<img alt="Configuration PPP" class="m-image" src="/images/F33-MerakiVPN05.png" />
+<img alt="Configuration PPP" class="m-image" src="../../images/F33-MerakiVPN05.png" style="width: 170px" />
 <p>Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :</p>
 <ul>
 <li><code class="code">journalctl -f</code> dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.</li>

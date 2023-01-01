@@ -11,13 +11,13 @@
 # dnf install strongswan
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Une fois cette installation effectuée, la configuration d'un VPN L2TP devient possible dans l'interface de gestion du réseau. Pour cela, il suffit de ce rendre dans les paramètres réseau et ajouter le VPN. Avant de valider, quelques modifications sont à faire pour ne pas conserver les paramètres par défaut.&lt;/p&gt;
-&lt;img alt="Configuration réseau" class="m-image" src="/images/F33-MerakiVPN01.png" /&gt;
+&lt;img alt="Configuration réseau" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN01.png" style="width: 397px" /&gt;
 &lt;p&gt;En cliquant sur le + pour ajouter un VPN, on arrive sur cette nouvelle fenêtre. Celle ci permet de choisir le type de VPN à monter.&lt;/p&gt;
-&lt;img alt="Choix du type de VPN" class="m-image" src="/images/F33-MerakiVPN02.png" /&gt;
+&lt;img alt="Choix du type de VPN" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN02.png" style="width: 320px" /&gt;
 &lt;p&gt;On choisi le VPN L2TP puis on arrive sur la configuration du VPN&lt;/p&gt;
-&lt;img alt="Configuration du VPN L2TP" class="m-image" src="/images/F33-MerakiVPN03.png" /&gt;
+&lt;img alt="Configuration du VPN L2TP" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN03.png" style="width: 320px" /&gt;
 &lt;p&gt;Ici, on entre le nom du VPN, l'IP publique du MX Meraki ainsi que le nom d'utilisateur et le mot de passe. Une fois que c'est fait, on clique sur &lt;code class="code"&gt;IPsec Settings&lt;/code&gt;.&lt;/p&gt;
-&lt;img alt="Configuration IPsec" class="m-image" src="/images/F33-MerakiVPN04.png" /&gt;
+&lt;img alt="Configuration IPsec" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN04.png" style="width: 174px" /&gt;
 &lt;p&gt;On entre sa PSK puis on déplie les paramètres avancés. Là, il faut fixer les algorithmes de chiffrement des phases 1 et 2 IPsec. Pour chacune de ses phases, il faut entrer :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aes128-sha1-modp1024,3des-sha1-modp1024!
 &lt;/pre&gt;&lt;/div&gt;
@@ -25,7 +25,7 @@
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ike string error: IKE DH algorithm &amp;#39;modp1024&amp;#39; is not supported
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;On ne touche à rien d'autre, on valide cette fenêtre puis on clique sur &lt;code class="code"&gt;PPP Settings&lt;/code&gt;. Sur cette fenêtre, dans les paramètres d'authentification, on décoche tout sauf PAP et on laisse tout le reste par défaut.&lt;/p&gt;
-&lt;img alt="Configuration PPP" class="m-image" src="/images/F33-MerakiVPN05.png" /&gt;
+&lt;img alt="Configuration PPP" class="m-image" src="https://blog.devarieux.net/images/F33-MerakiVPN05.png" style="width: 170px" /&gt;
 &lt;p&gt;Une fois ces paramètres validés, on peut tenter de se connecter au VPN. Cela doit fonctionner de suite. Si ça ne marche pas, il y a 2 moyens pour débuguer :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code class="code"&gt;journalctl -f&lt;/code&gt; dans un terminal pendant la tentative de connexion pour voir ce qu'il se passe.&lt;/li&gt;
@@ -391,10 +391,10 @@ Voici donc comment configurer un VPN Meraki sous Windows 10. Avec en bonus, la c
 &lt;section id="configuration-du-client-vpn-l2tp"&gt;
 &lt;h2&gt;Configuration du client VPN L2TP&lt;/h2&gt;
 &lt;p&gt;Dans les paramètres VPN de Windows 10, ajouter un nouveau VPN et y entrer les informations de connexion. Jusque là, rien de bien compliqué.&lt;/p&gt;
-&lt;img alt="Windows 10 - Add VPN" class="m-image" src="/images/Meraki_VPN_WIN10_Settings.png" /&gt;
+&lt;img alt="Windows 10 - Add VPN" class="m-image" src="https://blog.devarieux.net/images/Meraki_VPN_WIN10_Settings.png" style="width: 254px" /&gt;
 &lt;p&gt;Ensuite, il faut se rendre dans les options d'adaptateurs (Change adapter options). Cela ouvre le Control Panel. Clique droit sur la connexion VPN concernée puis Propriété. Ici, dans l'onglet Securité, dans le second menu déroulant, il faut sélectionner &amp;quot;Require Encryption (Disconnect if server decline)&amp;quot;.
 Puis, dans le partie Authentication, il faut cocher Allow these protocols puis 'Unencrypted password (PAP). Cette option n'envoie pas le mot de passe en clair sur le réseau. Celui ci transit par un canal chiffré entre le poste client et le MX Meraki.&lt;/p&gt;
-&lt;img alt="Windows 10 - VPN Properties" class="m-image" src="/images/Meraki_VPN_Win10_Properties01.png" /&gt;
+&lt;img alt="Windows 10 - VPN Properties" class="m-image" src="https://blog.devarieux.net/images/Meraki_VPN_Win10_Properties01.png" style="width: 239px" /&gt;
 &lt;p&gt;Ensuite, il faut cliquer sur le bouton 'Advanced Settings' et entrer la PSK dans la fenêtre qui s'ouvre.
 On peut enfin valider le tout et se connecter au VPN. Si cela ne fonctionne pas, il est possible que ce soit une option de Windows dans la base de registre qui empêche la communication a travers les réseaux natés. Pour corriger cela, il faut ouvrir la base de registre en mode administrateur puis créer cette clé :&lt;/p&gt;
 &lt;pre class="code"&gt;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent
@@ -469,12 +469,12 @@ commande.&lt;/p&gt;
 [root&amp;#64;monzimbra]# zmprov ms monzimbra.mondomaine.com zimbraMtaSmtpTlsSecurityLevel may&lt;/pre&gt;
 &lt;p&gt;C'est terminé, tous les domaines attachés au serveur passeront
 dorénavant vers ce relais SMTP.&lt;/p&gt;
-</content><category term="Sysadmin"></category></entry><entry><title>Galera Mariadb: Load balancing et Failover HAproxy</title><link href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" rel="alternate"></link><published>2016-06-21T21:47:00+02:00</published><updated>2016-06-21T21:47:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-06-21:/2016/06/galera-load-balancing-failover-haproxy.html</id><summary type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/"&gt;cluster Galera
+</content><category term="Sysadmin"></category></entry><entry><title>Galera Mariadb: Load balancing et Failover HAproxy</title><link href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html" rel="alternate"></link><published>2016-06-21T21:47:00+02:00</published><updated>2016-06-21T21:47:00+02:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2016-06-21:/2016/06/galera-load-balancing-failover-haproxy.html</id><summary type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html"&gt;cluster Galera
 Mariadb&lt;/a&gt;,
 nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
 être un proxy mysql ou tout autre serveur HA.&lt;/p&gt;
 &lt;p&gt;Nous allons configurer HAproxy avec l'option leastconn pour qu'il envoie
-les paquets vers la machine ayant le moins de connexions …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="http://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb/"&gt;cluster Galera
+les paquets vers la machine ayant le moins de connexions …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Après avoir mis en place le &lt;a href="https://blog.devarieux.net/2016/06/monter-cluster-galera-mariadb.html"&gt;cluster Galera
 Mariadb&lt;/a&gt;,
 nous avons besoin d'un point d'accès au cluster. Ce point d'accès peut
 être un proxy mysql ou tout autre serveur HA.&lt;/p&gt;
@@ -589,7 +589,7 @@ serveur haproxy en frontal en mode répartition de charge (leastconn) qui
 fait office de passerelle d'accès. Les machines s'appellent
 respectivement mariadb01, mariadb02, mariadb03 et mariadb-proxy.&lt;/p&gt;
 &lt;p&gt;Cet article s'attache à la mise en oeuvre du cluster en lui même. Un
-second article détaillera &lt;a href="http://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy/"&gt;le déploiement
+second article détaillera &lt;a href="https://blog.devarieux.net/2016/06/galera-load-balancing-failover-haproxy.html"&gt;le déploiement
 d'haproxy&lt;/a&gt;.&lt;/p&gt;
 &lt;section id="configuration-du-noeud-mariadb01"&gt;
 &lt;h2&gt;Configuration du nœud mariadb01&lt;/h2&gt;
@@ -1568,14 +1568,14 @@ découvrir plusieurs solutions open source dont je ne connaissais pas
 l'existence. Un système de double notation permet de se rendre
 rapidement compte de la fiabilité des produits (note smile et note des
 utilisateurs).&lt;/p&gt;
-</content><category term="Sysadmin"></category></entry><entry><title>Owncloud et fail2ban derrière un reverse proxy</title><link href="https://blog.devarieux.net/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html" rel="alternate"></link><published>2013-12-05T18:32:00+01:00</published><updated>2013-12-05T18:32:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-12-05:/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html</id><summary type="html">&lt;p&gt;Dans le &lt;a href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+</content><category term="Sysadmin"></category></entry><entry><title>Owncloud et fail2ban derrière un reverse proxy</title><link href="https://blog.devarieux.net/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html" rel="alternate"></link><published>2013-12-05T18:32:00+01:00</published><updated>2013-12-05T18:32:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2013-12-05:/2013/12/owncloud-et-fail2ban-derriere-un-reverse-proxy.html</id><summary type="html">&lt;p&gt;Dans le &lt;a href="https://blog.devarieux.net/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
 article&lt;/a&gt;,
 j'expliquais comment mettre en place fail2ban sur son serveur pour
 protéger son instance Owncloud lorsqu'elle est connectée sur un serveur
 Ldap.&lt;/p&gt;
 &lt;p&gt;En général, lorsqu'on utilise un serveur Ldap pour l'authentification,
 c'est qu'on se trouve en entreprise et les choses ne sont pas alors pas
-si simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le &lt;a href="/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
+si simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans le &lt;a href="https://blog.devarieux.net/2013/11/mise-en-oeuvre-de-fail2ban-pour-owncloudldap.html"&gt;dernier
 article&lt;/a&gt;,
 j'expliquais comment mettre en place fail2ban sur son serveur pour
 protéger son instance Owncloud lorsqu'elle est connectée sur un serveur

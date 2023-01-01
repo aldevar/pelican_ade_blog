@@ -19,7 +19,6 @@ rendre au paragraphe 'Paramétrage d'ADB'.&lt;/p&gt;
 &lt;p&gt;La première étape est d'installer le market Aptoide si ce n'est pas déjà
 fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
 'Place de marché' tout en bas et installer le market Aptoide Appstore&lt;/p&gt;
-&lt;p&gt;[gallery size=&amp;quot;medium&amp;quot; columns=&amp;quot;2&amp;quot; link=&amp;quot;file&amp;quot; ids=&amp;quot;571,572&amp;quot;]&lt;/p&gt;
 &lt;/section&gt;
 &lt;section id="installation-de-firefox"&gt;
 &lt;h2&gt;Installation de Firefox&lt;/h2&gt;
@@ -27,7 +26,6 @@ fait. Pour cela, il faut se rendre dans la Boutique Jolla, puis dans
 l'application nouvellement installée et dans la zone de recherche, taper
 Firefox. Il faut ensuite trouver l'application &lt;strong&gt;Firefox Browser for
 Android&lt;/strong&gt; et l'installer.&lt;/p&gt;
-&lt;p&gt;[gallery link=&amp;quot;file&amp;quot; columns=&amp;quot;2&amp;quot; size=&amp;quot;medium&amp;quot; ids=&amp;quot;575,576,577,578&amp;quot;]&lt;/p&gt;
 &lt;/section&gt;
 &lt;section id="parametrage-d-adb"&gt;
 &lt;h2&gt;Paramétrage d'ADB&lt;/h2&gt;
@@ -166,12 +164,12 @@ root, taper simplement 'su' avec le même mot de passe.&lt;/p&gt;
 &lt;div class="m-image"&gt;
 &lt;a href="/images/sshJolla.png"&gt;&lt;img src="https://blog.devarieux.net/images/sshJolla.png" /&gt;&lt;/a&gt;
 &lt;/div&gt;
-</content><category term="Tech"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+</content><category term="Tech"></category></entry><entry><title>Jolla victime de son succès</title><link href="https://blog.devarieux.net/2015/02/jolla-victime-de-son-succes.html" rel="alternate"></link><published>2015-02-24T10:47:00+01:00</published><updated>2015-02-24T10:47:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-24:/2015/02/jolla-victime-de-son-succes.html</id><summary type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="https://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla.html"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
 ci étaient absentes.&lt;/p&gt;
 &lt;p&gt;J'ai donc envoyé un mail au support Jolla pour savoir ce qu'il en était.
-Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="http://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla/"&gt;article sur le
+Ils m'ont informé qu'ils ne pourraient pas honorer leur commande. Voici …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Comme je le disais dans le dernier &lt;a href="https://blog.devarieux.net/2015/02/prise-en-main-du-smartphone-de-jolla.html"&gt;article sur le
 Jolla&lt;/a&gt;,
 je devais recevoir avec mon colis 2 coques supplémentaires mais celles
 ci étaient absentes.&lt;/p&gt;
@@ -241,7 +239,6 @@ Jolla pour savoir où était ses 2 pièces manquantes.&lt;/p&gt;
 &lt;p&gt;Une fois cette légère déception passée, j'ai observé l'emballage d'un
 peu plus prêt. La boite est sympa, sobre. Le logo Jolla est écrit en
 argenté et entouré de lignes de code&lt;/p&gt;
-&lt;p&gt;[gallery columns=&amp;quot;2&amp;quot; ids=&amp;quot;417,418,422,424&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Le contenu est très basique : le smartphone, la batterie, un câble
 USB/micro USB et un bloc alim secteur sur lequel on peut branche le
 câble USB. Pas de pair d'écouteur, on a juste le strict minimum. Notons
@@ -260,14 +257,12 @@ rafraichissante, surtout après 5 années chez Androïd.&lt;/p&gt;
 &lt;p&gt;Lorsqu'un menu est disponible, une lumière vous indique que vous pouvez
 tirer l'écran pour faire apparaitre ce menu. La sélection d'une entrée
 du menu se fait en tirant plus ou moins.&lt;/p&gt;
-&lt;p&gt;[gallery ids=&amp;quot;431,427,426&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Lorsqu'on ferme une application en swipant de droite à gauche (pour la
 fermer réellement, c'est de haut en bas), celle ci se 'range' sur la
 page principale et reste tourner en tache de fond. SailfishOS est
 multitâche. Les applications qui ne sont pas fermées continues de se
 mettre à jour et ne sont pas gelées comme cela peut être le cas sur les
 autres plateforme. Vous pouvez avoir jusqu'à 9 applications en parallèle&lt;/p&gt;
-&lt;p&gt;[gallery ids=&amp;quot;428,429,430&amp;quot;]&lt;/p&gt;
 &lt;p&gt;Au premier démarrage, SailfishOS vous propose de connecter vos comptes
 Google, Facebook et Twitter. Il regroupera ensuite toutes les
 notifications au même endroit, que vous pourrez retrouver en swipant du
@@ -292,7 +287,7 @@ Le système lumineux indiquant les actions possibles est très bien pensé
 et fait bien son boulot de guide.&lt;/p&gt;
 </content><category term="Tech"></category></entry><entry><title>Jolla - Le Smartphone Linux</title><link href="https://blog.devarieux.net/2015/02/jolla-le-smartphone-linux.html" rel="alternate"></link><published>2015-02-07T18:01:00+01:00</published><updated>2015-02-07T18:01:00+01:00</updated><author><name>Aldevar</name></author><id>tag:blog.devarieux.net,2015-02-07:/2015/02/jolla-le-smartphone-linux.html</id><summary type="html">&lt;section id="flash-back"&gt;
 &lt;h2&gt;Flash Back&lt;/h2&gt;
-&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html"&gt;me passer des services
 de
 Google&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
@@ -300,7 +295,7 @@ stock mon agenda, mes contacts, mes emails avec Zimbra. J'utilise
 &lt;a href="http://pyd.io"&gt;Pydio&lt;/a&gt; pour le cloud. Mon compte gmail est conservé
 pour des …&lt;/p&gt;&lt;/section&gt;</summary><content type="html">&lt;section id="flash-back"&gt;
 &lt;h2&gt;Flash Back&lt;/h2&gt;
-&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="http://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google/"&gt;me passer des services
+&lt;p&gt;En Juin 2013, je me demandais comment j'allais &lt;a href="https://blog.devarieux.net/2013/06/comment-vais-je-me-passer-des-services-de-google.html"&gt;me passer des services
 de
 Google&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Depuis, pas mal de choses ont évolué. J'ai un serveur sur lequel je
